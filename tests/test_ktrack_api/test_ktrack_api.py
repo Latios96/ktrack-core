@@ -141,6 +141,14 @@ def test_find(ktrack_instance):
 
     assert len(entities) == 1
 
+def test_find_field_value(ktrack_instance):
+    SHOT_CODE = 'nivtrnitvrtni'
+    ktrack_instance.create("shot", {'project': {'type': 'project', 'id': SOME_OBJECT_ID}, 'code': SHOT_CODE})
+
+    entities = ktrack_instance.find('shot', [['code', 'is', SHOT_CODE]])
+
+    assert len(entities) == 1
+
 
 def test_find_one(ktrack_instance):
     # type: (KtrackMongoImpl) -> None

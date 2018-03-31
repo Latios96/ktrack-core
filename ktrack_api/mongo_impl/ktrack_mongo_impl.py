@@ -84,7 +84,12 @@ class KtrackMongoImpl(object):
 
         if len(filters)>0:
             for f in filters:
-                filter_dict["{}__id".format(f[0])]=f[2]['id']
+                if isinstance(f[2], dict):
+                    filter_dict["{}__id".format(f[0])] = f[2]['id']
+                else:
+                    field_name= f[0]
+                    field_value= f[2]
+                    filter_dict[field_name] = field_value
 
         entity_candidates = entity_cls.objects(**filter_dict).all()
 

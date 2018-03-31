@@ -45,12 +45,12 @@ class Context(object):
         :param context_dict:
         :return: a new Context object
         """
-        return Context(project=context_dict['project'],
-                       entity=context_dict['entity'],
-                       step=context_dict['step'],
-                       task=context_dict['task'],
-                       workfile=context_dict['workfile'],
-                       user=context_dict['user'])
+        return Context(project=context_dict.get('project'),
+                       entity=context_dict.get('entity'),
+                       step=context_dict.get('step'),
+                       task=context_dict.get('task'),
+                       workfile=context_dict.get('workfile'),
+                       user=context_dict.get('user'))
 
 
     def serialize(self):

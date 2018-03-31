@@ -55,7 +55,7 @@ class Ktrack(object):
         Finds an entity of given type with matching filters
         :param entity_type:
         :param filters: [[field_name, 'is', field_value]] or [] is currently supported, default is []
-        :return: list of matching entities
+        :return: list of matching entities, empty list if no matching entity found
         """
         assert isinstance(entity_type, str)
         assert isinstance(filters, list)
