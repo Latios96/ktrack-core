@@ -1,3 +1,4 @@
+import copy
 import getpass
 import os
 import platform
@@ -5,6 +6,8 @@ import re
 
 import datetime
 import yaml
+
+ROUTES_YML = 'routes.yml'
 
 FOLDER_TEMPLATES_YML = 'folder_templates.yml'
 
@@ -24,10 +27,17 @@ def get_template_dir():
         return os.path.join(os.path.dirname(__file__), 'config')
 
 
-yml_file = os.path.join(get_template_dir(), FOLDER_TEMPLATES_YML)
+# load data for folders
+yml_file_folders = os.path.join(get_template_dir(), FOLDER_TEMPLATES_YML)
 
-with open(yml_file) as file_descriptor:
-    _data = yaml.load(file_descriptor)
+with open(yml_file_folders) as file_descriptor:
+    _data_folders = yaml.load(file_descriptor)
+
+# load data for routes
+yml_file_routes = os.path.join(get_template_dir(), ROUTES_YML)
+
+with open(yml_file_routes) as file_descriptor:
+    _data_routes = yaml.load(file_descriptor)
 
 
 def get_file_templates(entity_type):
@@ -65,8 +75,8 @@ def get_file_and_folder_templates(entity_type):
     """
     entity_type = entity_type.lower()
 
-    if entity_type in _data.keys():
-        folder_data = _data[entity_type.lower()]['folders']
+    if entity_type in _data_folders.keys():
+        folder_data = _data_folders[entity_type.lower()]['folders']
     else:
         raise KeyError(
             "No templates found for entity type {}, please add them in folder_templates.yml".format(entity_type))
@@ -106,7 +116,23 @@ def get_file_and_folder_templates(entity_type):
     return all_files, all_folders
 
 
-def format_template(template, context={}):
+def get_route_template(route_name):
+    # type: (str) -> str
+    """
+    Returns a route template, example would be project_root. route templates are strings
+    :param route_name:
+    :return:
+    """
+    try:
+        route_template = _data_routes[route_name]
+    except KeyError:
+        raise KeyError("Route with name {} does not exist!".format(route_name))
+    return route_template
+
+def get_all_route_templates():
+    return copy.deepcopy(_data_routes)
+
+def format_template(template, context_dict={}):
     # type: (str, dict) -> str
     """
     Takes a template string and replaces all tokens with values from context dictionary.
@@ -120,7 +146,7 @@ def format_template(template, context={}):
     - second : current second, for example 01
     - user : name of the current user, for example Jan
     :param template: the template string, containing tokens in {token_in_snake_case} format
-    :param context: dictionary containing all used tokens (or more) as keys and useful values.
+    :param context_dict: dictionary containing all used tokens (or more) as keys and useful values.
     Example: {'asset_name': 'useful_value'}
     :return: the template string with all tokens replaced
     """
@@ -136,7 +162,7 @@ def format_template(template, context={}):
         'user': getpass.getuser()
     }
 
-    default_context.update(context)
+    default_context.update(context_dict)
 
     try:
         formated_template = template.format(**default_context)

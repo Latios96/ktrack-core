@@ -32,7 +32,7 @@ class NonProjectEntity(Document):
             'collection': 'ktrack_api_entities'}
 
     def to_link(self):
-        return {'type': self.type, 'id': self.id} # todo add test
+        return {'type': self.type, 'id': self.id}  # todo add test
 
 
 class ProjectEntity(NonProjectEntity):
@@ -50,13 +50,14 @@ register_entity('project', Project)
 class Asset(ProjectEntity):
     type = 'asset'
     code = StringField()
+    asset_type=StringField()
 
 
 register_entity('asset', Asset)
 
 
 class Shot(ProjectEntity):
-    type = 'Shot'
+    type = 'shot'
     code = StringField()
     cut_in = IntField()
     cut_out = IntField()
@@ -64,3 +65,12 @@ class Shot(ProjectEntity):
 
 
 register_entity('shot', Shot)
+
+
+class PathEntry(NonProjectEntity):
+    type = 'path_entry'
+    path = StringField()
+    context = DictField()
+
+
+register_entity('path_entry', PathEntry)

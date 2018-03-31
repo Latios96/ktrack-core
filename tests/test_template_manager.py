@@ -31,7 +31,7 @@ def test_load_folder_template():
             ]
         }
         }}
-    with patch.object(template_manager, '_data', yml_data) as mock_yml_data:
+    with patch.object(template_manager, '_data_folders', yml_data) as mock_yml_data:
         folders = template_manager.get_folder_templates('asset')
 
     print folders
@@ -64,7 +64,7 @@ def test_get_file_template():
             ]
         }
         }}
-    with patch.object(template_manager, '_data', yml_data) as mock_yml_data:
+    with patch.object(template_manager, '_data_folders', yml_data) as mock_yml_data:
         files = template_manager.get_file_templates('asset')
 
     print files
@@ -113,7 +113,7 @@ def test_not_all_tokens_provided():
         formated_template = template_manager.format_template(template)
 
     with pytest.raises(KeyError):
-        formated_template = template_manager.format_template(template, context={'useless_key': 'some_value'})
+        formated_template = template_manager.format_template(template, context_dict={'useless_key': 'some_value'})
 
 
 def test_format_template_default_tokens():
@@ -133,6 +133,17 @@ def test_format_template_default_tokens():
 
     context = {'year': 2019}
 
-    formated_template = template_manager.format_template(template, context=context)
+    formated_template = template_manager.format_template(template, context_dict=context)
 
     assert formated_template.startswith("2019")
+
+def test_route_template():
+    yml_data={'project_root': 'somewhere_over_the_rainbow'}
+
+    with patch.object(template_manager, '_data_routes', yml_data) as mock_yml_data:
+        project_root=template_manager.get_route_template('project_root')
+
+        assert project_root is not None
+
+        with pytest.raises(KeyError):
+            template_manager.get_route_template('this route does not exist')

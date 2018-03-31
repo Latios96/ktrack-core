@@ -1,0 +1,5 @@
+project_root : "M:/Projekte/{year}"
+project_folder: "{project_root}/{project_name}"
+asset_folder: "{project_root}/{project_name}/{asset_type}/{code}"
+asset_alembic: "{project_root}/{project_name}/Assets/{asset_type}/{code}/{code}_Alembic"
+asset_renderoutput_3D: "{project_root}/{project_name}/Assets/{asset_type}/{code}/{code}_Input_3D"

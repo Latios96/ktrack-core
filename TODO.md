@@ -1,7 +1,6 @@
 # TODO
 
-- folder creation and registration
-- configuration files and location
+- LOGGING
 - restore context from path
 - cmd line util
 - engines für Maya, Nuke, Houdini

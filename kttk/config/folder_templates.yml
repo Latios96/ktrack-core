@@ -5,15 +5,16 @@ project:
             - Shots
 asset: 
     folders:
-        "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}":
-            - "{asset_name}_Textures"
-            - "{asset_name}_Input_2D"
-            - "{asset_name}_Input_3D"
-            - "{asset_name}/Maya":
+        "{project_root}/{project_name}/Assets/{asset_type}/{code}":
+            - "{code}_Alembic"
+            - "{code}_Textures"
+            - "{code}_Input_2D"
+            - "{code}_Input_3D"
+            - "{code}_Maya":
                 - __file__ :
                              name: workspace.mel
                              content: '''
-                                      workspace -fr "image" "{asset_renderoutput_3D"; linebreak workspace -fr "alembicCache" "{asset_alembic}";
+                                      workspace -fr "image" "{asset_renderoutput_3D}"; linebreak workspace -fr "alembicCache" "{asset_alembic}";
                                       '''
-            - "{asset_name}_out":
+            - "{code}_out":
                 - playblast
