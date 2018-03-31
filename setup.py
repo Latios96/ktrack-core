@@ -9,6 +9,6 @@ setup(
     author='Jan Honsbrok',
     author_email='',
     description='',
-    install_requires=['pytest', 'mock', 'mongoengine', 'mongomock', 'blinker']
+    install_requires=['pytest', 'mock', 'mongoengine', 'mongomock', 'blinker', 'pyyaml']
     # todo add interactive api script
 )

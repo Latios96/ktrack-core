@@ -1,0 +1,19 @@
+project: 
+    folders:
+        "{project_root}/{project_name}":
+            - Assets
+            - Shots
+asset: 
+    folders:
+        "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}":
+            - "{asset_name}_Textures"
+            - "{asset_name}_Input_2D"
+            - "{asset_name}_Input_3D"
+            - "{asset_name}/Maya":
+                - __file__ :
+                             name: workspace.mel
+                             content: '''
+                                      workspace -fr "image" "{asset_renderoutput_3D"; linebreak workspace -fr "alembicCache" "{asset_alembic}";
+                                      '''
+            - "{asset_name}_out":
+                - playblast
