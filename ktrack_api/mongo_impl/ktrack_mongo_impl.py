@@ -24,16 +24,16 @@ def _convert_to_dict(entity):
 
 
 class KtrackMongoImpl(object):
-    #todo add doc
+    """
+    Mongo DB Implementation of the ktrack api interface. Uses mongoengine as a database mapper
+    """
 
     def __init__(self, connection_uri):
-        # todo add doc
         connect("mongoeengine_test",
                 host=connection_uri)
 
     def create(self, entity_type, data={}):
         # type: (str, dict) -> dict
-        # todo add doc
         """
         Creates a new entity instance of given type and applies given data.
         Returns new created entity
@@ -49,7 +49,7 @@ class KtrackMongoImpl(object):
 
         entity = entity_cls()
 
-        for key, value in data.iteritems(): #todo test with not empty data dict
+        for key, value in data.iteritems():
             setattr(entity, key, value)
 
         entity.save()
@@ -57,7 +57,6 @@ class KtrackMongoImpl(object):
         return _convert_to_dict(entity)
 
     def update(self, entity_type, entity_id, data):
-        # todo add doc
         try:
             entity_cls = entities.entities[entity_type]
         except KeyError:
@@ -76,7 +75,6 @@ class KtrackMongoImpl(object):
         entity.save()
 
     def find(self, entity_type, filters):
-        # todo add doc
         try:
             entity_cls = entities.entities[entity_type]
         except KeyError:
@@ -96,7 +94,6 @@ class KtrackMongoImpl(object):
 
 
     def find_one(self, entity_type, entity_id):
-        # todo add doc
         try:
             entity_cls = entities.entities[entity_type]
         except KeyError:
@@ -111,7 +108,6 @@ class KtrackMongoImpl(object):
 
 
     def delete(self, entity_type, entity_id):
-        # todo add doc
         try:
             entity_cls = entities.entities[entity_type]
         except KeyError:

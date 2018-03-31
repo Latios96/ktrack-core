@@ -3,7 +3,7 @@ import os
 import ktrack_api
 from kttk import template_manager
 from kttk.context import Context
-
+from . import logger
 
 def init_entity(entity_type, entity_id):
     """
@@ -41,6 +41,8 @@ def init_entity(entity_type, entity_id):
     context_dict['project_root'] = template_manager.get_route_template('project_root')
     context_dict['project_name'] = project['name']
 
+    logger.info("Creating folders for {} {}..".format(entity_type,
+                                                      entity.get('name') if entity.get('name') else entity.get('code')))
     # create folders
     for folder_template in folder_templates:
         path = template_manager.format_template(folder_template, context_dict)
@@ -55,6 +57,8 @@ def init_entity(entity_type, entity_id):
 
         kt.create('path_entry', path_entry_data)
 
+    logger.info("Creating folders for {} {}..".format(entity_type,
+                                                      entity.get('name') if entity.get('name') else entity.get('code')))
     for file_template in file_templates:
         file_path = template_manager.format_template(file_template['path'], context_dict)
         content = template_manager.format_template(file_template['content'], context_dict)

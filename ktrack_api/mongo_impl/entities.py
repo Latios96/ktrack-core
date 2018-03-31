@@ -1,4 +1,6 @@
 import datetime
+import getpass
+
 from mongoengine import signals, Document, DateTimeField, StringField, DictField, IntField
 
 
@@ -22,17 +24,18 @@ def register_entity(name, entity_cls):
 
 
 class NonProjectEntity(Document):
-    created_at = DateTimeField()  # todo check for correctness
-    created_by = StringField()  # todo check for correctness
-    updated_at = DateTimeField()  # todo check for correctness
+    created_at = DateTimeField(default=datetime.datetime.now())
+    created_by = StringField(default=getpass.getuser())
+    updated_at = DateTimeField()
     type = 'NonProjectEntity'
     thumbnail = DictField()
 
     meta = {'allow_inheritance': True,
             'collection': 'ktrack_api_entities'}
 
-    def to_link(self):
-        return {'type': self.type, 'id': self.id}  # todo add test
+    # currently unused
+    """def to_link(self):
+        return {'type': self.type, 'id': self.id} # todo add test"""
 
 
 class ProjectEntity(NonProjectEntity):
@@ -50,7 +53,7 @@ register_entity('project', Project)
 class Asset(ProjectEntity):
     type = 'asset'
     code = StringField()
-    asset_type=StringField()
+    asset_type = StringField()
 
 
 register_entity('asset', Asset)

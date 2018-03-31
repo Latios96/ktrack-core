@@ -1,3 +1,5 @@
+import getpass
+
 import pytest
 from ktrack_api.Exceptions import EntityMissing, EntityNotFoundException
 from ktrack_api.mongo_impl.entities import Project
@@ -31,9 +33,39 @@ def test_create(ktrack_instance):
 
     assert 'id' in entity.keys()
 
+    assert entity['created_at']
+    assert entity['updated_at']
+    assert entity['created_by'] == getpass.getuser()
+
     entity_in_db = len(Project.objects(id=entity['id']))
 
     assert entity_in_db
+
+def test_create_additional_data(ktrack_instance):
+    # type: (KtrackMongoImpl) -> None
+
+
+    # test create existing entity
+    entity = ktrack_instance.create('project', {'name': 'my_lovely_project'})
+
+    assert entity is not None
+
+    assert type(entity) == dict
+
+    assert entity['type'] == 'project'
+
+    assert 'id' in entity.keys()
+
+    assert entity['created_at']
+    assert entity['updated_at']
+    assert entity['created_by'] == getpass.getuser()
+    assert entity['name'] == 'my_lovely_project'
+
+    entity_in_db = len(Project.objects(id=entity['id']))
+
+    assert entity_in_db
+
+
 
 
 def test_update(ktrack_instance):
@@ -51,6 +83,8 @@ def test_update(ktrack_instance):
     # now test real update
     entity = ktrack_instance.create("project")
 
+    old_update_time=entity['updated_at']
+
     thumbnail_dict = {'type': 'thumbnail', 'id': SOME_OBJECT_ID}
 
     ktrack_instance.update("project", entity['id'], {'thumbnail': thumbnail_dict})
@@ -67,6 +101,7 @@ def test_update(ktrack_instance):
     # now check if values are correctly updated
     assert entity.thumbnail['type'] == 'thumbnail'
     assert entity.thumbnail['id'] == SOME_OBJECT_ID
+    assert entity.updated_at > old_update_time
 
 
 def test_delete(ktrack_instance):
@@ -125,3 +160,7 @@ def test_find_one(ktrack_instance):
     _entity = ktrack_instance.find_one('project', entity['id'])
 
     assert entity['id'] == _entity['id']
+
+
+
+
