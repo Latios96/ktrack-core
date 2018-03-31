@@ -145,5 +145,5 @@ def test_route_template():
 
         assert project_root is not None
 
-        with pytest.raises(KeyError):
+        with pytest.raises(template_manager.RouteNotExists):
             template_manager.get_route_template('this route does not exist')

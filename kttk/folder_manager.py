@@ -1,7 +1,7 @@
 import os
 
 import ktrack_api
-from kttk import template_manager
+from kttk import template_manager, path_cache_manager
 from kttk.context import Context
 from . import logger
 
@@ -51,14 +51,11 @@ def init_entity(entity_type, entity_id):
             os.makedirs(path)
 
         # register folders in database with context
-        path_entry_data = {}
-        path_entry_data['path'] = path
-        path_entry_data['context'] = context.as_dict()
-
-        kt.create('path_entry', path_entry_data)
+        path_cache_manager.register_path(path, context)
 
     logger.info("Creating folders for {} {}..".format(entity_type,
                                                       entity.get('name') if entity.get('name') else entity.get('code')))
+    # create files
     for file_template in file_templates:
         file_path = template_manager.format_template(file_template['path'], context_dict)
         content = template_manager.format_template(file_template['content'], context_dict)
@@ -66,15 +63,11 @@ def init_entity(entity_type, entity_id):
         with open(file_path, "w") as f:
             f.write(content)
 
-        path_entry_data = {}
-        path_entry_data['path'] = file_path
-        path_entry_data['context'] = context.as_dict()
-
-        kt.create('path_entry', path_entry_data) # todo register path in extra method, make path nice formatted so it only contains / and no \
+        path_cache_manager.register_path(path, context)
 
     # register entity folder
     project_folder_template = template_manager.get_route_template(
-        '{}_folder'.format(entity_type))  # todo catch when route does not exist and display good error message
+        '{}_folder'.format(entity_type))
     project_folder = template_manager.format_template(project_folder_template, context_dict)
 
     path_entry_data = {}
