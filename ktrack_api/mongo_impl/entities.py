@@ -32,7 +32,7 @@ class NonProjectEntity(Document):
             'collection': 'ktrack_api_entities'}
 
     def to_link(self):
-        return {'type': self.type, 'id': self.id}
+        return {'type': self.type, 'id': self.id} # todo add test
 
 
 class ProjectEntity(NonProjectEntity):

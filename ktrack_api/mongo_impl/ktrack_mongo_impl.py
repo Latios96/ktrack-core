@@ -41,6 +41,7 @@ class KtrackMongoImpl(object):
         :param data: data for entity
         :return: newly created entity
         """
+        # todo make sure that project names are unique
         try:
             entity_cls = entities.entities[entity_type.lower()]
         except KeyError:

@@ -10,4 +10,5 @@ setup(
     author_email='',
     description='',
     install_requires=['pytest', 'mock', 'mongoengine', 'mongomock', 'blinker']
+    # todo add interactive api script
 )
