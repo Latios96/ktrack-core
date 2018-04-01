@@ -16,3 +16,6 @@ ch.setFormatter(formatter)
 # add the handlers to the logger
 #logger.addHandler(fh)
 logger.addHandler(ch)
+
+from .folder_manager import init_entity
+from .path_cache_manager import register_path, unregister_path, context_from_path

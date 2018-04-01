@@ -21,7 +21,7 @@ class Context(object):
         msg.append("  Task: %s" % str(self.task))
         msg.append("  User: %s" % str(self.user))
 
-        return "<Sgtk Context: %s>" % ("\n".join(msg))
+        return "<Sgtk Context: \n%s>" % ("\n".join(msg))
 
     def as_dict(self):
         """

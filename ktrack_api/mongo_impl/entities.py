@@ -76,4 +76,5 @@ class PathEntry(NonProjectEntity):
     context = DictField()
 
 
+
 register_entity('path_entry', PathEntry)

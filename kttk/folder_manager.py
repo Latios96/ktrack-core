@@ -5,6 +5,7 @@ from kttk import template_manager, path_cache_manager
 from kttk.context import Context
 from . import logger
 
+
 def init_entity(entity_type, entity_id):
     """
     Initialises an entity for production. Will create folders for entity on disk, will register folders in database,
