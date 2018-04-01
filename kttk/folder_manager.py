@@ -49,6 +49,7 @@ def init_entity(entity_type, entity_id):
         path = template_manager.format_template(folder_template, context_dict)
 
         if not os.path.exists(path):
+            logger.info("Create folder {}".format(path))
             os.makedirs(path)
 
         # register folders in database with context
