@@ -9,7 +9,7 @@ from mock import MagicMock
 from kttk import template_manager
 from kttk.context import Context
 from kttk.path_cache_manager import PathNotRegistered
-from scripts.ktrack_command import execute_cmd
+from scripts.ktrack_command import execute_cmd, NoAssetType
 from tests.test_ktrack_api.test_ktrack_api import ktrack_instance
 
 ASSET_NAME = 'my_test_asset'
@@ -29,7 +29,15 @@ def project_init_args():
 def asset_init_args():
     arg_mock = MagicMock()
     arg_mock.init = ['init', 'asset', ASSET_NAME]
+    arg_mock.asset_type = 'Prop'
 
+    return arg_mock
+
+@pytest.fixture
+def asset_init_args_no_asset_type():
+    arg_mock = MagicMock()
+    arg_mock.init = ['init', 'asset', ASSET_NAME]
+    arg_mock.asset_type = None
     return arg_mock
 
 
@@ -64,7 +72,7 @@ def test_init_project(project_init_args, ktrack_instance):
             mock_init_entity.assert_called_with('project', projects_with_name[0]['id'])
 
 
-def test_init_asset(asset_init_args, ktrack_instance, ktrack_registered_project):
+def test_init_asset(asset_init_args, asset_init_args_no_asset_type, ktrack_instance, ktrack_registered_project):
     # mock get_ktrack
     project, project_context_path = ktrack_registered_project
 
@@ -74,6 +82,11 @@ def test_init_asset(asset_init_args, ktrack_instance, ktrack_registered_project)
                 mock_get_cwd.return_value = project_context_path
 
                 mock_get_ktrack.return_value = ktrack_instance
+
+                # should fail when no asset type is provided
+
+                with pytest.raises(NoAssetType):
+                    execute_cmd(asset_init_args_no_asset_type)
 
                 execute_cmd(asset_init_args)
 

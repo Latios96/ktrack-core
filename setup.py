@@ -11,4 +11,5 @@ setup(
     description='',
     install_requires=['pytest', 'mock', 'mongoengine', 'mongomock', 'blinker', 'pyyaml']
     # todo add interactive api script
+    # todo add ktrack command
 )
