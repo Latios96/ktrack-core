@@ -76,5 +76,26 @@ class PathEntry(NonProjectEntity):
     context = DictField()
 
 
-
 register_entity('path_entry', PathEntry)
+
+
+class Task(ProjectEntity):
+    type = 'task'
+    step = StringField()
+    name = StringField()
+    entity = DictField(required=True)
+
+
+register_entity('task', Task)
+
+
+class WorkFile(ProjectEntity):
+    type = 'workfile'
+    name = StringField()
+    entity = DictField()
+    path = StringField(required=True)
+    comment = StringField()
+    version_number = IntField()
+
+
+register_entity('workfile', WorkFile)

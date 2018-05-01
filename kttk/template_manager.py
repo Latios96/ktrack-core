@@ -13,10 +13,16 @@ FOLDER_TEMPLATES_YML = 'folder_templates.yml'
 
 KTRACK_TEMPLATE_DIR = 'KTRACK_TEMPLATE_DIR'
 
+
 class RouteNotExists(KeyError):
 
     def __init__(self, route_name):
-        super(RouteNotExists, self).__init__("Route with name {} does not exist! Please head over to {} and create your route!".format(route_name, os.path.join(get_template_dir(), ROUTES_YML)))
+        super(RouteNotExists, self).__init__(
+            "Route with name {} does not exist! Please head over to {} and create your route!".format(route_name,
+                                                                                                      os.path.join(
+                                                                                                          get_template_dir(),
+                                                                                                          ROUTES_YML)))
+
 
 def get_template_dir():
     # type: () -> str
@@ -133,8 +139,10 @@ def get_route_template(route_name):
         raise RouteNotExists(route_name)
     return route_template
 
+
 def get_all_route_templates():
     return copy.deepcopy(_data_routes)
+
 
 def format_template(template, context_dict={}):
     # type: (str, dict) -> str
@@ -165,7 +173,7 @@ def format_template(template, context_dict={}):
         'second': current_time.second,
         'user': getpass.getuser()
     }
-
+    # todo check if version is a token key and check if its in "v001" format
     default_context.update(context_dict)
 
     try:

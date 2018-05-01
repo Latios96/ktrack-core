@@ -14,7 +14,12 @@ asset:
                 - __file__ :
                              name: workspace.mel
                              content: '''
-                                      workspace -fr "image" "{asset_renderoutput_3D}"; linebreak workspace -fr "alembicCache" "{asset_alembic}";
+                                      workspace -ot "scene" "{asset_maya_scenes_location}";
+                                      workspace -ot "mayaAscii" "{asset_maya_scenes_location}";
+                                      workspace -ot "mayaBinary" "{asset_maya_scenes_location}";
+                                      workspace -rt "images" "{asset_renderoutput_3D}";
+                                      workspace -fr "alembicCache" "{asset_alembic}";
+                                      workspace -fr "movie" "asset_playblast_location";
                                       '''
             - "{code}_out":
                 - playblast

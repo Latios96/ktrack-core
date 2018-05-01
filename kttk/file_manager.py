@@ -1,12 +1,11 @@
+# todo refractor to abstract class, Should have ui and cli implementation?
 class FileManager(object):
     """
     Class responsable for opening, creation and advancing giles
     """
 
-    def __init__(self, context):
-        # type: (dict) -> None
-        self._context = context
-        self._current_workfile = None
+    def __init__(self, _current_workfile=None):
+        self._current_workfile = _current_workfile # context can be retrived from engine
         self._engine = None # todo get engine
 
     def open(self, work_file):
