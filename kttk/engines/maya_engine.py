@@ -8,6 +8,8 @@ KTTK_CONTEXT = 'kttk_context'
 
 
 class MayaEngine(AbstractEngine):
+    name = "Maya"  # todo read only
+    file_extension = ".mb"
 
     def current_file_path(self):  # todo add tests
         path = pm.sceneName()
@@ -23,6 +25,12 @@ class MayaEngine(AbstractEngine):
 
         # now open file in maya
         pm.openFile(file_to_open['path'], force=True)
+
+    def open_file_by_path(self, path):
+        super(MayaEngine, self).open_file_by_path()
+
+        # now open file in maya
+        pm.openFile(path, force=True)
 
     def has_unsaved_changes(self):
         return cmds.file(q=True, modified=True)
@@ -74,6 +82,8 @@ class MayaEngine(AbstractEngine):
 
         # store context in file
         self.serialize_context_to_file()
+
+        # todo set frame rate, frame range and resolution
 
     def serialize_context_to_file(self):
         pm.fileInfo[KTTK_CONTEXT] = self.context.serialize()

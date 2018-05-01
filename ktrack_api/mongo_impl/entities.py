@@ -96,6 +96,7 @@ class WorkFile(ProjectEntity):
     path = StringField(required=True)
     comment = StringField()
     version_number = IntField()
+    created_from = DictField(default=None)
 
 
 register_entity('workfile', WorkFile)

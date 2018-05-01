@@ -137,11 +137,20 @@ def test_format_template_default_tokens():
 
     assert formated_template.startswith("2019")
 
+
+def test_format_tempate_version_number():
+    template = "{version}"
+
+    formated_template = template_manager.format_template(template, {'version': 1})
+
+    assert formated_template == "v001"
+
+
 def test_route_template():
-    yml_data={'project_root': 'somewhere_over_the_rainbow'}
+    yml_data = {'project_root': 'somewhere_over_the_rainbow'}
 
     with patch.object(template_manager, '_data_routes', yml_data) as mock_yml_data:
-        project_root=template_manager.get_route_template('project_root')
+        project_root = template_manager.get_route_template('project_root')
 
         assert project_root is not None
 

@@ -4,7 +4,8 @@ from kttk.context import Context
 class AbstractEngine(object):
     context = None
 
-    name = "Abstract"  # todo read only
+    name = "Abstract"  # has to start with upper letter todo read only
+    file_extension = ".dat" # has to start with .
 
     @property
     def current_workfile(self):
@@ -44,6 +45,12 @@ class AbstractEngine(object):
         :param file_to_open: workfile to open
         """
         self.change_file(file_to_open)
+
+    def open_file_by_path(self, path):
+        """
+        Opens file path in DCC
+        """
+        pass
 
     def save(self):
         """

@@ -14,9 +14,9 @@ asset:
                 - __file__ :
                              name: workspace.mel
                              content: '''
-                                      workspace -ot "scene" "{asset_maya_scenes_location}";
-                                      workspace -ot "mayaAscii" "{asset_maya_scenes_location}";
-                                      workspace -ot "mayaBinary" "{asset_maya_scenes_location}";
+                                      workspace -ot "scene" "{maya_scenes_location}";
+                                      workspace -ot "mayaAscii" "{maya_scenes_location}";
+                                      workspace -ot "mayaBinary" "{maya_scenes_location}";
                                       workspace -rt "images" "{asset_renderoutput_3D}";
                                       workspace -fr "alembicCache" "{asset_alembic}";
                                       workspace -fr "movie" "asset_playblast_location";

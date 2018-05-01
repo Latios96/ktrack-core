@@ -171,8 +171,14 @@ def format_template(template, context_dict={}):
         'hour': current_time.hour,
         'minute': current_time.minute,
         'second': current_time.second,
-        'user': getpass.getuser()
+        'user': getpass.getuser(),
+        'config_root': os.path.join(os.path.dirname(__file__), 'config') # todo add test coverage for config_root default context
     }
+    version_number = context_dict.get('version')
+    if version_number:
+        if isinstance(version_number, int):
+            context_dict['version'] = "v{}".format("{}".format(version_number).zfill(3))
+
     # todo check if version is a token key and check if its in "v001" format
     default_context.update(context_dict)
 
