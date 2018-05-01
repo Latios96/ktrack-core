@@ -7,6 +7,7 @@ class CreateNewManager(object):
     """
 
     # todo add logging
+    # todo respect also user canceling
     def __init__(self, engine, view_callback_provider, context):
         self._engine = engine
         self._view_callback_provider = view_callback_provider

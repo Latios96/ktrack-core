@@ -1,3 +1,5 @@
+from mock import MagicMock
+
 from kttk.file_manager.file_creation_helper import FileCreationHelper
 
 
@@ -11,8 +13,20 @@ class OpenManager(object):
         self._helper = FileCreationHelper(self._engine)
         self.workfile = None
 
-    def do_it(self):
+    def do_it(self, workfile):
+        # check if scene is already open
+        if self._engine.current_file_path() == workfile['path']:
+            # ask for reload
+            if self._view_callback_provider.ask_for_reload():
+                self._open_scene()
+            else:
+                return
+
         # check for unsaved changes
-        # if yes and not force: throw UnsavedChangesException
-        # if no or force, open file
-        pass
+        if self._engine.has_unsaved_changes():
+            if self._view_callback_provider.ask_for_save():
+                self._engine.save()
+        self._open_scene()
+
+    def _open_scene(self):
+        print "open scene"
