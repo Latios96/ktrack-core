@@ -37,6 +37,22 @@ def test_no_scene_open(create_new_manager):
     assert create_new_manager._create_from_template.called
 
 
+def test_scene_open_use_template_cancel(create_new_manager):
+    """
+    Some scene without unsaved changes is open, use template is canceled.
+    """
+    create_new_manager._engine.current_file_path.return_value = 'some_path'
+    create_new_manager._engine.has_unsaved_changes.return_value = False
+
+    create_new_manager._view_callback_provider.ask_for_template_use.return_value = "cancel"
+
+    create_new_manager._create_from_template = MagicMock()
+
+    create_new_manager.do_it()
+
+    assert not create_new_manager._create_from_template.called
+
+
 def test_scene_open_use_template_no_changes(create_new_manager):
     """
     Some scene without unsaved changes is open, use template is choosen.
@@ -69,6 +85,24 @@ def test_scene_open_use_template_has_changes_save(create_new_manager):
 
     assert create_new_manager._create_from_template.called
     assert create_new_manager._engine.save.called
+
+
+def test_scene_open_use_template_has_changes_cancel(create_new_manager):
+    """
+    Some scene with unsaved changes is open, use template is choosen. Changes are not saved, cancel is choosen
+    """
+    create_new_manager._engine.current_file_path.return_value = 'some_path'
+    create_new_manager._engine.has_unsaved_changes.return_value = True
+
+    create_new_manager._view_callback_provider.ask_for_template_use.return_value = True
+    create_new_manager._view_callback_provider.ask_for_save.return_value = "cancel"
+
+    create_new_manager._create_from_template = MagicMock()
+
+    create_new_manager.do_it()
+
+    assert not create_new_manager._create_from_template.called
+    assert not create_new_manager._engine.save.called
 
 
 def test_scene_open_use_template_has_changes_no_save(create_new_manager):

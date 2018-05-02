@@ -46,9 +46,10 @@ class CreateNewManager(object):
         """
         use_template = self._view_callback_provider.ask_for_template_use()
 
-        if use_template:
+        # explicit True and False, because _view_callback_provider can also return "cancel"
+        if use_template == True:
             self._check_unsaved_changes()
-        else:
+        elif not use_template:
             self._save_current_as_new()
 
     def _check_unsaved_changes(self):
@@ -66,8 +67,12 @@ class CreateNewManager(object):
 
     def _ask_for_save(self):
         save = self._view_callback_provider.ask_for_save()
-        if save:
+
+        # explicit True and False, because _view_callback_provider can also return "cancel"
+        if save == True:
             self._engine.save()
+        elif save == "cancel":
+            return
 
         self._create_from_template()
 

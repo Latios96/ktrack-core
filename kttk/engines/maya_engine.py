@@ -9,9 +9,9 @@ KTTK_CONTEXT = 'kttk_context'
 
 class MayaEngine(AbstractEngine):
     name = "Maya"  # todo read only
-    file_extension = ".mb"
+    file_extension = ".mb" # todo read only
 
-    def current_file_path(self):  # todo add tests
+    def current_file_path(self):  # todo maybe its better to make this a property?
         path = pm.sceneName()
 
         if path == "":
