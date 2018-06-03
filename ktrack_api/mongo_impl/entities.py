@@ -84,6 +84,7 @@ class Task(ProjectEntity):
     step = StringField()
     name = StringField()
     entity = DictField(required=True)
+    assigned = DictField()  # todo assign mulitple people to one task
 
 
 register_entity('task', Task)
@@ -100,3 +101,10 @@ class WorkFile(ProjectEntity):
 
 
 register_entity('workfile', WorkFile)
+
+
+class User(NonProjectEntity):
+    name = StringField()
+
+
+register_entity('user', User)

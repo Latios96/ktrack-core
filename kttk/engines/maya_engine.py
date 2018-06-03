@@ -26,8 +26,8 @@ class MayaEngine(AbstractEngine):
         # now open file in maya
         pm.openFile(file_to_open['path'], force=True)
 
-    def open_file_by_path(self, path):
-        super(MayaEngine, self).open_file_by_path()
+    def open_file_by_path(self, path): # todo add to rejecnt files
+        super(MayaEngine, self).open_file_by_path(path)
 
         # now open file in maya
         pm.openFile(path, force=True)

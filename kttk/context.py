@@ -4,6 +4,7 @@ from kttk import template_manager
 
 
 class Context(object):
+    # todo create context_changed signal / callback
     # todo user should default to OS user
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
         self.project = project

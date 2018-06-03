@@ -102,6 +102,19 @@ def test_create_workfile_from_existing(file_creation_helper, populated_context, 
         assert new_workfile['created_from'] == previos_workfile
 
 
+def test_create_workfile_from_existing_with_comment(file_creation_helper, populated_context, ktrack_instance):
+    # mock database
+    with patch('ktrack_api.get_ktrack') as mock_get_ktrack:
+        mock_get_ktrack.return_value = ktrack_instance
+
+        previos_workfile = {'version_number': 0, 'id': 'some_id'}
+        new_workfile = file_creation_helper._create_workfile_from(populated_context, previos_workfile,
+                                                                  comment="MY COMMENT")
+
+        assert new_workfile['created_from'] == previos_workfile
+        assert new_workfile['comment'] == "MY COMMENT"
+
+
 def test_get_highest_workfile_existing_workfiles(file_creation_helper, ktrack_instance):
     # mock database
     with patch('ktrack_api.get_ktrack') as mock_get_ktrack:

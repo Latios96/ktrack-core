@@ -2,7 +2,7 @@
 from kttk.context import Context
 
 class AbstractEngine(object):
-    context = None
+    context = None # todo check if somewhere context reference is changed, make read only
 
     name = "Abstract"  # has to start with upper letter todo read only
     file_extension = ".dat" # has to start with .
@@ -23,7 +23,7 @@ class AbstractEngine(object):
         step = task['step']
         entity = task['entity']  # entity here means shot / asset...
 
-        self.context = Context(project=project, entity=entity, step=step, task=task, workfile=new_file)
+        self.context = Context(project=project, entity=entity, step=step, task=task, workfile=new_file) # todo dont change context reference!!! instead, copy values
 
     def current_file_path(self):
         """

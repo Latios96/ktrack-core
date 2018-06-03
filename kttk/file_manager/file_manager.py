@@ -1,3 +1,4 @@
+from kttk import engines
 from kttk.file_manager.create_new_manager import CreateNewManager
 
 
@@ -10,7 +11,7 @@ class FileManager(object):
     """
 
     def __init__(self, view_callback_mixin):
-        self._engine = None  # todo get engine
+        self._engine = engines.current_engine()
         self._view = view_callback_mixin
 
     def open(self, workfile):

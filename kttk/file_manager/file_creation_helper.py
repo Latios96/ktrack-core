@@ -74,7 +74,7 @@ class FileCreationHelper(object):
         """
         return self._create_workfile_from(context, {'version_number': 0})
 
-    def _create_workfile_from(self, context, workfile):
+    def _create_workfile_from(self, context, workfile, comment=""): #todo add comment option
         """
         Creates a new workfile based on given workfile. Will increase version number. Workfile and context have to match for project etc.
         :param context:
@@ -104,6 +104,7 @@ class FileCreationHelper(object):
         workfile_data['project'] = context.project
         workfile_data['entity'] = context.task
         workfile_data['version_number'] = version_number
+        workfile_data['comment'] = comment
 
         if len(workfile.keys()) > 1:
             workfile_data['created_from'] = workfile

@@ -9,7 +9,7 @@ setup(
     author='Jan Honsbrok',
     author_email='',
     description='',
-    install_requires=['pytest', 'mock', 'mongoengine', 'mongomock', 'blinker', 'pyyaml']
+    install_requires=['pytest', 'mock', 'mongoengine', 'mongomock', 'blinker', 'pyyaml', 'Qt.py', 'pytest-qt']
     # todo add interactive api script
     # todo add ktrack command
 )
