@@ -1,6 +1,9 @@
 import getpass
 
+
 import pytest
+from mongoengine import NotUniqueError
+
 from ktrack_api.Exceptions import EntityMissing, EntityNotFoundException
 from ktrack_api.mongo_impl.entities import Project
 from ktrack_api.mongo_impl.ktrack_mongo_impl import KtrackMongoImpl
@@ -41,9 +44,9 @@ def test_create(ktrack_instance):
 
     assert entity_in_db
 
+
 def test_create_additional_data(ktrack_instance):
     # type: (KtrackMongoImpl) -> None
-
 
     # test create existing entity
     entity = ktrack_instance.create('project', {'name': 'my_lovely_project'})
@@ -66,8 +69,6 @@ def test_create_additional_data(ktrack_instance):
     assert entity_in_db
 
 
-
-
 def test_update(ktrack_instance):
     # type: (KtrackMongoImpl) -> None
 
@@ -83,7 +84,7 @@ def test_update(ktrack_instance):
     # now test real update
     entity = ktrack_instance.create("project")
 
-    old_update_time=entity['updated_at']
+    old_update_time = entity['updated_at']
 
     thumbnail_dict = {'type': 'thumbnail', 'id': SOME_OBJECT_ID}
 
@@ -141,6 +142,7 @@ def test_find(ktrack_instance):
 
     assert len(entities) == 1
 
+
 def test_find_field_value(ktrack_instance):
     SHOT_CODE = 'nivtrnitvrtni'
     ktrack_instance.create("shot", {'project': {'type': 'project', 'id': SOME_OBJECT_ID}, 'code': SHOT_CODE})
@@ -170,7 +172,10 @@ def test_find_one(ktrack_instance):
     assert entity['id'] == _entity['id']
 
 
+def test_project_name_unique(ktrack_instance):
+    # type: (KtrackMongoImpl) -> None
 
+    ktrack_instance.create("project", {'name': 'my_awesome_project_name'})
 
-
-
+    with pytest.raises(NotUniqueError):
+        ktrack_instance.create("project", {'name': 'my_awesome_project_name'})

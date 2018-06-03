@@ -44,7 +44,7 @@ class ProjectEntity(NonProjectEntity):
 
 class Project(NonProjectEntity):
     type = 'project'
-    name = StringField()
+    name = StringField(unique=True)
 
 
 register_entity('project', Project)
