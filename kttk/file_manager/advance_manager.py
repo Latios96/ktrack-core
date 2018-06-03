@@ -11,7 +11,7 @@ class AdvanceManager(object):
         self._helper = FileCreationHelper(self._engine)
         self.workfile = None
 
-    def do_it(self, workfile): # todo add tests
+    def do_it(self): # todo add tests
         # ask for comment
         user_option, comment = self._view_callback_provider.ask_for_comment()
 

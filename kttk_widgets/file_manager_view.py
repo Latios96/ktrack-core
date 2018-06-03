@@ -9,6 +9,8 @@ from kttk_widgets.searchable_list_widget import SearchableListWidget
 
 from PySide import QtCore
 
+from kttk_widgets.view_callback_mixin.view_callback_qt_impl import ViewCallbackQtImplementation
+
 
 class DataRetriver(object):
 
@@ -22,12 +24,13 @@ class DataRetriver(object):
         return self._kt.find("workfile", [['entity', 'is', task]])
 
 
-class FileManagerWidget(QtWidgets.QWidget):  # todo implement viewcallbackmixin
+class FileManagerWidget(QtWidgets.QWidget):
 
     def __init__(self, parent=None):
         super(FileManagerWidget, self).__init__(parent)
         self._data_retriver = DataRetriver()
-        self._file_manager = FileManager(None)
+        self._view_callback_mixin = ViewCallbackQtImplementation()
+        self._file_manager = FileManager(self._view_callback_mixin)
         self._setup_ui()
         self._init()
 
@@ -88,12 +91,13 @@ class FileManagerWidget(QtWidgets.QWidget):  # todo implement viewcallbackmixin
         if len(selected_indexes) > 0:
             task = self.task_model.get_entity(selected_indexes[0].row())
             workfiles = self._data_retriver.get_workfiles(task)
+            print workfiles
             self.workfile_model.set_entities(workfiles)
 
             # enable button
             self._btn_create_new.setEnabled(True)
 
-            print self._context_from_task(task)
+            # self._context_from_task(task)
         else:
             self.workfile_model.set_entities([])
             self._btn_create_new.setEnabled(False)
@@ -102,13 +106,16 @@ class FileManagerWidget(QtWidgets.QWidget):  # todo implement viewcallbackmixin
         indexes = self._task_list_view.selected_indexes()
 
         if len(indexes) > 0:
+            # get selected task
             task = self.task_model.get_entity(indexes[0].row())
+
+            # create a context from task, so we can create a new workfile there
             context = self._context_from_task(task)
             self._file_manager.create(context)
 
+
     def _context_from_task(self, task):
         context = Context(project=task['project'], entity=task['entity'], task=task, step=task['step'])
-        print context
         return context
 
 

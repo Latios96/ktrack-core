@@ -1,3 +1,4 @@
+import getpass
 import pickle
 
 from kttk import template_manager
@@ -13,6 +14,9 @@ class Context(object):
         self.task = task
         self.workfile = workfile
         self.user = user
+
+        if not self.user:
+            self.user = getpass.getuser()
 
     def __repr__(self):
         # multi line repr

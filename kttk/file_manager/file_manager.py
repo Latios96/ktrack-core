@@ -1,5 +1,7 @@
 from kttk import engines
+from kttk.file_manager.advance_manager import AdvanceManager
 from kttk.file_manager.create_new_manager import CreateNewManager
+from kttk.file_manager.open_manager import OpenManager
 
 
 class FileManager(object):
@@ -22,8 +24,8 @@ class FileManager(object):
         :param force: if unsaved changes are present and force is True, no UnsavedChangesException is thrown and file is opened.
         :return:
         """
-
-        raise NotImplementedError()
+        open_manager = OpenManager(self._engine, self._view, None)
+        open_manager.do_it(workfile)
 
     def advance(self, comment=""):
         # type: (dict, str) -> dict
@@ -33,11 +35,8 @@ class FileManager(object):
         :param comment: Comment for advanced version
         :return: new created workfile
         """
-        # check if a file is opened, if not,
-        # create a new workfile based on current workfile: increase version number, name also changes
-        # saveAs with just created workfile
-        # update for context
-        raise NotImplementedError()
+        advance_manager = AdvanceManager(self._engine, self._view, None)
+        advance_manager.do_it()
 
     def create(self, context):
         """

@@ -27,11 +27,14 @@ class EntityListModel(QtCore.QAbstractListModel):
             return entity
 
     def set_entities(self, entities):
+        # first remove all rows
+        self.beginRemoveRows(QtCore.QModelIndex(), 0,len(self._entities)-1)
+        self._entities = []
+        self.endRemoveRows()
 
+        # now set new rows
         self.beginInsertRows(QtCore.QModelIndex(), 0,len(entities)-1)
-
         self._entities = entities
-
         self.endInsertRows()
         # todo also store entity in userData Role, so i think its possible to access it through a proxyModel
 
