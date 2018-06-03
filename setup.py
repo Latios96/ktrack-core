@@ -5,7 +5,6 @@ setup(
     version='',
     packages=find_packages(),
     package_data={
-        # If any package contains *.txt or *.rst files, include them:
         '': ['*.yml']
     },
     url='',

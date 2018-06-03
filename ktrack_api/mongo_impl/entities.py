@@ -28,7 +28,7 @@ class NonProjectEntity(Document):
     created_by = StringField(default=getpass.getuser())
     updated_at = DateTimeField()
     type = 'NonProjectEntity'
-    thumbnail = DictField()
+    thumbnail = DictField() # dict like {'path': thumbnail_path}
 
     meta = {'allow_inheritance': True,
             'collection': 'ktrack_api_entities'}

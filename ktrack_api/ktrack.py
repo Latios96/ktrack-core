@@ -1,3 +1,7 @@
+import os
+import shutil
+import uuid
+
 from ktrack_api.mongo_impl.ktrack_mongo_impl import KtrackMongoImpl
 
 
@@ -89,4 +93,12 @@ class Ktrack(object):
 
     def upload_thumbnail(self, entity_type, entity_id, path):
         # type: (str, str, str) -> None
-        raise NotImplementedError() # todo implement this, should copy thumbnail image to some location
+
+        # todo make thumbnail folder editable in config, so its not hardcoded, should resize thumbnail
+        thumbnail_path_template = "M:/ktrack_thumbnails/thumbnail_{entity_type}_{entity_id}_{uuid}{ext}"
+        thumbnail_path = thumbnail_path_template.format(entity_type=entity_type,
+                                                        entity_id=entity_id,
+                                                        uuid=uuid.uuid4(),
+                                                        ext=os.path.splitext(path)[1])
+        shutil.copy(path, thumbnail_path)
+        self.update(entity_type, entity_id, {'thumbnail': {'path': thumbnail_path}})

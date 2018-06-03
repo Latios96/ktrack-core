@@ -1,3 +1,6 @@
+import glob
+import os
+
 import mock
 import pytest
 from mock import MagicMock
@@ -58,3 +61,23 @@ def test_ktrack_interface_delete(ktrack_mocked_impl):
 
     kt.delete("", "")
     assert impl_mock.delete.called
+
+def test_upload_thumbnail(ktrack_mocked_impl):
+    kt, impl_mock = ktrack_mocked_impl
+    thumbnail_image = os.path.join(os.path.dirname(__file__), 'maya_thumbnail_test.png')
+
+    thumbnail_path = "M:/ktrack_thumbnails/thumbnail_project_108be19d-8833-4129-a8ee-462f352fae08_*.png"
+    files = glob.glob(thumbnail_path)
+    old_len = len(files)
+
+    kt.upload_thumbnail('project', '108be19d-8833-4129-a8ee-462f352fae08', thumbnail_image)
+
+    #check update was called
+    assert impl_mock.update.called
+
+    # check file was copied
+
+    files = glob.glob(thumbnail_path)
+    assert len(files) == old_len+1
+
+
