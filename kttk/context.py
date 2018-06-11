@@ -1,6 +1,7 @@
 import getpass
 import pickle
 
+import ktrack_api
 from kttk import template_manager
 
 
@@ -74,11 +75,16 @@ class Context(object):
         if self.project:
             avaible_tokens['project_name'] = self.project['name']
 
-        if self.entity:
-            avaible_tokens['code'] = self.entity['code']
+        # make sure to query all fields from ktrack, because we might only have id and type
 
-            if self.entity['type'] == 'asset':
-                avaible_tokens['asset_type'] = self.entity['asset_type']
+        kt = ktrack_api.get_ktrack()
+
+        if self.entity:
+            entity = kt.find_one(self.entity['type'], self.entity['id'])
+            avaible_tokens['code'] = entity['code']
+
+            if entity['type'] == 'asset':
+                avaible_tokens['asset_type'] = entity['asset_type']
 
         if self.step:
             avaible_tokens['step'] = self.step
@@ -87,13 +93,16 @@ class Context(object):
             avaible_tokens['task_name'] = self.task['name']
 
         if self.workfile:
-            avaible_tokens['work_file_name'] = self.workfile['name']
-            avaible_tokens['work_file_path'] = self.workfile['path']
-            avaible_tokens['work_file_comment'] = self.workfile['comment']
-            avaible_tokens['version'] = "v{}".format("{}".format(self.workfile['version_number']).zfill(3))
+            workfile = kt.find_one('workfile', self.workfile['id'])
+
+            avaible_tokens['work_file_name'] = workfile['name']
+            avaible_tokens['work_file_path'] = workfile['path']
+            avaible_tokens['work_file_comment'] = workfile['comment']
+            avaible_tokens['version'] = "v{}".format("{}".format(workfile['version_number']).zfill(3))
 
         if self.user:
-            avaible_tokens['user_name'] = self.user['name']
+            user = kt.find_one('user','5af33abd6e87ff056014967a') # todo dont hardcode user id
+            avaible_tokens['user_name'] = user['name']
 
         avaible_tokens['project_root'] = template_manager.get_route_template('project_root')
 

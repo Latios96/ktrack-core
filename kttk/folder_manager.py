@@ -65,17 +65,14 @@ def init_entity(entity_type, entity_id):
         with open(file_path, "w") as f:
             f.write(content)
 
+        # register the created paths in database
         path_cache_manager.register_path(path, context)
 
     # register entity folder
-    project_folder_template = template_manager.get_route_template(
+    entity_folder_template = template_manager.get_route_template(
         '{}_folder'.format(entity_type))
-    project_folder = template_manager.format_template(project_folder_template, context_dict)
+    entity_folder = template_manager.format_template(entity_folder_template, context_dict)
 
-    path_entry_data = {}
-    path_entry_data['path'] = project_folder
-    path_entry_data['context'] = context.as_dict()
-
-    kt.create('path_entry', path_entry_data)
+    path_cache_manager.register_path(entity_folder, context)
 
     # run setup hooks todo implement setup hooks

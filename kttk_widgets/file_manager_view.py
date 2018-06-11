@@ -7,7 +7,6 @@ from kttk_widgets.context_widget import ContextWidget
 from kttk_widgets.entity_list import EntityListModel
 from kttk_widgets.searchable_list_widget import SearchableListWidget
 
-from PySide import QtCore
 
 from kttk_widgets.view_callback_mixin.view_callback_qt_impl import ViewCallbackQtImplementation
 
@@ -18,17 +17,17 @@ class DataRetriver(object):
         self._kt = ktrack_api.get_ktrack()
 
     def get_my_tasks(self, user):
-        return self._kt.find("task", [['assigned', 'is', user]])
+        tasks = self._kt.find("task", [['assigned', 'is', user]])
+        return tasks
 
     def get_workfiles(self, task):
         return self._kt.find("workfile", [['entity', 'is', task]])
 
     def project_from_task(self, task):
-        return self._kt.find("project", [['id', 'is', task['project']['id']]])[0]
+        return self._kt.find("project", [['id', 'is', task['project']['id']]])[0] # todo use find_one
 
     def entity_from_task(self, task):
-        print "type", task['entity']['type']
-        return self._kt.find(str(task['entity']['type']), [['id', 'is', task['entity']['id']]])[0]
+        return self._kt.find(str(task['entity']['type']), [['id', 'is', task['entity']['id']]])[0] # todo use find_one
 
 
 class FileManagerWidget(QtWidgets.QWidget):
@@ -98,8 +97,9 @@ class FileManagerWidget(QtWidgets.QWidget):
     def task_selection_changed(self, selected_indexes):
         if len(selected_indexes) > 0:
             task = self.task_model.get_entity(selected_indexes[0].row())
+
             workfiles = self._data_retriver.get_workfiles(task)
-            print workfiles
+
             self.workfile_model.set_entities(workfiles)
 
             # enable button
@@ -126,7 +126,7 @@ class FileManagerWidget(QtWidgets.QWidget):
                           entity=self._data_retriver.entity_from_task(task),
                           task=task,
                           step=task['step'])
-        print context.project
+
         return context
 
 

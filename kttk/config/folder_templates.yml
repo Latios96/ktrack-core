@@ -13,13 +13,36 @@ asset:
             - "{code}_Maya":
                 - __file__ :
                              name: workspace.mel
-                             content: '''
-                                      workspace -ot "scene" "{maya_scenes_location}";
-                                      workspace -ot "mayaAscii" "{maya_scenes_location}";
-                                      workspace -ot "mayaBinary" "{maya_scenes_location}";
+                             content: '
+                                      workspace -ot "scene" "{dcc_scenes_location_asset_maya}";
+                                      workspace -ot "mayaAscii" "{dcc_scenes_location_asset_maya}";
+                                      workspace -ot "mayaBinary" "{dcc_scenes_location_asset_maya}";
                                       workspace -rt "images" "{asset_renderoutput_3D}";
                                       workspace -fr "alembicCache" "{asset_alembic}";
                                       workspace -fr "movie" "asset_playblast_location";
-                                      '''
+                                      '
             - "{code}_out":
                 - playblast
+shot:
+    folders:
+        "{project_root}/{project_name}/Shots/{code}":
+            - "{code}_Alembic"
+            - "{code}_Textures"
+            - "{code}_Input_2D"
+            - "{code}_Input_3D"
+            - "{code}_Maya":
+                - __file__ :
+                             name: workspace.mel
+                             content: '
+                                      workspace -ot "scene" "{dcc_scenes_location_shot_maya}";
+                                      workspace -ot "mayaAscii" "{dcc_scenes_location_shot_maya}";
+                                      workspace -ot "mayaBinary" "{dcc_scenes_location_shot_maya}";
+                                      workspace -rt "images" "{shot_renderoutput_3D}";
+                                      workspace -fr "alembicCache" "{shot_alembic}";
+                                      workspace -fr "movie" "shot_playblast_location";
+                                      '
+            - "{code}_out":
+                - playblast
+task:
+    folders:
+            "": ""

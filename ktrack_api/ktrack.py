@@ -33,7 +33,7 @@ class Ktrack(object):
         :param data: data for entity
         :return: newly created entity
         """
-        assert isinstance(entity_type, str)
+        assert (isinstance(entity_type, str) or isinstance(entity_type, unicode))
         assert isinstance(data, dict)
 
         return self._impl.create(entity_type, data)
@@ -47,7 +47,7 @@ class Ktrack(object):
         :param data: dict with data to update
         :return: None
         """
-        assert isinstance(entity_type, str)
+        assert (isinstance(entity_type, str) or isinstance(entity_type, unicode))
         assert isinstance(entity_id, str)
         assert isinstance(data, dict)
 
@@ -61,7 +61,7 @@ class Ktrack(object):
         :param filters: [[field_name, 'is', field_value]] or [] is currently supported, default is []
         :return: list of matching entities, empty list if no matching entity found
         """
-        assert isinstance(entity_type, str)
+        assert (isinstance(entity_type, str) or isinstance(entity_type, unicode))
         assert isinstance(filters, list)
 
         return self._impl.find(entity_type, filters)
@@ -74,8 +74,8 @@ class Ktrack(object):
         :param entity_id: id of entity
         :return: entity dict
         """
-        assert isinstance(entity_type, str)
-        assert isinstance(entity_id, str)
+        assert (isinstance(entity_type, str) or isinstance(entity_type, unicode))
+        assert (isinstance(entity_id, str) or isinstance(entity_id, unicode))
         return self._impl.find_one(entity_type, entity_id)
 
     def delete(self, entity_type, entity_id):
@@ -86,7 +86,7 @@ class Ktrack(object):
         :param entity_id: id of entity
         :return: None
         """
-        assert isinstance(entity_type, str)
+        assert (isinstance(entity_type, str) or isinstance(entity_type, unicode))
         assert isinstance(entity_id, str)
 
         return self._impl.delete(entity_type, entity_id)

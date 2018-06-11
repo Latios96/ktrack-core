@@ -94,7 +94,7 @@ class FileCreationHelper(object):
         workfile_file_name = template_manager.format_template(workfile_file_name_template, tokens)
 
         # get and format template for workfile folder
-        workfile_location_template = template_manager.get_route_template('dcc_scenes_location_{}'.format(context.entity['type']))
+        workfile_location_template = template_manager.get_route_template('dcc_scenes_location_{}_{}'.format(context.entity['type'], self._engine.name.lower()))
         workfile_location = template_manager.format_template(workfile_location_template, tokens)
 
         # combine location and name to workfile path
