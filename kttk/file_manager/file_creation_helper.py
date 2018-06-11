@@ -78,10 +78,10 @@ class FileCreationHelper(object):
         """
         Creates a new workfile based on given workfile. Will increase version number. Workfile and context have to match for project etc.
         :param context:
-        :return:
+        :return: the new workfile
         """
         # initial version number is 1
-        version_number = workfile['version_number'] + 1
+        version_number = workfile['version_number'] + 1 if workfile['version_number'] else 1
 
         # get template for file name
         workfile_file_name_template = template_manager.get_route_template('workfile_file_name')
@@ -94,7 +94,7 @@ class FileCreationHelper(object):
         workfile_file_name = template_manager.format_template(workfile_file_name_template, tokens)
 
         # get and format template for workfile folder
-        workfile_location_template = template_manager.get_route_template('dcc_scenes_location')
+        workfile_location_template = template_manager.get_route_template('dcc_scenes_location_{}'.format(context.entity['type']))
         workfile_location = template_manager.format_template(workfile_location_template, tokens)
 
         # combine location and name to workfile path

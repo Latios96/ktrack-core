@@ -1,6 +1,8 @@
 # TODO engine should be Singleton
 from kttk.context import Context
 
+# todo engine should be able to return qt main window for parenting
+
 class AbstractEngine(object):
     context = None # todo check if somewhere context reference is changed, make read only
 
@@ -19,7 +21,7 @@ class AbstractEngine(object):
         """
         # extract contest from the workfile
         project = new_file['project']
-        task = new_file['task']
+        task = new_file['entity']
         step = task['step']
         entity = task['entity']  # entity here means shot / asset...
 

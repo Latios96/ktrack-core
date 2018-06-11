@@ -23,6 +23,13 @@ class DataRetriver(object):
     def get_workfiles(self, task):
         return self._kt.find("workfile", [['entity', 'is', task]])
 
+    def project_from_task(self, task):
+        return self._kt.find("project", [['id', 'is', task['project']['id']]])[0]
+
+    def entity_from_task(self, task):
+        print "type", task['entity']['type']
+        return self._kt.find(str(task['entity']['type']), [['id', 'is', task['entity']['id']]])[0]
+
 
 class FileManagerWidget(QtWidgets.QWidget):
 
@@ -81,7 +88,8 @@ class FileManagerWidget(QtWidgets.QWidget):
         self.setLayout(self._layout)
 
     def _init(self):
-        tasks = self._data_retriver.get_my_tasks({'type': 'user', 'id': '5af33abd6e87ff056014967a'})
+        tasks = self._data_retriver.get_my_tasks(
+            {'type': 'user', 'id': '5af33abd6e87ff056014967a'})  # todo dont hardcode user id
         self.task_model.set_entities(tasks)
 
     def _update_w(self, selected_indexes):
@@ -113,11 +121,13 @@ class FileManagerWidget(QtWidgets.QWidget):
             context = self._context_from_task(task)
             self._file_manager.create(context)
 
-
     def _context_from_task(self, task):
-        context = Context(project=task['project'], entity=task['entity'], task=task, step=task['step'])
+        context = Context(project=self._data_retriver.project_from_task(task),
+                          entity=self._data_retriver.entity_from_task(task),
+                          task=task,
+                          step=task['step'])
+        print context.project
         return context
-
 
 
 if __name__ == '__main__':

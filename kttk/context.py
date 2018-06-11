@@ -6,17 +6,16 @@ from kttk import template_manager
 
 class Context(object):
     # todo create context_changed signal / callback
-    # todo user should default to OS user
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
         self.project = project
         self.entity = entity
-        self.step = step
+        self.step = step # step is a simple string
         self.task = task
         self.workfile = workfile
         self.user = user
 
         if not self.user:
-            self.user = getpass.getuser()
+            self.user = {'name': getpass.getuser()} # todo find user with name in database
 
     def __repr__(self):
         # multi line repr
@@ -82,7 +81,7 @@ class Context(object):
                 avaible_tokens['asset_type'] = self.entity['asset_type']
 
         if self.step:
-            avaible_tokens['step'] = self.step['name']
+            avaible_tokens['step'] = self.step
 
         if self.task:
             avaible_tokens['task_name'] = self.task['name']

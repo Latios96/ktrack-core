@@ -33,4 +33,5 @@ class OpenManager(object):
         self._open_scene()
 
     def _open_scene(self):
+        # todo call engine
         print "open scene"
