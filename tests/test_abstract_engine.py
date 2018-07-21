@@ -33,7 +33,7 @@ def test_save_as(abstract_engine):
 def test_change_file(abstract_engine):
     file_to_open = {}
     file_to_open['project'] = 'project'
-    file_to_open['task'] = {'step': 'anim', 'entity': 'shot'}
+    file_to_open['entity'] = {'step': 'anim', 'entity': 'shot'}
     abstract_engine.open_file(file_to_open)
 
     assert abstract_engine.context.project == 'project'

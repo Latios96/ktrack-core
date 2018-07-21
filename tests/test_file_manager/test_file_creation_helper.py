@@ -5,7 +5,7 @@ from mock import MagicMock, patch
 
 from kttk.context import Context
 from kttk.file_manager.file_creation_helper import FileCreationHelper, InvalidContextException
-from tests.test_ktrack_api.test_ktrack_api import ktrack_instance
+from tests.test_ktrack_api.test_ktrack_api import ktrack_instance, ktrack_instance_dropping
 
 
 @pytest.fixture
@@ -21,15 +21,20 @@ def mock_engine():
 def file_creation_helper(mock_engine):
     return FileCreationHelper(mock_engine)
 
-
 @pytest.fixture
-def populated_context():
-    return Context(project={'name': 'my_project'},
-                   entity={'type': 'asset', 'code': 'my_entity', 'asset_type': 'prop', 'id': '123'},
-                   step={'name': 'step'},
-                   task={'name': 'task'},
-                   workfile={'name': 'workfile', 'path': 'some_path', 'comment': 'awesome', 'version_number': 1},
-                   user={'name': 'user', 'id': '123'})
+def populated_context(ktrack_instance_dropping):
+    kt = ktrack_instance_dropping
+    project = kt.create("project", {'name': 'my_project'})
+    entity = kt.create("asset", {'code': 'my_entity', 'asset_type': 'prop', 'project': project})
+    task = kt.create("task", {'name': 'task', 'step': 'anim', 'entity': entity, 'project': project})
+    workfile = kt.create("workfile", {'entity': task, 'name': 'workfile', 'path': 'some_path', 'comment': 'awesome', 'version_number': 1, 'project': project})
+    user = kt.create("user", {'name': 'user'})
+    return Context(project=project,
+                   entity=entity,
+                   step='step',
+                   task=task,
+                   workfile=workfile,
+                   user=user)
 
 
 def test_context_is_valid(file_creation_helper):
