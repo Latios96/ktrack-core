@@ -1,10 +1,4 @@
-# init:
-# if project:
-#   checken ob es namen gibt, dann project in db erstellen und dann initialisieren
-# else:
-#   checken ob aktueller ordner einen context hat, wenn ja, dann context holen, wenn nicht, abbruch
-#   neuen entity erstellen und mit context richtig verlinken, dann initialisieren
-import argparse
+
 import os
 import pprint
 
@@ -14,87 +8,6 @@ from tabulate import tabulate
 import ktrack_api
 import kttk
 from kttk import logger
-
-
-# todo use python fire
-def execute_cmd(parsed_args):
-    if parsed_args.init:
-        logger.info("init cmd")
-        logger.info("Connecting to database..")
-        kt = ktrack_api.get_ktrack()
-        entity_type, entity_name = parsed_args.init[1:]
-
-        if entity_type == 'project':
-            logger.info("initialise project")
-            logger.info("create project in database..")
-
-            project_data = {}
-            project_data['name'] = entity_name
-
-            project = kt.create("project", project_data)
-
-            logger.info("Created project {} with id {}".format(project['name'], project['id']))
-
-            logger.info("initialise project on disk..")
-            kttk.init_entity('project', project['id'])
-
-            logger.info("{entity_type} with id {entity_id} initialised. Done.".format(entity_type='project',
-                                                                                      entity_id=project['id']))
-        else:
-            is_asset = entity_type == 'asset'
-            is_task = entity_type == 'task'
-
-            if is_asset:
-                if not parsed_args.asset_type:
-                    print "no asset type"
-                    return
-
-            if is_task:
-                if not parsed_args.task_step:
-                    raise Exception()
-
-            logger.info("initialise {}".format(entity_type))
-
-            current_location = os.getcwd()
-            # current_location = r"M:\Projekte\2018\my_awesome_project"
-            logger.info("Restore context from location {}..".format(current_location))
-
-            context = kttk.context_from_path(current_location)
-
-            logger.info("Context is {context}".format(context=context))
-
-            logger.info("create {} in database..".format(entity_type))
-
-            entity_data = {}
-            entity_data['code'] = entity_name
-            entity_data['project'] = context.project
-
-            if is_asset:
-                entity_data['asset_type'] = parsed_args.asset_type
-
-            if is_task:
-                entity_data['name'] = entity_name
-                entity_data['step'] = parsed_args.task_step
-                entity_data['entity'] = context.entity
-
-                entity_data['assigned'] = {'type': 'user',
-                                           'id': '5af33abd6e87ff056014967a'}  # todo dont hardcode user id
-
-            entity = kt.create(entity_type, entity_data)
-
-            logger.info("created {entity_type} {entity_name} with id {entity_id}.".format(entity_type=entity['type'],
-                                                                                          entity_name=entity.get(
-                                                                                              'code') if entity.get(
-                                                                                              'code') else entity[
-                                                                                              'name'],
-                                                                                          entity_id=entity['id']))
-
-            logger.info("initialise project on disk..")
-
-            kttk.init_entity(entity_type, entity['id'])
-
-            logger.info("{entity_type} with id {entity_id} initialised. Done.".format(entity_type=entity['type'],
-                                                                                      entity_id=entity['id']))
 
 
 def get_name_or_code(entity):
@@ -115,9 +28,101 @@ def get_name_or_code(entity):
         return entity['code']
 
 
-def create(entity_type, name, project=None):
-    # todo implement create
-    print "creation entity of type {} with name {} for project {}".format(entity_type, name, project)
+def create(entity_type, entity_name, project_id=None, asset_type=None, task_step=None):
+    """
+    Creates a new entity if given type in database and initialises it in disk kttk.init_entity
+    :param entity_type: type of the new entity to create
+    :param entity_name: name the new entity will get, will be used for code if entity has no name
+    :param project_id: optional, will link project entity to project with this id
+    :param asset_type: type a newly created asset will get
+    :param task_step: step a newly created task will get
+    :return: None
+    """
+    # init:
+    # if project:
+    #   checken ob es namen gibt, dann project in db erstellen und dann initialisieren
+    # else:
+    #   checken ob aktueller ordner einen context hat, wenn ja, dann context holen, wenn nicht, abbruch
+    #   neuen entity erstellen und mit context richtig verlinken, dann initialisieren
+    # todo add some more documentation
+    logger.info("creation entity of type {} with name {} for project {}".format(entity_type, entity_name, project_id))
+    logger.info("init cmd")
+    logger.info("Connecting to database..")
+    kt = ktrack_api.get_ktrack()
+
+    if entity_type == 'project':
+        logger.info("initialise project")
+        logger.info("create project in database..")
+
+        project_data = {}
+        project_data['name'] = entity_name
+
+        project = kt.create("project", project_data)
+
+        logger.info("Created project {} with id {}".format(project['name'], project['id']))
+
+        logger.info("initialise project on disk..")
+        kttk.init_entity('project', project['id'])
+
+        logger.info("{entity_type} with id {entity_id} initialised. Done.".format(entity_type='project',
+                                                                                  entity_id=project['id']))
+    else:
+        is_asset = entity_type == 'asset'
+        is_task = entity_type == 'task'
+
+        if is_asset:
+            if not asset_type:
+                print "no asset type"
+                # todo hints for asset_type
+                return
+
+        if is_task:
+            if not task_step:
+                # todo hints for task_step
+                raise Exception()
+
+        logger.info("initialise {}".format(entity_type))
+
+        current_location = os.getcwd()
+        # current_location = r"M:\Projekte\2018\my_awesome_project"
+        logger.info("Restore context from location {}..".format(current_location))
+
+        context = kttk.context_from_path(current_location)
+
+        logger.info("Context is {context}".format(context=context))
+
+        logger.info("create {} in database..".format(entity_type))
+
+        entity_data = {}
+        entity_data['code'] = entity_name
+        entity_data['project'] = context.project
+
+        if is_asset:
+            entity_data['asset_type'] = asset_type
+
+        if is_task:
+            entity_data['name'] = entity_name
+            entity_data['step'] = task_step
+            entity_data['entity'] = context.entity
+
+            entity_data['assigned'] = {'type': 'user',
+                                       'id': '5af33abd6e87ff056014967a'}  # todo dont hardcode user id
+
+        entity = kt.create(entity_type, entity_data)
+
+        logger.info("created {entity_type} {entity_name} with id {entity_id}.".format(entity_type=entity['type'],
+                                                                                      entity_name=entity.get(
+                                                                                          'code') if entity.get(
+                                                                                          'code') else entity[
+                                                                                          'name'],
+                                                                                      entity_id=entity['id']))
+
+        logger.info("initialise entity on disk..")
+
+        kttk.init_entity(entity_type, entity['id'])
+
+        logger.info("{entity_type} with id {entity_id} initialised. Done.".format(entity_type=entity['type'],
+                                                                                  entity_id=entity['id']))
 
 
 def find_one(entity_type, entity_id):
@@ -219,6 +224,7 @@ def update(entity_type, entity_id, data):
 
 
 def main():
+    # todo restore user, if no user found create information
     fire.Fire({
         'create': create,
         'find_one': find_one,
