@@ -200,8 +200,17 @@ def show(entity_type, link_entity_type=None, link_entity_id=None):
 
 
 def context(path=os.getcwd()):
-    # todo implement context
-    print "Context for {} is {}".format(path, "<Context>")
+    """
+    Prints the context for the fiven path
+    :param path: path to print context for, default is current directory
+    :return: None
+    """
+    # todo print context more pretty
+    try:  # todo remove expcetion handling if context_from_path does not throw expcetions anymore
+        context = kttk.path_cache_manager.context_from_path(path)
+        print context
+    except kttk.path_cache_manager.PathNotRegistered:
+        print "No Context registered for path {}".format(path)
 
 
 def update(entity_type, entity_id, data):
