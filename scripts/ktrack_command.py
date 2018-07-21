@@ -9,8 +9,7 @@ import ktrack_api
 import kttk
 from kttk import logger
 
-
-
+# todo writing tests for this makes sense?
 
 def get_name_or_code(entity):
     # type: (dict) -> str
@@ -28,9 +27,6 @@ def get_name_or_code(entity):
         return entity['name']
     elif has_code:
         return entity['code']
-
-
-
 
 
 def create(entity_type, entity_name, project_id=None, asset_type=None, task_step=None):
@@ -231,7 +227,6 @@ def update(entity_type, entity_id, data):
 def main():
     # restore user, will create a new one if there is nothing to restore. This way we ensure thing like create have a valid user
     user = kttk.restore_user()
-
 
     fire.Fire({
         'create': create,
