@@ -54,6 +54,7 @@ class Ktrack(object):
         return self._impl.update(entity_type, entity_id, data)
 
     def find(self, entity_type, filters=[]):
+        # type: (object, object) -> object
         # type: (str, list) -> list
         """
         Finds an entity of given type with matching filters

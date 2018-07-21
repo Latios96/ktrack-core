@@ -6,6 +6,7 @@
 #   neuen entity erstellen und mit context richtig verlinken, dann initialisieren
 import argparse
 import os
+import pprint
 
 import fire
 from tabulate import tabulate
@@ -13,22 +14,6 @@ from tabulate import tabulate
 import ktrack_api
 import kttk
 from kttk import logger
-
-parser = argparse.ArgumentParser()
-parser.add_argument('init',
-                    nargs=3)  # example usage: ktrack_command init project my_project, so init {entity_type} {entity_name}
-parser.add_argument('-asset-type',
-                    help="Specify the asset type for your new asset")  # example usage: ktrack_command init asset my_asset -asset-type Prop
-
-parser.add_argument('-task-step',
-                    help="Specify the task step for your new task")
-
-
-class NoAssetType(Exception):
-
-    def __init__(self):
-        super(NoAssetType, self).__init__(
-            "You have not provided an asset type!!! Please do so by -asset-type <your_asset_type>")
 
 
 # todo use python fire
@@ -61,7 +46,8 @@ def execute_cmd(parsed_args):
 
             if is_asset:
                 if not parsed_args.asset_type:
-                    raise NoAssetType()
+                    print "no asset type"
+                    return
 
             if is_task:
                 if not parsed_args.task_step:
@@ -111,14 +97,6 @@ def execute_cmd(parsed_args):
                                                                                       entity_id=entity['id']))
 
 
-def create(entity_type, name, project=None):
-    print "creation entity of type {} with name {} for project {}".format(entity_type, name, project)
-
-
-def find_one(entity_type, entity_id):
-    print "finding entity of type {} with id {}".format(entity_type, entity_id)
-
-
 def get_name_or_code(entity):
     # type: (dict) -> str
     """
@@ -135,6 +113,35 @@ def get_name_or_code(entity):
         return entity['name']
     elif has_code:
         return entity['code']
+
+
+def create(entity_type, name, project=None):
+    # todo implement create
+    print "creation entity of type {} with name {} for project {}".format(entity_type, name, project)
+
+
+def find_one(entity_type, entity_id):
+    """
+    Finds the given entity in the database and pretty prints it
+    :param entity_type: type of the entity
+    :param entity_id: id of the entity
+    :return: None
+    """
+    kt = ktrack_api.get_ktrack()
+
+    entity = None
+    try:
+        # todo remove exception handling when find_one does not throw an exception anymore
+        entity = kt.find_one(entity_type, entity_id)
+
+    except ktrack_api.Exceptions.EntityNotFoundException:
+        pass
+
+    if entity:
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(entity)
+    else:
+        print 'Entity of type "{}" and id "{}" not found..'.format(entity_type, entity_id)
 
 
 # todo add sort by option
@@ -193,6 +200,7 @@ def show(entity_type, link_entity_type=None, link_entity_id=None):
 
 
 def context(path=os.getcwd()):
+    # todo implement context
     print "Context for {} is {}".format(path, "<Context>")
 
 

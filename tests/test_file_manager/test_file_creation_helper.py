@@ -25,11 +25,11 @@ def file_creation_helper(mock_engine):
 @pytest.fixture
 def populated_context():
     return Context(project={'name': 'my_project'},
-                   entity={'type': 'asset', 'code': 'my_entity', 'asset_type': 'prop'},
+                   entity={'type': 'asset', 'code': 'my_entity', 'asset_type': 'prop', 'id': '123'},
                    step={'name': 'step'},
                    task={'name': 'task'},
                    workfile={'name': 'workfile', 'path': 'some_path', 'comment': 'awesome', 'version_number': 1},
-                   user={'name': 'user'})
+                   user={'name': 'user', 'id': '123'})
 
 
 def test_context_is_valid(file_creation_helper):
