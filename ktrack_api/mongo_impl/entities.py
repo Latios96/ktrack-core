@@ -106,6 +106,8 @@ register_entity('workfile', WorkFile)
 
 class User(NonProjectEntity):
     name = StringField()
+    first_name = StringField()
+    second_name = StringField()
 
 
 register_entity('user', User)

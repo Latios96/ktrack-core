@@ -1,4 +1,4 @@
-
+import json
 import os
 import pprint
 
@@ -8,6 +8,8 @@ from tabulate import tabulate
 import ktrack_api
 import kttk
 from kttk import logger
+
+
 
 
 def get_name_or_code(entity):
@@ -26,6 +28,9 @@ def get_name_or_code(entity):
         return entity['name']
     elif has_code:
         return entity['code']
+
+
+
 
 
 def create(entity_type, entity_name, project_id=None, asset_type=None, task_step=None):
@@ -106,7 +111,7 @@ def create(entity_type, entity_name, project_id=None, asset_type=None, task_step
             entity_data['entity'] = context.entity
 
             entity_data['assigned'] = {'type': 'user',
-                                       'id': '5af33abd6e87ff056014967a'}  # todo dont hardcode user id
+                                       'id': '5af33abd6e87ff056014967a'}  # todo dont hardcode user id, use kttk.restore_user()
 
         entity = kt.create(entity_type, entity_data)
 
@@ -224,7 +229,10 @@ def update(entity_type, entity_id, data):
 
 
 def main():
-    # todo restore user, if no user found create information
+    # restore user, will create a new one if there is nothing to restore. This way we ensure thing like create have a valid user
+    user = kttk.restore_user()
+
+
     fire.Fire({
         'create': create,
         'find_one': find_one,
