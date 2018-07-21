@@ -12,7 +12,7 @@ setup(
     author='Jan Honsbrok',
     author_email='',
     description='',
-    install_requires=['pytest', 'mock', 'mongoengine', 'mongomock', 'blinker', 'pyyaml', 'Qt.py', 'pytest-qt'],
+    install_requires=['pytest', 'mock', 'mongoengine', 'mongomock', 'blinker', 'pyyaml', 'Qt.py', 'pytest-qt', 'fire', 'tabulate'],
     entry_points={
         'console_scripts': [
             'interactive_api = scripts.interactive_api:main',
