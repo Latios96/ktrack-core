@@ -101,7 +101,7 @@ class Context(object):
             avaible_tokens['version'] = "v{}".format("{}".format(workfile['version_number']).zfill(3))
 
         if self.user:
-            user = kt.find_one('user','5af33abd6e87ff056014967a') # todo dont hardcode user id
+            user = kt.find_one('user', self.user['id'])
             avaible_tokens['user_name'] = user['name']
 
         avaible_tokens['project_root'] = template_manager.get_route_template('project_root')
