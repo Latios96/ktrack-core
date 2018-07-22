@@ -54,6 +54,7 @@ def init_entity(entity_type, entity_id):
 
         # register folders in database with context
         path_cache_manager.register_path(path, context)
+        # todo register also top level path for example for asset
 
     logger.info("Creating folders for {} {}..".format(entity_type,
                                                       entity.get('name') if entity.get('name') else entity.get('code')))

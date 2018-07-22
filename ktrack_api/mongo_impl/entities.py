@@ -10,7 +10,7 @@ def update_modified(sender, document):
 
 signals.pre_save.connect(update_modified)
 
-entities = {}
+entities = {}  # type: dict[str, NonProjectEntity]
 
 
 def register_entity(name, entity_cls):
@@ -106,6 +106,8 @@ register_entity('workfile', WorkFile)
 
 class User(NonProjectEntity):
     name = StringField()
+    first_name = StringField()
+    second_name = StringField()
 
 
 register_entity('user', User)

@@ -7,16 +7,6 @@ from kttk.file_manager.open_manager import OpenManager
 
 
 @pytest.fixture
-def populated_context():
-    return Context(project={'name': 'my_project'},
-                   entity={'type': 'asset', 'code': 'my_entity', 'asset_type': 'prop'},
-                   step={'name': 'step'},
-                   task={'name': 'task', 'id': 'some_id'},
-                   workfile={'name': 'workfile', 'path': 'some_path', 'comment': 'awesome', 'version_number': 1},
-                   user={'name': 'user'})
-
-
-@pytest.fixture
 def open_manager(populated_context):
     manager = OpenManager(MagicMock(), MagicMock(), populated_context)
     manager._helper = MagicMock()

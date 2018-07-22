@@ -19,3 +19,4 @@ logger.addHandler(ch)
 
 from .folder_manager import init_entity
 from .path_cache_manager import register_path, unregister_path, context_from_path
+from .user_manager import restore_user, create_user, save_user_information

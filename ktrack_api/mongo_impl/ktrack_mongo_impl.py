@@ -74,6 +74,7 @@ class KtrackMongoImpl(object):
         entity.save()
 
     def find(self, entity_type, filters):
+        # type: (object, object) -> object
         try:
             entity_cls = entities.entities[entity_type]
         except KeyError:
@@ -106,7 +107,7 @@ class KtrackMongoImpl(object):
         entity_candidates = entity_cls.objects(id = entity_id).all()
 
         if len(entity_candidates) == 0:
-            raise EntityNotFoundException(str(entity_id))
+            raise EntityNotFoundException(str(entity_id)) # todo would be better to return None instead of exception
 
         return _convert_to_dict(entity_candidates[0])
 

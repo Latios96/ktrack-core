@@ -71,7 +71,7 @@ def context_from_path(path):
         context = Context.from_dict(context_dicts[0]['context'])
         return context
     else:
-        raise PathNotRegistered(path)
+        raise PathNotRegistered(path) # todo better return None
 
 
 def __good_path(path):

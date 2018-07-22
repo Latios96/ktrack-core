@@ -5,7 +5,6 @@ import pytest
 from mock import patch
 
 from kttk import folder_manager, template_manager
-from tests.test_ktrack_api.test_ktrack_api import ktrack_instance
 
 
 @pytest.fixture

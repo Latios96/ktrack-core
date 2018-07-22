@@ -4,7 +4,6 @@ import pytest
 
 from kttk import path_cache_manager
 from kttk.context import Context
-from tests.test_ktrack_api.test_ktrack_api import ktrack_instance
 
 
 @pytest.fixture
