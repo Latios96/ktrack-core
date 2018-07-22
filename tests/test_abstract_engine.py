@@ -38,7 +38,7 @@ def test_change_file(abstract_engine, populated_context):
     assert abstract_engine.context == populated_context.copy_context(user=None)
 
 
-def test_current_workfile(abstract_engine):
-    abstract_engine.context = Context(workfile='some_file')
+def test_current_workfile(abstract_engine, workfile_dict):
+    abstract_engine.context = Context(workfile=workfile_dict)
 
-    assert abstract_engine.current_workfile == 'some_file'
+    assert abstract_engine.current_workfile == workfile_dict
