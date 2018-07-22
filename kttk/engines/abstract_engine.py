@@ -25,7 +25,8 @@ class AbstractEngine(object):
         step = task['step']
         entity = task['entity']  # entity here means shot / asset...
 
-        self.context = Context(project=project, entity=entity, step=step, task=task, workfile=new_file) # todo dont change context reference!!! instead, copy values
+        # todo what to do with user? usermanager.restore_user() can lead to issues in travis ci
+        self.context = Context(project=project, entity=entity, step=step, task=task, workfile=new_file, user=None) # todo add context changed signal / callback
 
     def current_file_path(self):
         """

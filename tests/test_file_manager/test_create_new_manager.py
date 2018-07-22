@@ -5,15 +5,6 @@ from kttk.context import Context
 from kttk.file_manager.create_new_manager import CreateNewManager
 
 
-@pytest.fixture
-def populated_context():
-    return Context(project={'name': 'my_project'},
-                   entity={'type': 'asset', 'code': 'my_entity', 'asset_type': 'prop'},
-                   step={'name': 'step'},
-                   task={'name': 'task', 'id': 'some_id'},
-                   workfile={'name': 'workfile', 'path': 'some_path', 'comment': 'awesome', 'version_number': 1},
-                   user={'name': 'user'})
-
 
 @pytest.fixture
 def create_new_manager(populated_context):
