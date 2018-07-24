@@ -23,7 +23,7 @@ def register_path(path, context):
 
     path_entry_data = {}
     path_entry_data['path'] = path
-    path_entry_data['context'] = context.as_dict()
+    path_entry_data['context'] = context.as_dict() # todo remove user information
 
     return kt.create("path_entry", path_entry_data)
 
