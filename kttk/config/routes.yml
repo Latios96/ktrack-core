@@ -1,7 +1,7 @@
 project_root : "M:/Projekte/{year}"
 project_folder: "{project_root}/{project_name}"
 template_file_dcc: "{config_root}/templates/template{dcc_extension}"
-asset_folder: "{project_root}/{project_name}/{asset_type}/{code}"
+asset_folder: "{project_root}/{project_name}/Assets/{asset_type}/{code}"
 asset_alembic: "{project_root}/{project_name}/Assets/{asset_type}/{code}/{code}_Alembic"
 asset_renderoutput_3D: "{project_root}/{project_name}/Assets/{asset_type}/{code}/{code}_Input_3D"
 asset_maya_workspace_location: "{project_root}/{project_name}/Assets/{asset_type}/{code}/{code}_Maya"
