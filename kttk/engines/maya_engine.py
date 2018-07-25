@@ -8,8 +8,20 @@ KTTK_CONTEXT = 'kttk_context'
 
 
 class MayaEngine(AbstractEngine):
+
+
     name = "Maya"  # todo read only
     file_extension = ".mb" # todo read only
+
+    @property
+    def qt_main_window(self):
+        # local imports because could break app otherwise when running in batch mode
+        from shiboken2 import wrapInstance
+        from maya import OpenMayaUI
+        from PySide2 import QtWidgets
+
+        ptr = OpenMayaUI.MQtUtil.mainWindow()
+        return wrapInstance(long(ptr), QtWidgets.QMainWindow)
 
     def current_file_path(self):  # todo maybe its better to make this a property?
         path = pm.sceneName()
@@ -69,16 +81,21 @@ class MayaEngine(AbstractEngine):
         maya_workspace_location = template_manager.format_template(maya_workspace_location_template, self.context.get_avaible_tokens())
 
         # now change to correct location, workspace.mel is is created together with all other folders
-        pm.workspace.chdir(maya_workspace_location)
+        pm.mel.eval(' setProject "{}"'.format(maya_workspace_location))
 
         # get and format image name template
         image_name_template = template_manager.get_route_template('render_image_file_name')
         image_name = template_manager.format_template(image_name_template, self.context.get_avaible_tokens())
 
         # set filename for vray
-        settings_node = self.__get_vray_settings()
-        if settings_node:
-            settings_node.fileNamePrefix.set(image_name)
+        vray_settings_node = self.__get_vray_settings()
+        if vray_settings_node:
+            vray_settings_node.fileNamePrefix.set(image_name)
+
+        # set standart fileNamePrefix
+        settings_node = self.__get_default_render_globals()
+        settings_node.imageFilePrefix.set(image_name)
+
 
         # store context in file
         self.serialize_context_to_file()
@@ -91,6 +108,12 @@ class MayaEngine(AbstractEngine):
     @staticmethod
     def __get_vray_settings():
         settings_nodes = pm.ls("vraySettings")
+        if len(settings_nodes) > 0:
+            return settings_nodes[0]
+
+    @staticmethod
+    def __get_default_render_globals():
+        settings_nodes = pm.ls("defaultRenderGlobals")
         if len(settings_nodes) > 0:
             return settings_nodes[0]
 

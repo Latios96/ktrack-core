@@ -1,13 +1,21 @@
 # TODO engine should be Singleton
 from kttk.context import Context
 
-# todo engine should be able to return qt main window for parenting
+
 
 class AbstractEngine(object):
-    context = None # todo check if somewhere context reference is changed, make read only
+    context = None  # todo check if somewhere context reference is changed, make read only
 
     name = "Abstract"  # has to start with upper letter todo read only
-    file_extension = ".dat" # has to start with .
+    file_extension = ".dat"  # has to start with .
+
+    @property
+    def qt_main_window(self):
+        """
+        Returns a reference to the qt main window of the application
+        :return:
+        """
+        raise NotImplementedError()
 
     @property
     def current_workfile(self):
@@ -26,7 +34,8 @@ class AbstractEngine(object):
         entity = task['entity']  # entity here means shot / asset...
 
         # todo what to do with user? usermanager.restore_user() can lead to issues in travis ci
-        self.context = Context(project=project, entity=entity, step=step, task=task, workfile=new_file, user=None) # todo add context changed signal / callback
+        self.context = Context(project=project, entity=entity, step=step, task=task, workfile=new_file,
+                               user=None)  # todo add context changed signal / callback
 
     def current_file_path(self):
         """
@@ -96,5 +105,7 @@ class AbstractEngine(object):
 
     def has_ui(self):
         pass
+
+
 
     # todo add method to add / create a widget and parent it to the main window
