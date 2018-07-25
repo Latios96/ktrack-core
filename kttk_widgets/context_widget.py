@@ -32,37 +32,47 @@ class ContextWidget(QtWidgets.QWidget):
 
     def _render_context(self):
         # todo create and use central entity nice formatter
-        # todo check if project is not None
         # project
-        project_name = self.context.project['name']
-        project_text = project_name if project_name else NONE_TEXT
-        self._project_name_label.setText(project_text)
+        if self.context.project:
+            project_name = self.context.project['name']
+            project_text = project_name if project_name else NONE_TEXT
+            self._project_name_label.setText(project_text)
+        else:
+            self._project_name_label.setText(NONE_TEXT)
 
-        # todo check if entity is not None
         # entity
-        entity_code = self.context.entity['code']
-        entity_type = self.context.entity['type']
-        entity_text = "{} <i>{}</i>".format(entity_code if entity_code else None, entity_type)
-        self._entity_name_label.setText(entity_text)
+        if self.context.entity:
+            entity_code = self.context.entity['code']
+            entity_type = self.context.entity['type']
+            entity_text = "{} <i>{}</i>".format(entity_code if entity_code else None, entity_type)
+            self._entity_name_label.setText(entity_text)
+        else:
+            self._entity_name_label.setText(NONE_TEXT)
 
-        # todo check if task is not None
         # task
-        task_name = self.context.task['name']
-        task_step = self.context.task['step']
-        entity_text = "{} <i>{}</i>".format(task_name if task_name else None, task_step if task_step else "None")
-        self._task_name_label.setText(entity_text)
+        if self.context.task:
+            task_name = self.context.task['name']
+            task_step = self.context.task['step']
+            entity_text = "{} <i>{}</i>".format(task_name if task_name else None, task_step if task_step else "None")
+            self._task_name_label.setText(entity_text)
+        else:
+            self._task_name_label.setText(NONE_TEXT)
 
-        # todo check if workfile is not None
         # workfile
-        workfile_name = self.context.workfile['name']
-        workfile_text = workfile_name if workfile_name else NONE_TEXT
-        self._workfile_name_label.setText(workfile_text)
+        if self.context.workfile:
+            workfile_name = self.context.workfile['name']
+            workfile_text = workfile_name if workfile_name else NONE_TEXT
+            self._workfile_name_label.setText(workfile_text)
+        else:
+            self._workfile_name_label.setText(NONE_TEXT)
 
-        # todo check if user is not None
         # user
-        user_name = self.context.user
-        user_text = user_name if user_name else NONE_TEXT
-        self._user_name_label.setText(user_text)
+        if self.context.user:
+            user_name = self.context.user['name']
+            user_text = user_name if user_name else NONE_TEXT
+            self._user_name_label.setText(user_text)
+        else:
+            self._user_name_label.setText(NONE_TEXT)
 
     def _setup_ui(self):
         self._layout = QtWidgets.QGridLayout(self)
