@@ -10,7 +10,7 @@ from kttk_widgets.searchable_list_widget import SearchableListWidget
 
 from kttk_widgets.view_callback_mixin.view_callback_qt_impl import ViewCallbackQtImplementation
 
-
+# todo add tests
 class DataRetriver(object):
 
     def __init__(self):
@@ -69,11 +69,11 @@ class FileManagerWidget(QtWidgets.QWidget):
         operations_layout.addWidget(self._btn_create_new)
 
         # advance
-        self._btn_advance = QtWidgets.QPushButton("advance")
+        self._btn_advance = QtWidgets.QPushButton("advance") # todo support advance
         operations_layout.addWidget(self._btn_advance)
 
         # open
-        self._btn_open = QtWidgets.QPushButton("open")
+        self._btn_open = QtWidgets.QPushButton("open") # todo support open
         operations_layout.addWidget(self._btn_open)
 
         self._context_view = ContextWidget(None, self)
@@ -104,8 +104,11 @@ class FileManagerWidget(QtWidgets.QWidget):
 
             # enable button
             self._btn_create_new.setEnabled(True)
+            
+            # context = self._context_from_task(task)
+            # self._context_view.context = context
 
-            # self._context_from_task(task)
+
         else:
             self.workfile_model.set_entities([])
             self._btn_create_new.setEnabled(False)
@@ -121,7 +124,11 @@ class FileManagerWidget(QtWidgets.QWidget):
             context = self._context_from_task(task)
             self._file_manager.create(context)
 
-    def _context_from_task(self, task):
+            # update published files
+            workfiles = self._data_retriver.get_workfiles(task)
+            self.workfile_model.set_entities(workfiles)
+
+    def _context_from_task(self, task): # todo add tests
         context = Context(project=self._data_retriver.project_from_task(task),
                           entity=self._data_retriver.entity_from_task(task),
                           task=task,
