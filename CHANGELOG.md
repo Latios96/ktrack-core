@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - renamed ktrack_command to ktrack
+### Fixed
+- Context step was not validated correctly, now only accepts not None not empty strings or unicode
 ### Added
 ## 0.0.1 - 2017-07-24
 ### Added
