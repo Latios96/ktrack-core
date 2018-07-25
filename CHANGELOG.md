@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
-
-
+### Changed
+- renamed ktrack_command to ktrack
+### Added
 ## 0.0.1 - 2017-07-24
 ### Added
 - This CHANGELOG file to hopefully serve as an evolving example
