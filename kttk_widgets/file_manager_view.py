@@ -49,6 +49,12 @@ class FileManagerWidget(QtWidgets.QWidget):
         self._init()
 
     def _setup_ui(self):
+        self.setObjectName("FileManagerWidget")
+        self.setWindowTitle("Ktrack File Manager")
+
+        # Window type
+        self.setWindowFlags(QtCore.Qt.Window)
+
         task_layout = QtWidgets.QVBoxLayout()
         task_layout.addWidget(QtWidgets.QLabel("<b>My Tasks"))
 
@@ -81,7 +87,9 @@ class FileManagerWidget(QtWidgets.QWidget):
         operations_layout.addWidget(self._btn_advance)
 
         # open
-        self._btn_open = QtWidgets.QPushButton("open") # todo support open
+        self._btn_open = QtWidgets.QPushButton("open")
+        self._btn_open.setEnabled(False)
+        self._btn_open.clicked.connect(lambda: self._open())
         operations_layout.addWidget(self._btn_open)
 
         self._context_view = ContextWidget(None, self)
@@ -122,10 +130,16 @@ class FileManagerWidget(QtWidgets.QWidget):
 
     def workfile_selection_changed(self, selected_indexes):
         if len(selected_indexes) > 0:
+            # enable open button
+            self._btn_open.setEnabled(True)
             workfile = self.workfile_model.get_entity(selected_indexes[0].row())
 
             context = self._context_from_workfile(workfile)
         else:
+            # disable open button
+            self._btn_open.setEnabled(False)
+
+            # remove workfile from context
             context = self._context_view.context.copy_context(workfile=None)
 
         self._context_view.context = context
@@ -144,6 +158,12 @@ class FileManagerWidget(QtWidgets.QWidget):
             # update published files
             workfiles = self._data_retriver.get_workfiles(task)
             self.workfile_model.set_entities(workfiles)
+
+    def _open(self):
+        workfile_index = self._workfile_list_view.selected_indexes()[0]
+        workfile = self.workfile_model.get_entity(workfile_index.row())
+
+        self._file_manager.open(workfile)
 
     def _context_from_task(self, task): # todo add tests
         context = Context(project=self._data_retriver.project_from_project_entity(task),
