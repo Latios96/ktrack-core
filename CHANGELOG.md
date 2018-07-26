@@ -8,8 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- FileManagerWidget can now open files
+- FileManagerWidget can now open and advance files
 - Maya Engine: get qt_main_window
+- we can run tests for Maya
 ### Changed
 - renamed ktrack_command to ktrack
 ### Fixed
