@@ -83,7 +83,8 @@ class FileManagerWidget(QtWidgets.QWidget):
         operations_layout.addWidget(self._btn_create_new)
 
         # advance
-        self._btn_advance = QtWidgets.QPushButton("advance") # todo support advance
+        self._btn_advance = QtWidgets.QPushButton("advance")
+        self._btn_advance.clicked.connect(lambda: self._advance())
         operations_layout.addWidget(self._btn_advance)
 
         # open
@@ -164,6 +165,14 @@ class FileManagerWidget(QtWidgets.QWidget):
         workfile = self.workfile_model.get_entity(workfile_index.row())
 
         self._file_manager.open(workfile)
+
+    def _advance(self):
+        self._file_manager.advance()
+
+        # update published files
+        task = self.task_model.get_entity(self._task_list_view.selected_indexes()[0].row())
+        workfiles = self._data_retriver.get_workfiles(task)
+        self.workfile_model.set_entities(workfiles)
 
     def _context_from_task(self, task): # todo add tests
         context = Context(project=self._data_retriver.project_from_project_entity(task),

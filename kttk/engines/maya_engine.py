@@ -86,6 +86,7 @@ class MayaEngine(AbstractEngine):
         # get and format image name template
         image_name_template = template_manager.get_route_template('render_image_file_name')
         image_name = template_manager.format_template(image_name_template, self.context.get_avaible_tokens())
+        # todo force exr format
 
         # set filename for vray
         vray_settings_node = self.__get_vray_settings()
