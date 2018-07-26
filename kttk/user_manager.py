@@ -43,7 +43,9 @@ def get_user_information_path():
     Returns the expanded path to ~/.ktrack_user.json
     :return: the expanded path to ~/.ktrack_user.json
     """
-    user_folder = os.path.expanduser("~")
+    username = os.environ["username"]
+    user_folder = "C:/Users/{username}".format(username=username)
+
     user_information = os.path.join(user_folder, KTRACK_USER_JSON)
     return user_information
 

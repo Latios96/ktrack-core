@@ -1,6 +1,7 @@
 import __builtin__
 import json
 import os
+import sys
 
 from mock import patch, MagicMock
 
@@ -10,8 +11,12 @@ from kttk import user_manager
 def test_get_user_information_path():
     path = user_manager.get_user_information_path()
 
-    assert path.startswith("C:")
-    assert "Users" in path
+    is_windows = sys.platform.startswith('win')
+    if is_windows:
+        assert path.startswith("C:")
+        assert "Users" in path
+    else:
+        print "running not on windows, so pass this tests"
 
 
 def test_generate_user_name():
