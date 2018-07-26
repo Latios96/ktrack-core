@@ -87,12 +87,12 @@ class MayaEngine(AbstractEngine):
         # get and format image name template
         image_name_template = template_manager.get_route_template('render_image_file_name')
         image_name = template_manager.format_template(image_name_template, self.context.get_avaible_tokens())
-        # todo force exr format
 
         # set filename for vray
         vray_settings_node = self.__get_vray_settings()
         if vray_settings_node:
             vray_settings_node.fileNamePrefix.set(image_name)
+            vray_settings_node.imageFormatStr.set("exr")
 
         # set standart fileNamePrefix
         settings_node = self.__get_default_render_globals()
@@ -102,7 +102,7 @@ class MayaEngine(AbstractEngine):
         # store context in file
         self.serialize_context_to_file()
 
-        # todo set frame rate, frame range and resolution
+        # todo set frame rate, frame range and resolution, store initialsized_once in file
 
     def serialize_context_to_file(self):
         pm.fileInfo[KTTK_CONTEXT] = self.context.serialize()
