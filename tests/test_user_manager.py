@@ -7,6 +7,13 @@ from mock import patch, MagicMock
 from kttk import user_manager
 
 
+def test_get_user_information_path():
+    path = user_manager.get_user_information_path()
+
+    assert path.startswith("C:")
+    assert "Users" in path
+
+
 def test_generate_user_name():
     # simple test with regular strings as we expect them
     username = user_manager.generate_user_name("sonny", "black")
@@ -124,7 +131,6 @@ def test_restore_user_existing(tmpdir):
 
             # mock call to save_user_information
             with patch("kttk.user_manager.save_user_information") as mock_save_user_information:
-
                 user = user_manager.restore_user()
 
                 # no new user should be created and returned dict should only have two keys

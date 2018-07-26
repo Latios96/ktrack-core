@@ -17,5 +17,5 @@ shot_playblast_location: "{project_root}/{project_name}/Shots/{code}/{code}_out/
 
 task_folder: ""
 
-render_image_file_name: "<Layer>/{version}/<Scene>"
+render_image_file_name: "<RenderLayer>/{version}/<Scene>"
 workfile_file_name: "{code}_{task_name}_{step}_{version}{dcc_extension}"

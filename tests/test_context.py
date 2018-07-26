@@ -1,6 +1,6 @@
 import pytest
 
-from kttk.context import Context, InvalidEntityException
+from kttk.context import Context, InvalidEntityException, InvalidStepException
 
 
 def test_reation(populated_context):
@@ -98,6 +98,37 @@ def test_validate_entity_dict():
     # test missing type and id
     with pytest.raises(InvalidEntityException):
         context._validate_entity_dict({})
+
+
+def test_valid_step():
+    # test _validate_step method
+    assert Context._validate_step(None)
+
+    with pytest.raises(InvalidStepException):
+        assert Context._validate_step("")
+        assert Context._validate_step(u"")
+
+    with pytest.raises(InvalidStepException):
+        assert Context._validate_step(dict)
+        assert Context._validate_step(list)
+
+    assert Context._validate_step("step")
+    assert Context._validate_step(u"step")
+
+    # test Context construction
+
+    context = Context(step=None)
+
+    with pytest.raises(InvalidStepException):
+        context = Context(step="")
+        context = Context(step=u"")
+
+    with pytest.raises(InvalidStepException):
+        context = Context(step=dict)
+        context = Context(step=list)
+
+    context = Context(step="step")
+    context = Context(step=u"step")
 
 
 def test_context_immutable():
@@ -235,6 +266,7 @@ def test_context__equal__(populated_context):
     # test not matching user
     assert not populated_context == populated_context.copy_context(user={'type': 'project', 'id': 123})
 
+
 def test_context__ne__(populated_context):
     context_left = Context()
     context_right = Context()
@@ -256,5 +288,3 @@ def test_context__ne__(populated_context):
 
     # test not matching user
     assert populated_context != populated_context.copy_context(user={'type': 'project', 'id': 123})
-
-

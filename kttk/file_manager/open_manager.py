@@ -30,8 +30,7 @@ class OpenManager(object):
                 self._engine.save()
             elif save == "cancel":
                 return
-        self._open_scene()
+        self._open_scene(workfile)
 
-    def _open_scene(self):
-        # todo call engine
-        print "open scene"
+    def _open_scene(self,workfile):
+        self._engine.open_file(workfile)

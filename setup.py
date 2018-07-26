@@ -16,7 +16,7 @@ setup(
     entry_points={
         'console_scripts': [
             'interactive_api = scripts.interactive_api:main',
-            'ktrack_command = scripts.ktrack_command:main',
+            'ktrack = scripts.ktrack_command:main',
         ]
     }
 )
