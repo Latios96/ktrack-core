@@ -27,12 +27,11 @@ class FileManager(object):
         open_manager = OpenManager(self._engine, self._view, None)
         open_manager.do_it(workfile)
 
-    def advance(self, comment=""):
+    def advance(self):
         # type: (dict, str) -> dict
         """
         Advances a workfile. New workfile will become current workfile, version number will be increased. Workfile will be updated for context.
         Will throw NoFileOpen Exception if no file is currently opened
-        :param comment: Comment for advanced version
         :return: new created workfile
         """
         advance_manager = AdvanceManager(self._engine, self._view, None)
@@ -46,6 +45,5 @@ class FileManager(object):
         :return: newly created workfile
         """
         create_new_manager = CreateNewManager(self._engine, self._view, context)
-        print context.project['name']
         create_new_manager.do_it()
         return create_new_manager.workfile

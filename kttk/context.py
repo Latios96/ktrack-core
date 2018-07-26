@@ -2,21 +2,113 @@ import getpass
 import pickle
 
 import ktrack_api
-from kttk import template_manager
+from kttk import template_manager, user_manager
 
 
+class InvalidEntityException(Exception):
+
+    def __init__(self, type_missing, id_missing):
+        super(InvalidEntityException, self).__init__(
+            "Entity is invalid: type missing: {}, id missing: {}".format(type_missing, id_missing))
+
+
+class InvalidStepException(Exception):
+
+    def __init__(self, step):
+        super(InvalidStepException, self).__init__("Invalid step, {} is not a non-empty string, its {}!".format(step, type(step)))
+
+
+# todo make them contain only type and id
+# todo step should be taken from task if task is provided
 class Context(object):
+    # todo add docs
+    """
+    Context is immutable!!!
+    """
+
     # todo create context_changed signal / callback
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
-        self.project = project
-        self.entity = entity
-        self.step = step # step is a simple string
-        self.task = task
-        self.workfile = workfile
-        self.user = user
+        # project
+        self._validate_entity_dict(project)
+        self._project = project
 
-        if not self.user:
-            self.user = {'name': getpass.getuser()} # todo find user with name in database
+        # entity
+        self._validate_entity_dict(entity)
+        self._entity = entity
+
+        # step
+        self._validate_step(step)
+        self._step = step
+
+        # task
+        self._validate_entity_dict(task)
+        self._task = task
+
+        # workfile
+        self._validate_entity_dict(workfile)
+        self._workfile = workfile
+
+        # user
+        self._validate_entity_dict(user)
+        self._user = user
+
+    @property
+    def project(self):
+        return self._project
+
+    @property
+    def entity(self):
+        return self._entity
+
+    @property
+    def step(self):
+        return self._step
+
+    @property
+    def task(self):
+        return self._task
+
+    @property
+    def workfile(self):
+        return self._workfile
+
+    @property
+    def user(self):
+        return self._user
+
+    @staticmethod
+    def _validate_step(step):
+        """
+        Validates the given step. A step can be null or string or unicode, but not empty string
+        :param step: step to validate
+        :return: True if step is valid, raises InvalidStepException if not
+        """
+        if step is not None:
+            if isinstance(step, str) or isinstance(step, unicode):
+                if len(step) >0:
+                    return True
+            raise InvalidStepException(step)
+        else:
+            return True
+
+    @staticmethod
+    def _validate_entity_dict(entity_dict):
+        # type: (dict) -> bool
+        """
+        Validates the given entity dict. Should have at least a type and a id and they are not None
+        :param dic:
+        :return: true if entity has type and id, otherwise invalid entity Exception is thrown
+        """
+        if entity_dict is not None:
+            has_type = entity_dict.get("type")
+            has_id = entity_dict.get("id")
+
+            if has_type and has_id:
+                return True
+            else:
+                raise InvalidEntityException(not has_type, not has_id)
+        else:
+            return True
 
     def __repr__(self):
         # multi line repr
@@ -28,6 +120,68 @@ class Context(object):
         msg.append("  User: %s" % str(self.user))
 
         return "<Sgtk Context: \n%s>" % ("\n".join(msg))
+
+    def _entity_dicts_equal(self, left, right):
+        """
+        Tests if two entity dicts are equal. They are equal if both type and id match or both are None
+        :param left:
+        :param right:
+        :return:
+        """
+        if left == right == None:
+            return True
+        if left == None or right == None:
+            return False
+        return left["type"] == right["type"] and left["id"] == right["id"]
+
+    def __eq__(self, other):
+        """
+        Tests if two context are equal. Contexts are considered equal, if both type and id attributes of containing entities
+        match and step string matches
+        :param other:
+        :return:
+        """
+
+        if not isinstance(other, Context):
+            return NotImplemented
+
+        # test project
+        if not self._entity_dicts_equal(self.project, other.project):
+            return False
+
+        # test entity
+        if not self._entity_dicts_equal(self.entity, other.entity):
+            return False
+
+        # test step
+        if not self.step == other.step:
+            return False
+
+        # test task
+        if not self._entity_dicts_equal(self.task, other.task):
+            return False
+
+        # test workfile
+        if not self._entity_dicts_equal(self.workfile, other.workfile):
+            return False
+
+        # test user
+        if not self._entity_dicts_equal(self.user, other.user):
+            return False
+
+        return True
+
+    def __ne__(self, other):
+        """
+        Test if this Context instance is not equal to the other Context instance
+
+        :param other:   The other Context instance to compare with
+        :returns:       True if self != other, False otherwise
+        """
+        is_equal = self.__eq__(other)
+        if is_equal is NotImplemented:
+            return NotImplemented
+        return not is_equal
 
     def as_dict(self):
         """
@@ -101,9 +255,48 @@ class Context(object):
             avaible_tokens['version'] = "v{}".format("{}".format(workfile['version_number']).zfill(3))
 
         if self.user:
-            user = kt.find_one('user','5af33abd6e87ff056014967a') # todo dont hardcode user id
+            user = kt.find_one('user', self.user['id'])
             avaible_tokens['user_name'] = user['name']
 
         avaible_tokens['project_root'] = template_manager.get_route_template('project_root')
 
         return avaible_tokens
+
+    def copy_context(self, project=0, entity=0, step=0, task=0, workfile=0, user=0):
+        """
+        Copy util. Returns a new context instance, will contain values from this context if not overriden by keyword args
+        Note: We use 0 here instead of None, so we can override with None
+        :param self:
+        :param project:
+        :param entity:
+        :param step:
+        :param task:
+        :param workfile:
+        :param user:
+        :return:
+        """
+        _project = self.project
+        if project != 0:
+            _project = project
+
+        _entity = self.entity
+        if entity != 0:
+            _entity = entity
+
+        _step = self.step
+        if step != 0:
+            _step = step
+
+        _task = self.task
+        if task != 0:
+            _task = task
+
+        _workfile = self.workfile
+        if workfile != 0:
+            _workfile = workfile
+
+        _user = self.user
+        if user != 0:
+            _user = user
+
+        return Context(_project, _entity, _step, _task, _workfile, _user)

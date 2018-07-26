@@ -1,21 +1,13 @@
 import getpass
-
-
 import pytest
-from mongoengine import NotUniqueError
 
 from ktrack_api.Exceptions import EntityMissing, EntityNotFoundException
-from ktrack_api.mongo_impl.entities import Project
+from ktrack_api.mongo_impl.entities import Project, entities
 from ktrack_api.mongo_impl.ktrack_mongo_impl import KtrackMongoImpl
 
 SOME_OTHER_OBJECT_ID = "507f1f77bcf86cd799439011"
 
 SOME_OBJECT_ID = "507f1f77bcf86cd799439012"
-
-
-@pytest.fixture
-def ktrack_instance():
-    return KtrackMongoImpl('mongomock://localhost')
 
 
 def test_create(ktrack_instance):

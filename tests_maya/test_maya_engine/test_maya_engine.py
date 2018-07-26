@@ -14,17 +14,6 @@ import os
 from kttk.engines.maya_engine import MayaEngine
 
 
-# todo collect all test fixtures in a package for better reuse
-@pytest.fixture
-def populated_context():
-    return Context(project={'name': 'my_project'},
-                   entity={'type': 'asset', 'code': 'my_entity', 'asset_type': 'prop'},
-                   step={'name': 'step'},
-                   task={'name': 'task'},
-                   workfile={'name': 'workfile', 'path': 'some_path', 'comment': 'awesome', 'version_number': 1},
-                   user={'name': 'user'})
-
-
 @pytest.fixture
 def empty_file():
     pm.newFile(force=True)
@@ -53,13 +42,13 @@ def test_current_file_path_saved_scene(maya_engine, saved_file):
     assert os.path.normpath(maya_engine.current_file_path()) == os.path.normpath(saved_file)
 
 
-def test_open_file(maya_engine, saved_file):
+def test_open_file(maya_engine, populated_context, saved_file):
     pm.newFile(force=True)
 
-    file_to_open = {}
-    file_to_open['project'] = 'project'
-    file_to_open['task'] = {'step': 'anim', 'entity': 'shot'}
-    file_to_open['path'] = saved_file
+    # make sure workfile has a valid maya scene path
+    populated_context.workfile['path'] = saved_file
+
+    file_to_open = populated_context.workfile
 
     maya_engine.open_file(file_to_open)
 
@@ -83,7 +72,7 @@ def test_save(maya_engine, saved_file):
     assert cmds.file(q=True, modified=True) == False
 
 
-def test_save_as(maya_engine, saved_file):
+def test_save_as(maya_engine, saved_file, populated_context):
     pm.polyCube()
 
     assert cmds.file(q=True, modified=True) == True
@@ -91,9 +80,7 @@ def test_save_as(maya_engine, saved_file):
     name, ext = os.path.splitext(saved_file)
     path = name + "_test" + ext
 
-    file_to_save_to = {}
-    file_to_save_to['project'] = 'project'
-    file_to_save_to['task'] = {'step': 'anim', 'entity': 'shot'}
+    file_to_save_to = populated_context.workfile
     file_to_save_to['path'] = path
 
     maya_engine.save_as(file_to_save_to)
@@ -119,6 +106,6 @@ def test_update_file_for_context(maya_engine, saved_file, populated_context, tmp
 
         maya_engine.update_file_for_context()
 
-        assert os.path.normpath(pm.workspace.getcwd()) == os.path.normpath(expected_project_path)
+        assert os.path.normpath(pm.workspace( q=True, rd=True)) == os.path.normpath(expected_project_path)
 
         assert mock_get_vray.fileNamePrefix.set.assert_called
