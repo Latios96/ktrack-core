@@ -79,11 +79,12 @@ class ViewCallbackQtImplementation(ViewCallbackMixin):
         :return: (useroption, comment) where useroption is True if user pressed ok, False if user canceled.
         Comment should be None if user canceled, else user comment as string (utf-8)
         """
-        raise NotImplementedError()
+        comment, useroption = QtWidgets.QInputDialog.getText(None, "Comment", "Enter comment for new file")
+        return useroption, comment.encode('utf_8','ignore')
 
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
     v = ViewCallbackQtImplementation()
-    print v.ask_for_template_use()
+    print v.ask_for_comment()
     app.exec_()

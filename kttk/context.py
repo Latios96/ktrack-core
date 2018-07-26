@@ -15,7 +15,7 @@ class InvalidEntityException(Exception):
 class InvalidStepException(Exception):
 
     def __init__(self, step):
-        super(InvalidStepException, self).__init__("Invalid step, {} is not a string!".format(step))
+        super(InvalidStepException, self).__init__("Invalid step, {} is not a non-empty string, its {}!".format(step, type(step)))
 
 
 # todo make them contain only type and id
@@ -37,8 +37,7 @@ class Context(object):
         self._entity = entity
 
         # step
-        if step is not None and not isinstance(step, str):
-            raise Exception("Step is not a string!")
+        self._validate_step(step)
         self._step = step
 
         # task
@@ -77,7 +76,23 @@ class Context(object):
     def user(self):
         return self._user
 
-    def _validate_entity_dict(self, entity_dict):
+    @staticmethod
+    def _validate_step(step):
+        """
+        Validates the given step. A step can be null or string or unicode, but not empty string
+        :param step: step to validate
+        :return: True if step is valid, raises InvalidStepException if not
+        """
+        if step is not None:
+            if isinstance(step, str) or isinstance(step, unicode):
+                if len(step) >0:
+                    return True
+            raise InvalidStepException(step)
+        else:
+            return True
+
+    @staticmethod
+    def _validate_entity_dict(entity_dict):
         # type: (dict) -> bool
         """
         Validates the given entity dict. Should have at least a type and a id and they are not None
