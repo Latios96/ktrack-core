@@ -46,6 +46,5 @@ class FileManager(object):
         :return: newly created workfile
         """
         create_new_manager = CreateNewManager(self._engine, self._view, context)
-        print context.project['name']
         create_new_manager.do_it()
         return create_new_manager.workfile

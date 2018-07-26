@@ -30,20 +30,15 @@ def test_save_as(abstract_engine):
     assert change_file_mock.assert_called
 
 
-def test_change_file(abstract_engine):
-    file_to_open = {}
-    file_to_open['project'] = 'project'
-    file_to_open['entity'] = {'step': 'anim', 'entity': 'shot'}
+def test_change_file(abstract_engine, populated_context):
+    file_to_open = populated_context.workfile
     abstract_engine.open_file(file_to_open)
 
-    assert abstract_engine.context.project == 'project'
-    assert abstract_engine.context.entity == 'shot'
-    assert abstract_engine.context.step == 'anim'
-    assert abstract_engine.context.task == {'step': 'anim', 'entity': 'shot'}
-    assert abstract_engine.context.workfile == file_to_open
+    # todo we need to ignore user here, because we have no good way at the moment, because we cant simply use restore_user
+    assert abstract_engine.context == populated_context.copy_context(user=None)
 
 
-def test_current_workfile(abstract_engine):
-    abstract_engine.context = Context(workfile='some_file')
+def test_current_workfile(abstract_engine, workfile_dict):
+    abstract_engine.context = Context(workfile=workfile_dict)
 
-    assert abstract_engine.current_workfile == 'some_file'
+    assert abstract_engine.current_workfile == workfile_dict

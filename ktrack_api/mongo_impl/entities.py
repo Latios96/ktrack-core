@@ -10,7 +10,7 @@ def update_modified(sender, document):
 
 signals.pre_save.connect(update_modified)
 
-entities = {}
+entities = {}  # type: dict[str, NonProjectEntity]
 
 
 def register_entity(name, entity_cls):
