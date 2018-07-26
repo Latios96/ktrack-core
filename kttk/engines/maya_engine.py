@@ -79,6 +79,7 @@ class MayaEngine(AbstractEngine):
 
         # format the workspace location template
         maya_workspace_location = template_manager.format_template(maya_workspace_location_template, self.context.get_avaible_tokens())
+        maya_workspace_location = maya_workspace_location.replace("\\", "/")
 
         # now change to correct location, workspace.mel is is created together with all other folders
         pm.mel.eval(' setProject "{}"'.format(maya_workspace_location))
