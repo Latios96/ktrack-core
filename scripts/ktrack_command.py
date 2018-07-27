@@ -9,6 +9,7 @@ import ktrack_api
 import kttk
 from kttk import logger
 
+
 # todo writing tests for this makes sense?
 
 def get_name_or_code(entity):
@@ -224,6 +225,31 @@ def update(entity_type, entity_id, data):
     print "updating entity of type {} with id {} with data {}".format(entity_type, entity_id, data)
 
 
+def task_preset():
+    # get context
+    path = os.getcwd()
+    try:  # todo remove expcetion handling if context_from_path does not throw expcetions anymore
+        context = kttk.path_cache_manager.context_from_path(path)
+
+        # make sure context has project and entity
+        assert context.project and context.entity
+
+        # get task presets for entity
+        presets = kttk.get_task_presets(context.entity['type'])
+
+        # now create presets
+        kt = ktrack_api.get_ktrack()
+
+        for preset in presets:
+            logger.info("Creating task {} of step {}".format(preset['name'], preset['type']))
+            task = kt.create('task', {'project': context.project, 'entity': context.entity, 'name': preset['name'],
+                                      'step': preset['step']})
+            kttk.init_entity(task['type'], task['id'])
+
+    except kttk.path_cache_manager.PathNotRegistered:
+        print "No Context registered for path {}".format(path)
+
+
 def main():
     # restore user, will create a new one if there is nothing to restore. This way we ensure thing like create have a valid user
     user = kttk.restore_user()
@@ -232,7 +258,8 @@ def main():
         'create': create,
         'find_one': find_one,
         'show': show,
-        'context': context
+        'context': context,
+        'task_preset': task_preset
         # TODO add update
     })
 
