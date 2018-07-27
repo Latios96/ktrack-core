@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Added
+- Added task_presets_manager: Can now get task presets for given entity type from config
+- Ktrack Command: added support for task preset
 ## 0.1.0 - 2017-07-26
 ### Added
 - Tests: we can run tests for Maya

@@ -1,0 +1,12 @@
+shot:
+  - step: anim
+    name: anim
+  - step: lsr
+    name: lsr
+  - step: comp
+    name: comp
+asset:
+  - step: modelling
+    name: modelling
+  - step: lsr
+    name: lookdev
