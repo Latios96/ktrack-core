@@ -15,6 +15,7 @@ class MayaEngine(AbstractEngine):
 
     @property
     def qt_main_window(self):
+        # type: () -> QtWidgets.QMainWindow
         # local imports because could break app otherwise when running in batch mode
         from shiboken2 import wrapInstance
         from maya import OpenMayaUI
@@ -24,6 +25,7 @@ class MayaEngine(AbstractEngine):
         return wrapInstance(long(ptr), QtWidgets.QMainWindow)
 
     def current_file_path(self):  # todo maybe its better to make this a property?
+        # type: () -> str
         path = pm.sceneName()
 
         if path == "":
@@ -32,25 +34,30 @@ class MayaEngine(AbstractEngine):
         return str(path)
 
     def open_file(self, file_to_open):
+        # type: (dict) -> None
         # call super method to store file_to_open in context
         super(MayaEngine, self).open_file(file_to_open)
 
         # now open file in maya
         pm.openFile(file_to_open['path'], force=True)
 
-    def open_file_by_path(self, path): # todo add to recent files
+    def open_file_by_path(self, path):
+        # type: (str) -> None
+        # todo add to recent files
         super(MayaEngine, self).open_file_by_path(path)
 
         # now open file in maya
         pm.openFile(path, force=True)
 
     def has_unsaved_changes(self):
+        # type: () -> bool
         return cmds.file(q=True, modified=True)
 
     def save(self):
         pm.saveFile()
     
     def save_as(self, file_to_save_to):
+        # type: (workfile) -> None
         # call super for context change
         super(MayaEngine, self).save_as(file_to_save_to)
 

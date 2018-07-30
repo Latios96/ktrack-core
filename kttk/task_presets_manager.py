@@ -68,6 +68,7 @@ validate_presets(_data_presets)
 
 
 def get_task_presets(entity_type):
+    # type: (str) -> list[dict]
     """
     Returns list of all task templates for given type. Task preset example, everything will be lowercase
     {

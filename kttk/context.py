@@ -54,30 +54,37 @@ class Context(object):
 
     @property
     def project(self):
+        # type: () -> dict
         return self._project
 
     @property
     def entity(self):
+        # type: () -> dict
         return self._entity
 
     @property
     def step(self):
+        # type: () -> str
         return self._step
 
     @property
     def task(self):
+        # type: () -> dict
         return self._task
 
     @property
     def workfile(self):
+        # type: () -> dict
         return self._workfile
 
     @property
     def user(self):
+        # type: () -> dict
         return self._user
 
     @staticmethod
     def _validate_step(step):
+        # type: (str) -> bool
         """
         Validates the given step. A step can be null or string or unicode, but not empty string
         :param step: step to validate
@@ -111,6 +118,7 @@ class Context(object):
             return True
 
     def __repr__(self):
+        # type: () -> str
         # multi line repr
         msg = []
         msg.append("  Project: %s" % str(self.project))
@@ -122,6 +130,7 @@ class Context(object):
         return "<Sgtk Context: \n%s>" % ("\n".join(msg))
 
     def _entity_dicts_equal(self, left, right):
+        # type: (dict, dict) -> bool
         """
         Tests if two entity dicts are equal. They are equal if both type and id match or both are None
         :param left:
@@ -135,6 +144,7 @@ class Context(object):
         return left["type"] == right["type"] and left["id"] == right["id"]
 
     def __eq__(self, other):
+        # type: (Context) -> bool
         """
         Tests if two context are equal. Contexts are considered equal, if both type and id attributes of containing entities
         match and step string matches
@@ -172,6 +182,7 @@ class Context(object):
         return True
 
     def __ne__(self, other):
+        # type: (Context) -> bool
         """
         Test if this Context instance is not equal to the other Context instance
 
@@ -184,6 +195,7 @@ class Context(object):
         return not is_equal
 
     def as_dict(self):
+        # type: () -> dict
         """
         Converts this context into a dictionary
         :return: this context as dict
@@ -200,6 +212,7 @@ class Context(object):
 
     @classmethod
     def from_dict(cls, context_dict):
+        # type: (dict) -> Context
         """
         Constructs a new Context from given dictionary
         :param context_dict:
@@ -213,6 +226,7 @@ class Context(object):
                        user=context_dict.get('user'))
 
     def serialize(self):
+        # type: () -> str
         """
         Serializes this context to a pickle string
         :return:
@@ -221,9 +235,11 @@ class Context(object):
 
     @classmethod
     def deserialize(cls, string):
+        # type: (str) -> Context
         return cls.from_dict(pickle.loads(string))
 
     def get_avaible_tokens(self):
+        # type: () -> dict
         avaible_tokens = {}
 
         if self.project:
@@ -263,17 +279,18 @@ class Context(object):
         return avaible_tokens
 
     def copy_context(self, project=0, entity=0, step=0, task=0, workfile=0, user=0):
+        # type: (dict, dict, str, dict, dict, dict) -> Context
         """
         Copy util. Returns a new context instance, will contain values from this context if not overriden by keyword args
         Note: We use 0 here instead of None, so we can override with None
         :param self:
-        :param project:
-        :param entity:
-        :param step:
-        :param task:
-        :param workfile:
-        :param user:
-        :return:
+        :param project: project to override on new Context
+        :param entity: entity to override on new Context
+        :param step: step to override on new Context
+        :param task: task to override on new Context
+        :param workfile: workfile to override on new Context
+        :param user: user to override on new Context
+        :return: Context, values not overriden are the same as in this instance
         """
         _project = self.project
         if project != 0:

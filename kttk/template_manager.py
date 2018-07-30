@@ -172,7 +172,8 @@ def format_template(template, context_dict={}):
         'minute': current_time.minute,
         'second': current_time.second,
         'user': getpass.getuser(),
-        'config_root': os.path.join(os.path.dirname(__file__), 'config') # todo add test coverage for config_root default context
+        'config_root': os.path.join(os.path.dirname(__file__), 'config')
+    # todo add test coverage for config_root default context
     }
     version_number = context_dict.get('version')
     if version_number:

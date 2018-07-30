@@ -1,4 +1,5 @@
 from kttk import engines
+from kttk.context import Context
 from kttk.file_manager.advance_manager import AdvanceManager
 from kttk.file_manager.create_new_manager import CreateNewManager
 from kttk.file_manager.open_manager import OpenManager
@@ -20,15 +21,13 @@ class FileManager(object):
         # type: (dict) -> None
         """
         opens given workfile. Current file will become given workfile
-        :param work_file: workfile to open
-        :param force: if unsaved changes are present and force is True, no UnsavedChangesException is thrown and file is opened.
+        :param workfile: workfile to open
         :return:
         """
         open_manager = OpenManager(self._engine, self._view, None)
         open_manager.do_it(workfile)
 
     def advance(self):
-        # type: (dict, str) -> dict
         """
         Advances a workfile. New workfile will become current workfile, version number will be increased. Workfile will be updated for context.
         Will throw NoFileOpen Exception if no file is currently opened
@@ -38,6 +37,7 @@ class FileManager(object):
         advance_manager.do_it()
 
     def create(self, context):
+        # type: (Context) -> dict
         """
         Creates a new file, if save_current: will use currenty opened file, else will use template file
         Current file will become newly created file. Workfile will also be stored in Context

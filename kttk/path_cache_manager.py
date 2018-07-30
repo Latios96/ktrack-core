@@ -75,6 +75,7 @@ def context_from_path(path):
 
 
 def __good_path(path):
+    # type: (str) -> str
     """
     Makes os paths good, replace \\ with /
     :param path:
