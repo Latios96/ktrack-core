@@ -175,3 +175,10 @@ pip-selfcheck.json
 
 
 # End of https://www.gitignore.io/api/python,pycharm,virtualenv
+junit_xml_test_maya\.xml
+
+junit_xml_test_core\.xml
+
+junit_xml_test_core_maya\.xml
+
+junit_xml_test_kttk_widgets\.xml
