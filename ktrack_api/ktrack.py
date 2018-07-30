@@ -2,17 +2,20 @@ import os
 import shutil
 import uuid
 
+from ktrack_api import KtrackIdType
 from ktrack_api.mongo_impl.ktrack_mongo_impl import KtrackMongoImpl
 
+# todo make easy to config
 _connection_url = "mongodb://localhost:27090/ktrack"
 
+
 def get_ktrack():
+    # type: () -> Ktrack
     """
     Factory method which returns a new Ktrack instance with the current implementation.
     Change here if you want to use a different implementation
     :return:
     """
-    # type: () -> Ktrack
     # connection_uri = ("mongodb://ktrack_admin:mErGSKW2hFFuYceo@cluster0-shard-00-00-2k1zb.mongodb.net:27017,cluster0-shard-00-01-2k1zb.mongodb.net:27017,cluster0-shard-00-02-2k1zb.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin")
     connection_uri = _connection_url
     mongo_impl = KtrackMongoImpl(connection_uri)
@@ -40,7 +43,7 @@ class Ktrack(object):
         return self._impl.create(entity_type, data)
 
     def update(self, entity_type, entity_id, data):
-        # type: (str, object, dict) -> None
+        # type: (str, KtrackIdType, dict) -> None
         """
         Update entity of given type with given id with given data
         :param entity_type: type of entity to update
@@ -55,7 +58,6 @@ class Ktrack(object):
         return self._impl.update(entity_type, entity_id, data)
 
     def find(self, entity_type, filters=[]):
-        # type: (object, object) -> object
         # type: (str, list) -> list
         """
         Finds an entity of given type with matching filters
@@ -69,7 +71,7 @@ class Ktrack(object):
         return self._impl.find(entity_type, filters)
 
     def find_one(self, entity_type, entity_id):
-        # type: (str, str) -> dict
+        # type: (str, KtrackIdType) -> dict
         """
         Finds one entity of given type and id
         :param entity_type: type of entity
@@ -81,7 +83,7 @@ class Ktrack(object):
         return self._impl.find_one(entity_type, entity_id)
 
     def delete(self, entity_type, entity_id):
-        # type: (str, str) -> None
+        # type: (str, KtrackIdType) -> None
         """
         Deleted entity of given type with given id
         :param entity_type: type of entity
@@ -99,7 +101,7 @@ class Ktrack(object):
         return "M:/ktrack_thumbnails/thumbnail_{entity_type}_{entity_id}_{uuid}{ext}"
 
     def upload_thumbnail(self, entity_type, entity_id, path):
-        # type: (str, str, str) -> None
+        # type: (str, KtrackIdType, str) -> None
         """
         Uploads the image at given path to ktrack. "Uploading" means copy to a location on disk specified in _get_thumbnail_path_template.
         File name will be like thumbnail_{entity_type}_{entity_id}_{uuid}{ext}

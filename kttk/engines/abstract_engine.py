@@ -2,7 +2,6 @@
 from kttk.context import Context
 
 
-
 class AbstractEngine(object):
     context = None  # todo check if somewhere context reference is changed, make read only
 
@@ -11,6 +10,7 @@ class AbstractEngine(object):
 
     @property
     def qt_main_window(self):
+        # type: () -> QtWidgets.QMainWindow
         """
         Returns a reference to the qt main window of the application
         :return:
@@ -19,9 +19,11 @@ class AbstractEngine(object):
 
     @property
     def current_workfile(self):
+        # type: () -> dict
         return self.context.workfile
 
     def change_file(self, new_file):
+        # type: (dict) -> None
         """
         Changes context workfile to new file. Will NOT load the file into the DCC!!!
         :param new_file:
@@ -38,6 +40,7 @@ class AbstractEngine(object):
                                user=None)  # todo add context changed signal / callback
 
     def current_file_path(self):
+        # type: () -> str
         """
         Path of the currently opened file
         :return: the path to the currently opened file, None if no file is opened, for example when DCC was just launched
@@ -45,6 +48,7 @@ class AbstractEngine(object):
         pass
 
     def has_unsaved_changes(self):
+        # type: () -> bool
         """
         Determines if the app has unsaved changes.
         :return: True if has unsaved changes, False if no unsaved changes
@@ -52,6 +56,7 @@ class AbstractEngine(object):
         pass
 
     def open_file(self, file_to_open):
+        # type: (dict) -> None
         """
         Opens given workfile in DCC. Opened file will become current workfile. Will call change file
         :param file_to_open: workfile to open
@@ -59,6 +64,7 @@ class AbstractEngine(object):
         self.change_file(file_to_open)
 
     def open_file_by_path(self, path):
+        # type: (str) -> None
         """
         Opens file path in DCC
         """
@@ -71,6 +77,7 @@ class AbstractEngine(object):
         pass
 
     def save_as(self, file_to_save_to):
+        # type: (workfile) -> None
         """
         Saves current file to given workfile. Context and current_file will ge changed to given workfile
         :param file_to_save_to: workfile, path field will be used for file location
@@ -105,7 +112,5 @@ class AbstractEngine(object):
 
     def has_ui(self):
         pass
-
-
 
     # todo add method to add / create a widget and parent it to the main window

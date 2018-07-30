@@ -6,9 +6,11 @@ import ktrack_api
 
 KTRACK_USER_JSON = ".ktrack_user.json"
 
+
 # todo make sure this is the semantic: user_information: dict with type and id, user: complete user entity
 
 def restore_user():
+    # type: () -> dict
     """
     Returns information about current user, will use ~/.ktrack_user.json for this. If no user information is avaible, it will be created
     :return: dict like {'type': 'user, 'id': 'asdf'}
@@ -40,6 +42,7 @@ def restore_user():
 
 
 def get_user_information_path():
+    # type: () -> str
     """
     Returns the expanded path to ~/.ktrack_user.json
     :return: the expanded path to ~/.ktrack_user.json
@@ -53,9 +56,10 @@ def get_user_information_path():
 
 
 def save_user_information(user_information):
+    # type: (dict) -> ()
     """
     Saves information about given user to ~/KTRACK_USER_JSON
-    :param user: user_information to save, dict like {'type': 'user, 'id': 'asdf'}
+    :param user_information: user_information to save, dict like {'type': 'user, 'id': 'asdf'}
     :return:
     """
     user_information_path = get_user_information_path()

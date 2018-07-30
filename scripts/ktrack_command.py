@@ -7,6 +7,7 @@ from tabulate import tabulate
 
 import ktrack_api
 import kttk
+from ktrack_api import KtrackIdType
 from kttk import logger
 
 
@@ -128,6 +129,7 @@ def create(entity_type, entity_name, project_id=None, asset_type=None, task_step
 
 
 def find_one(entity_type, entity_id):
+    # type: (str, KtrackIdType) -> None
     """
     Finds the given entity in the database and pretty prints it
     :param entity_type: type of the entity
@@ -155,7 +157,7 @@ def find_one(entity_type, entity_id):
 # todo add tests
 # todo test link_entity_type and link_entity_id
 def show(entity_type, link_entity_type=None, link_entity_id=None):
-    # type: (str, str, str) -> None
+    # type: (str, str, KtrackIdType) -> None
 
     # make sure entity type is lowercase
     entity_type = entity_type.lower()
@@ -221,6 +223,7 @@ def context(path=os.getcwd()):
 
 
 def update(entity_type, entity_id, data):
+    # type: (str, KtrackIdType, dict) -> None
     # FIXME not working yet
     print "updating entity of type {} with id {} with data {}".format(entity_type, entity_id, data)
 
