@@ -1,7 +1,8 @@
 import os
 
 import ktrack_api
-from ktrack_api import KtrackIdType
+from ktrack_api.ktrack import KtrackIdType
+
 from kttk import template_manager, path_cache_manager
 from kttk.context import Context
 from . import logger

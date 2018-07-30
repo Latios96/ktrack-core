@@ -2,7 +2,7 @@ import os
 import shutil
 import uuid
 
-from ktrack_api import KtrackIdType
+KtrackIdType = str
 from ktrack_api.mongo_impl.ktrack_mongo_impl import KtrackMongoImpl
 
 # todo make easy to config

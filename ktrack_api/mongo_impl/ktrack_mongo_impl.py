@@ -1,7 +1,7 @@
 from bson import ObjectId
 from mongoengine import connect, DictField
 
-from ktrack_api import KtrackIdType
+from ktrack_api.ktrack import KtrackIdType
 from ktrack_api.mongo_impl import entities
 from ktrack_api.Exceptions import EntityMissing, EntityNotFoundException
 from ktrack_api.mongo_impl.entities import NonProjectEntity
@@ -60,7 +60,6 @@ class KtrackMongoImpl(object):
         return _convert_to_dict(entity)
 
     def update(self, entity_type, entity_id, data):
-        # type: (str, str, KtrackIdType) -> None
         try:
             entity_cls = entities.entities[entity_type]
         except KeyError:

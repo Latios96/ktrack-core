@@ -1,4 +1,4 @@
-from ktrack_api import KtrackIdType
+from ktrack_api.ktrack import KtrackIdType
 
 
 class EntityMissing(Exception):
