@@ -8,15 +8,24 @@ class PathNotRegistered(Exception):
         super(PathNotRegistered, self).__init__("No Context registered for path {}".format(path))
 
 
-# todo validate paths
+class InvalidPath(Exception):
+
+    def __init__(self, path):
+        super(InvalidPath, self).__init__("Path {} is not valid to be registered in database".format(path))
+
+
 def register_path(path, context):
     # type: (str, Context) -> dict
     """
     registeres given context for given path in database, so we can later get the context back from the path
-    :param path: path to register
+    :param path: path to register, None or "" not allowed!!!
     :param context: context to register
     :return: newly created path entry from database
     """
+    # check if path is valid
+    if not is_valid_path(path):
+        raise InvalidPath(path)
+
     # make path beautifull
     path = __good_path(path)
 
@@ -72,6 +81,22 @@ def context_from_path(path):
         return context
     else:
         raise PathNotRegistered(path)  # todo better return None
+
+
+def is_valid_path(path):
+    """
+    Checks if the path can be registered in the database.
+    Path is not allowed to be None or empty Strng
+    :param path: path to check
+    :return: True if path is valid, False otherwise
+    """
+    valid = False
+
+    if path:
+        if len(path) > 0:
+            valid = True
+
+    return valid
 
 
 def __good_path(path):
