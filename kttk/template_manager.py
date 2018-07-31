@@ -125,7 +125,7 @@ def get_file_and_folder_templates(entity_type):
 
     return all_files, all_folders
 
-
+# todo add get_formatted_template, where we can pass route name and context and get formatted route
 def get_route_template(route_name):
     # type: (str) -> str
     """

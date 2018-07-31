@@ -54,7 +54,7 @@ register_entity('project', Project)
 class Asset(ProjectEntity):
     type = 'asset'
     code = StringField()
-    asset_type = StringField()
+    asset_type = StringField() # todo make asset_type required
 
 
 register_entity('asset', Asset)
