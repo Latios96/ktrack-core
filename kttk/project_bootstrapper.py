@@ -54,7 +54,7 @@ data = {'project_name': 'Finding Dory',
 
 def bootstrap_project():
     """
-    Bootstraps a project for testing purposes
+    Bootstraps a project. Project can be used for testing or demonstration purposes
     :return:
     """
     kt = ktrack_api.get_ktrack()
@@ -68,28 +68,34 @@ def bootstrap_project():
     # init project
     kttk.init_entity(project['type'], project['id'])
 
-    # assets
-    asset_presets = task_presets_manager.get_task_presets('asset')
+    entity_types = ['asset', 'shot']
 
-    for asset in data['asset_names']:
-        # sanitize name
-        asset_name = name_sanitizer.sanitize_name(asset)
+    for entity_type in entity_types:
+        entity_presets = task_presets_manager.get_task_presets(entity_type)
 
-        # create the asset
-        asset = kt.create("asset", {'code': asset_name, 'project': project})
+        for entity in data['{}_names'.format(entity_type)]:
+            # sanitize name
+            entity_name = name_sanitizer.sanitize_name(entity)
 
-        # init asset
-        kttk.init_entity(asset['type'], asset['id'])
+            # create the entity
+            entity = kt.create(entity_type, {'code': entity_name, 'project': project})
 
-        # apply task preset
-        for preset in asset_presets:
-            logger.info("Creating task {} of step {}".format(preset['name'], preset['type']))
-            task = kt.create('task', {'project': project, 'entity': asset, 'name': preset['name'],
-                                      'step': preset['step']})
+            # init asset
+            kttk.init_entity(entity['type'], entity['id'])
 
-            kttk.init_entity(task['type'], task['id'])
+            # apply task preset
+            for preset in entity_presets:
+                logger.info("Creating task {} of step {}".format(preset['name'], preset['step']))
+                task = kt.create('task', {'project': project, 'entity': entity, 'name': preset['name'],
+                                          'step': preset['step']})
 
-    # shots:
-    # sanitize names
-    # create the shots
-    # apply task preset
+                kttk.init_entity(task['type'], task['id'])
+
+
+def remove_bootstrapped_project():
+    """
+    Removes the bootstrapped project. Removes entites from database, deletes folders and unregisters folders in database
+    :return:
+    """
+    # todo implement
+    raise NotImplementedError()
