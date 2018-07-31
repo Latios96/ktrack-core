@@ -125,7 +125,7 @@ def get_file_and_folder_templates(entity_type):
 
     return all_files, all_folders
 
-
+# todo add get_formatted_template, where we can pass route name and context and get formatted route
 def get_route_template(route_name):
     # type: (str) -> str
     """
@@ -172,7 +172,8 @@ def format_template(template, context_dict={}):
         'minute': current_time.minute,
         'second': current_time.second,
         'user': getpass.getuser(),
-        'config_root': os.path.join(os.path.dirname(__file__), 'config') # todo add test coverage for config_root default context
+        'config_root': os.path.join(os.path.dirname(__file__), 'config')
+    # todo add test coverage for config_root default context
     }
     version_number = context_dict.get('version')
     if version_number:

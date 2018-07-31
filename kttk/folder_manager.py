@@ -1,12 +1,15 @@
 import os
 
 import ktrack_api
+from ktrack_api.ktrack import KtrackIdType
+
 from kttk import template_manager, path_cache_manager
 from kttk.context import Context
 from . import logger
 
 
 def init_entity(entity_type, entity_id):
+    # type: (str, KtrackIdType) -> None
     """
     Initialises an entity for production. Will create folders for entity on disk, will register folders in database,
     will run stup scripts, example could be USD setup
@@ -67,13 +70,14 @@ def init_entity(entity_type, entity_id):
             f.write(content)
 
         # register the created paths in database
-        path_cache_manager.register_path(path, context)
+        path_cache_manager.register_path(os.path.dirname(file_path), context)
 
     # register entity folder
     entity_folder_template = template_manager.get_route_template(
         '{}_folder'.format(entity_type))
     entity_folder = template_manager.format_template(entity_folder_template, context_dict)
 
-    path_cache_manager.register_path(entity_folder, context)
+    if entity_folder != "":
+        path_cache_manager.register_path(entity_folder, context)
 
     # run setup hooks todo implement setup hooks

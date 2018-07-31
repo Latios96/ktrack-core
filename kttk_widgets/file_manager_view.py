@@ -8,8 +8,8 @@ from kttk_widgets.context_widget import ContextWidget
 from kttk_widgets.entity_list import EntityListModel
 from kttk_widgets.searchable_list_widget import SearchableListWidget
 
-
 from kttk_widgets.view_callback_mixin.view_callback_qt_impl import ViewCallbackQtImplementation
+
 
 # todo add tests
 class DataRetriver(object):
@@ -29,10 +29,10 @@ class DataRetriver(object):
         return self._kt.find("workfile", [['entity', 'is', task]])
 
     def project_from_project_entity(self, task):
-        return self._kt.find("project", [['id', 'is', task['project']['id']]])[0] # todo use find_one
+        return self._kt.find("project", [['id', 'is', task['project']['id']]])[0]  # todo use find_one
 
     def entity_from_task(self, task):
-        return self._kt.find(str(task['entity']['type']), [['id', 'is', task['entity']['id']]])[0] # todo use find_one
+        return self._kt.find(str(task['entity']['type']), [['id', 'is', task['entity']['id']]])[0]  # todo use find_one
 
     def entity_from_workfile(self, workfile):
         return self._kt.find_one(str(workfile['entity']['type']), workfile['entity']['id'])
@@ -174,7 +174,7 @@ class FileManagerWidget(QtWidgets.QWidget):
         workfiles = self._data_retriver.get_workfiles(task)
         self.workfile_model.set_entities(workfiles)
 
-    def _context_from_task(self, task): # todo add tests
+    def _context_from_task(self, task):  # todo add tests
         context = Context(project=self._data_retriver.project_from_project_entity(task),
                           entity=self._data_retriver.entity_from_task(task),
                           task=task,
@@ -186,6 +186,7 @@ class FileManagerWidget(QtWidgets.QWidget):
     def _context_from_workfile(self, workfile):
         context = self._context_view.context.copy_context(workfile=workfile)
         return context
+
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])

@@ -1,10 +1,14 @@
 from bson import ObjectId
 from mongoengine import connect, DictField
+
+from ktrack_api.ktrack import KtrackIdType
 from ktrack_api.mongo_impl import entities
 from ktrack_api.Exceptions import EntityMissing, EntityNotFoundException
+from ktrack_api.mongo_impl.entities import NonProjectEntity
 
 
 def _convert_to_dict(entity):
+    # type: (NonProjectEntity) -> dict
     obj_dict = {}
 
     obj_dict['type'] = entity.type
@@ -61,7 +65,7 @@ class KtrackMongoImpl(object):
         except KeyError:
             raise EntityMissing(entity_type)
 
-        entity_candidates = entity_cls.objects(id = entity_id).all()
+        entity_candidates = entity_cls.objects(id=entity_id).all()
 
         if len(entity_candidates) == 0:
             raise EntityNotFoundException(str(entity_id))
@@ -74,45 +78,44 @@ class KtrackMongoImpl(object):
         entity.save()
 
     def find(self, entity_type, filters):
-        # type: (object, object) -> object
+        # type: (str, list) -> list[dict]
+
         try:
             entity_cls = entities.entities[entity_type]
         except KeyError:
             raise EntityMissing(entity_type)
 
-        filter_dict={}
+        filter_dict = {}
 
-        if len(filters)>0:
+        if len(filters) > 0:
             for f in filters:
                 if isinstance(f[2], dict):
                     filter_dict["{}__id".format(f[0])] = f[2]['id']
                 else:
-                    field_name= f[0]
-                    field_value= f[2]
+                    field_name = f[0]
+                    field_value = f[2]
                     filter_dict[field_name] = field_value
 
         entity_candidates = entity_cls.objects(**filter_dict).all()
 
         return [_convert_to_dict(x) for x in entity_candidates]
 
-
-
-
     def find_one(self, entity_type, entity_id):
+        # type: (str, KtrackIdType) -> dict
         try:
             entity_cls = entities.entities[entity_type]
         except KeyError:
             raise EntityMissing(entity_type)
 
-        entity_candidates = entity_cls.objects(id = entity_id).all()
+        entity_candidates = entity_cls.objects(id=entity_id).all()
 
         if len(entity_candidates) == 0:
-            raise EntityNotFoundException(str(entity_id)) # todo would be better to return None instead of exception
+            raise EntityNotFoundException(str(entity_id))  # todo would be better to return None instead of exception
 
         return _convert_to_dict(entity_candidates[0])
 
-
     def delete(self, entity_type, entity_id):
+        # type: (str, KtrackIdType) -> None
         try:
             entity_cls = entities.entities[entity_type]
         except KeyError:

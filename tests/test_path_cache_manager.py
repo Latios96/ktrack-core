@@ -12,6 +12,15 @@ def context_for_testing(ktrack_instance):
     return Context(project=project)
 
 
+def test_validate_path():
+    # check None
+    assert not path_cache_manager.is_valid_path(None)
+
+    assert not path_cache_manager.is_valid_path("")
+
+    assert path_cache_manager.is_valid_path("my_path")
+
+
 def test_good_path():
     path = r"\\stststr\<sr/sersear//ser"
     expected_path = r"/stststr/<sr/sersear/ser"
@@ -19,6 +28,14 @@ def test_good_path():
     actual_path = path_cache_manager.__good_path(path)
 
     assert actual_path == expected_path
+
+
+def test_register_invalid_path():
+    with pytest.raises(path_cache_manager.InvalidPath):
+        path_cache_manager.register_path(None, None)
+
+    with pytest.raises(path_cache_manager.InvalidPath):
+        path_cache_manager.register_path("", None)
 
 
 def test_register_path(ktrack_instance, context_for_testing):
@@ -36,9 +53,11 @@ def test_register_path(ktrack_instance, context_for_testing):
 
     assert context.project['id'] == context_for_testing.project['id']
 
+
 def test_restore_context_no_path_registered():
     with pytest.raises(path_cache_manager.PathNotRegistered):
         path_cache_manager.context_from_path(str(uuid.uuid4()))
+
 
 def test_unregister_path(context_for_testing, ktrack_instance):
     with pytest.raises(path_cache_manager.PathNotRegistered):

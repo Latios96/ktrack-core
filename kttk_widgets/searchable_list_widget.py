@@ -38,13 +38,13 @@ class SearchableListWidget(QtWidgets.QWidget):
         self._search_line.textChanged.connect(lambda text: self._proxy_model.setFilterRegExp(text))
 
         selection_model = self._view.selectionModel()  # use this two line version, otherwise will crash !!!!
-        selection_model.selectionChanged.connect(lambda x: self.selection_changed.emit([self._proxy_model.mapToSource(a) for a in x.indexes()]))
+        selection_model.selectionChanged.connect(
+            lambda x: self.selection_changed.emit([self._proxy_model.mapToSource(a) for a in x.indexes()]))
 
     def selected_indexes(self):
         selection_model = self._view.selectionModel()  # use this two line version, otherwise will crash !!!!
-        #return selection_model.selectedIndexes()
+        # return selection_model.selectedIndexes()
         return [self._proxy_model.mapToSource(a) for a in selection_model.selectedIndexes()]
-
 
 
 if __name__ == '__main__':
