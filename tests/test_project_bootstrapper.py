@@ -35,7 +35,7 @@ def test_project_bootstrapper(ktrack_instance):
                 # mock entity init
                 with patch('kttk.init_entity') as mock_init_entity:
 
-                    project_bootstrapper.bootstrap_project()
+                    assert project_bootstrapper.bootstrap_project()
 
                     assert mock_init_entity.call_count == 15 # 15: 1 project + 3 assets + 4 shots + 3*3 asset tasks + 3*4 shot tasks
 

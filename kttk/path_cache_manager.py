@@ -8,6 +8,7 @@ class PathNotRegistered(Exception):
         super(PathNotRegistered, self).__init__("No Context registered for path {}".format(path))
 
 
+# todo validate paths
 def register_path(path, context):
     # type: (str, Context) -> dict
     """
@@ -23,7 +24,7 @@ def register_path(path, context):
 
     path_entry_data = {}
     path_entry_data['path'] = path
-    path_entry_data['context'] = context.as_dict() # todo remove user information
+    path_entry_data['context'] = context.as_dict()  # todo remove user information
 
     return kt.create("path_entry", path_entry_data)
 
@@ -45,11 +46,10 @@ def unregister_path(path):
     entry_found = len(path_entries) > 0
 
     if entry_found:
-        path_entry = path_entries[0]
-
-        kt.delete('path_entry', path_entry['id'])
+        for path_entry in path_entries:
+            kt.delete('path_entry', path_entry['id'])
     else:
-        raise PathNotRegistered(path)
+        raise PathNotRegistered(path)  # todo better return boolean if path was unregistered
 
 
 def context_from_path(path):
@@ -71,7 +71,7 @@ def context_from_path(path):
         context = Context.from_dict(context_dicts[0]['context'])
         return context
     else:
-        raise PathNotRegistered(path) # todo better return None
+        raise PathNotRegistered(path)  # todo better return None
 
 
 def __good_path(path):
