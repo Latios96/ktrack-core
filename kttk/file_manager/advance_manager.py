@@ -1,9 +1,9 @@
+from kttk import logger
 from kttk.file_manager.file_creation_helper import FileCreationHelper
 
 
 class AdvanceManager(object):
 
-    # todo add logging
     def __init__(self, engine, view_callback_provider, context):
         self._engine = engine
         self._view_callback_provider = view_callback_provider
@@ -28,6 +28,3 @@ class AdvanceManager(object):
         else:
             # user has canceled
             pass
-
-    def _open_scene(self):
-        print "open scene"

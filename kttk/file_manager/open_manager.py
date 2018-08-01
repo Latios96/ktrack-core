@@ -5,7 +5,6 @@ from kttk.file_manager.file_creation_helper import FileCreationHelper
 
 class OpenManager(object):
 
-    # todo add logging
     def __init__(self, engine, view_callback_provider, context):
         self._engine = engine
         self._view_callback_provider = view_callback_provider

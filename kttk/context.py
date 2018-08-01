@@ -26,7 +26,6 @@ class Context(object):
     Context is immutable!!!
     """
 
-    # todo create context_changed signal / callback
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
         # project
         self._validate_entity_dict(project)

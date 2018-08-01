@@ -1,4 +1,4 @@
-from kttk import template_manager
+from kttk import template_manager, logger
 from kttk.engines.abstract_engine import AbstractEngine
 
 import pymel.core as pm
@@ -65,6 +65,7 @@ class MayaEngine(AbstractEngine):
         pm.saveAs(file_to_save_to['path'])
 
     def update_file_for_context(self):
+        super(MayaEngine, self).update_file_for_context()
         # check in which context we are
         is_asset = self.context.entity['type'] == 'asset'
         is_shot = self.context.entity['type'] == 'shot'
@@ -89,6 +90,7 @@ class MayaEngine(AbstractEngine):
         maya_workspace_location = maya_workspace_location.replace("\\", "/")
 
         # now change to correct location, workspace.mel is is created together with all other folders
+        logger.info("Set Maya project to {}".format(maya_workspace_location))
         pm.mel.eval(' setProject "{}"'.format(maya_workspace_location))
 
         # get and format image name template
@@ -98,10 +100,12 @@ class MayaEngine(AbstractEngine):
         # set filename for vray
         vray_settings_node = self.__get_vray_settings()
         if vray_settings_node:
+            logger.info("Setting Vray fileNamePrefix to {}".format(image_name))
             vray_settings_node.fileNamePrefix.set(image_name)
             vray_settings_node.imageFormatStr.set("exr")
 
         # set standart fileNamePrefix
+        logger.info("Setting standart fileNamePrefix to {}".format(image_name))
         settings_node = self.__get_default_render_globals()
         settings_node.imageFilePrefix.set(image_name)
 

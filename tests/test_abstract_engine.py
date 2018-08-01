@@ -10,21 +10,21 @@ def abstract_engine():
     return AbstractEngine()
 
 
-def test_open_file(abstract_engine):
+def test_open_file(abstract_engine, workfile_dict):
     change_file_mock = MagicMock()
     abstract_engine.change_file = change_file_mock
 
-    file_to_open = {}
+    file_to_open = workfile_dict
     abstract_engine.open_file(file_to_open)
 
     assert change_file_mock.assert_called
 
 
-def test_save_as(abstract_engine):
+def test_save_as(abstract_engine, workfile_dict):
     change_file_mock = MagicMock()
     abstract_engine.change_file = change_file_mock
 
-    file_to_save_to = {}
+    file_to_save_to = workfile_dict
     abstract_engine.save_as(file_to_save_to)
 
     assert change_file_mock.assert_called
