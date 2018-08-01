@@ -1,6 +1,5 @@
 pytest
 pytest-qt
-PySide
 mock
 mongomock
 
