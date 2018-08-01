@@ -3,7 +3,7 @@ import os
 import sys
 
 # when running in Jenkins, Maya does not like backslashes
-venv_path = os.path.join(os.path.dirname(__file__), 'venv', 'Lib', 'site-packages')
+venv_path = os.path.join(os.getcwd(), 'venv', 'Lib', 'site-packages')
 venv_path = venv_path.replace("\\", "/")
 print "venv_path", venv_path
 sys.path.append(venv_path)
