@@ -1,4 +1,7 @@
 from setuptools import setup, find_packages
+import os
+
+os.system("pip install -r requirements.txt")
 
 setup(
     name='ktrack-core',
@@ -12,7 +15,6 @@ setup(
     author='Jan Honsbrok',
     author_email='',
     description='',
-    install_requires=['pytest', 'mock', 'mongoengine', 'mongomock', 'blinker', 'pyyaml', 'Qt.py', 'fire', 'tabulate', 'typing'],
     entry_points={
         'console_scripts': [
             'interactive_api = scripts.interactive_api:main',

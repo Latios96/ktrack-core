@@ -1,0 +1,7 @@
+mongoengine
+blinker
+pyyaml
+Qt.py
+fire
+tabulate
+typing
