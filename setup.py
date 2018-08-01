@@ -3,9 +3,21 @@ import os
 
 os.system("pip install -r requirements.txt")
 
+def read_version_number():
+    import re
+    VERSIONFILE = "kttk/__init__.py"
+    verstrline = open(VERSIONFILE, "rt").read()
+    VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
+    mo = re.search(VSRE, verstrline, re.M)
+    if mo:
+        verstr = mo.group(1)
+        return verstr.replace("__version__", "").strip()
+    else:
+        raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
+
 setup(
     name='ktrack-core',
-    version='0.0.1',
+    version=read_version_number(),
     packages=find_packages(),
     package_data={
         '': ['*.yml']
