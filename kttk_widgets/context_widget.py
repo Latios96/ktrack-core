@@ -11,6 +11,7 @@ class ContextWidget(QtWidgets.QWidget):
     def __init__(self, context, parent=None):
         super(ContextWidget, self).__init__(parent)
         self._setup_ui()
+        self._context = None
         self.context = context
 
     @property
@@ -19,11 +20,18 @@ class ContextWidget(QtWidgets.QWidget):
 
     @context.setter
     def context(self, context):
+        old_context = self._context
         if context:
-            self._context = context.populate_context()
+            if isinstance(context, Context):
+                self._context = context.populate_context()
+            else:
+                raise TypeError()
         else:
             self._context = None
-        self.context_changed.emit()
+
+        if old_context != self._context:
+            self.context_changed.emit()
+
         if self._context:
             self._render_context()
         else:
