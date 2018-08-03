@@ -7,10 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+## 0.3.0 - 2018-08-03
 ### Added
 - Maya Engine: serialize / deserialize context
 ### Changed
 - Context: now only takes type and id on construction
+- AbstractEngine: update_file_for_context will serialize context
 ## 0.2.0 - 2017-07-26
 ### Added
 - Added task_presets_manager: Can now get task presets for given entity type from config
