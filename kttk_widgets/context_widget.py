@@ -19,7 +19,10 @@ class ContextWidget(QtWidgets.QWidget):
 
     @context.setter
     def context(self, context):
-        self._context = context
+        if context:
+            self._context = context.populate_context()
+        else:
+            self._context = None
         self.context_changed.emit()
         if self._context:
             self._render_context()

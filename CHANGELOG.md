@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+- Added PopulatedContext class
 ## 0.3.0 - 2018-08-03
 ### Added
 - Maya Engine: serialize / deserialize context
