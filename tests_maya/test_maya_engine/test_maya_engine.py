@@ -109,3 +109,5 @@ def test_update_file_for_context(maya_engine, saved_file, populated_context, tmp
         assert os.path.normpath(pm.workspace( q=True, rd=True)) == os.path.normpath(expected_project_path)
 
         assert mock_get_vray.fileNamePrefix.set.assert_called
+
+# todo add tests for serialize / deserialize context
