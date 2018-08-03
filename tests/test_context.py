@@ -3,14 +3,27 @@ import pytest
 from kttk.context import Context, InvalidEntityException, InvalidStepException
 
 
-def test_reation(populated_context):
-    # type: (Context) -> None
-    assert populated_context.project['name'] == 'my_project'
-    assert populated_context.entity['code'] == 'my_entity'
-    assert populated_context.step == 'anim'
-    assert populated_context.task['name'] == 'task'
-    assert populated_context.workfile['name'] == 'workfile'
-    assert populated_context.user['name'] == 'user'
+def _is_entity_id_dict(entity_dict):
+    # type: (dict) -> bool
+    return len(entity_dict.keys()) == 2 and entity_dict.get('type') and entity_dict.get('id')
+
+
+def test_creation(project_dict, shot_dict, task_dict, workfile_dict, user_dict):
+    context = Context(project=project_dict, entity=shot_dict, step='anim', task=task_dict, workfile=workfile_dict, user=user_dict)
+    # check everything was set correctly
+    assert context.project['id'] == '1'
+    assert context.entity['id'] == '2'
+    assert context.step == 'anim'
+    assert context.task['id'] == '4'
+    assert context.workfile['id'] == '5'
+    assert context.user['id'] == '6'
+
+    # check for entity dicts
+    assert _is_entity_id_dict(context.project)
+    assert _is_entity_id_dict(context.entity)
+    assert _is_entity_id_dict(context.task)
+    assert _is_entity_id_dict(context.workfile)
+    assert _is_entity_id_dict(context.user)
 
 
 def test_context_as_dict(populated_context):
@@ -29,7 +42,7 @@ def test_context_as_dict(populated_context):
 def test_context_from_dict():
     context_dict = {}
     context_dict['project'] = {'type': 'project', 'id': 123}
-    context_dict['entity'] = {'type': 'shot', 'code': 'my_entity', 'id': 123}
+    context_dict['entity'] = {'type': 'shot', 'id': 123}
     context_dict['step'] = 'step'
     context_dict['task'] = {'type': 'task', 'id': 123}
     context_dict['workfile'] = {'type': 'workfile', 'id': 123}
@@ -38,7 +51,7 @@ def test_context_from_dict():
     context = Context.from_dict(context_dict)
 
     assert context.project == {'type': 'project', 'id': 123}
-    assert context.entity == {'type': 'shot', 'code': 'my_entity', 'id': 123}
+    assert context.entity == {'type': 'shot', 'id': 123}
     assert context.step == 'step'
     assert context.task == {'type': 'task', 'id': 123}
     assert context.workfile == {'type': 'workfile', 'id': 123}

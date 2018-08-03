@@ -1,4 +1,5 @@
 from kttk import template_manager, logger
+from kttk.context import Context
 from kttk.engines.abstract_engine import AbstractEngine
 
 import pymel.core as pm
@@ -117,6 +118,9 @@ class MayaEngine(AbstractEngine):
 
     def serialize_context_to_file(self):
         pm.fileInfo[KTTK_CONTEXT] = self.context.serialize()
+
+    def deserialize_context_from_file(self):
+        return Context.deserialize(pm.fileInfo[KTTK_CONTEXT])
 
     @staticmethod
     def __get_vray_settings():
