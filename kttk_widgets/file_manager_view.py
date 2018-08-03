@@ -21,7 +21,8 @@ class DataRetriver(object):
         user_information = kttk.restore_user()
         return self._kt.find_one("user", user_information['id'])
 
-    def get_my_tasks(self, user):
+    def get_my_tasks(self):
+        user = kttk.restore_user()
         tasks = self._kt.find("task", [['assigned', 'is', user]])
         return tasks
 
@@ -104,8 +105,7 @@ class FileManagerWidget(QtWidgets.QWidget):
         self.setLayout(self._layout)
 
     def _init(self):
-        tasks = self._data_retriver.get_my_tasks(
-            {'type': 'user', 'id': '5af33abd6e87ff056014967a'})  # todo dont hardcode user id
+        tasks = self._data_retriver.get_my_tasks()
         self.task_model.set_entities(tasks)
 
     def _update_w(self, selected_indexes):

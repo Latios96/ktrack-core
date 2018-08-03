@@ -7,7 +7,6 @@ from tabulate import tabulate
 
 import ktrack_api
 import kttk
-from ktrack_api import KtrackIdType
 from kttk import logger
 
 
@@ -244,7 +243,8 @@ def task_preset():
         kt = ktrack_api.get_ktrack()
 
         for preset in presets:
-            logger.info("Creating task {} of step {}".format(preset['name'], preset['type']))
+            print preset
+            logger.info("Creating task {} of step {}".format(preset['name'], preset['step']))
             task = kt.create('task', {'project': context.project, 'entity': context.entity, 'name': preset['name'],
                                       'step': preset['step']})
             kttk.init_entity(task['type'], task['id'])

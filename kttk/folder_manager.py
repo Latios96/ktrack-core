@@ -26,7 +26,7 @@ def init_entity(entity_type, entity_id):
     if entity_is_project:
         project = entity
     else:
-        project = entity['project']
+        project = kt.find_one('project', entity['project']['id'])
 
     # construct context
     context = Context(project=project, entity=entity)
