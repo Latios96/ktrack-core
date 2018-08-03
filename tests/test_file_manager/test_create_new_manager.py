@@ -15,10 +15,10 @@ def create_new_manager(populated_context):
 
 ##################### TEST CONTROL FLOW ###########################
 def test_no_scene_open(create_new_manager):
+    # type: (CreateNewManager) -> None
     """
     Has no scene open, so will create from template
     """
-    # type: (CreateNewManager) -> object
     create_new_manager._engine.current_file_path.return_value = None
 
     create_new_manager._create_from_template = MagicMock()
@@ -29,6 +29,7 @@ def test_no_scene_open(create_new_manager):
 
 
 def test_scene_open_use_template_cancel(create_new_manager):
+    # type: (CreateNewManager) -> None
     """
     Some scene without unsaved changes is open, use template is canceled.
     """
@@ -45,6 +46,7 @@ def test_scene_open_use_template_cancel(create_new_manager):
 
 
 def test_scene_open_use_template_no_changes(create_new_manager):
+    # type: (CreateNewManager) -> None
     """
     Some scene without unsaved changes is open, use template is choosen.
     """
@@ -61,6 +63,7 @@ def test_scene_open_use_template_no_changes(create_new_manager):
 
 
 def test_scene_open_use_template_has_changes_save(create_new_manager):
+    # type: (CreateNewManager) -> None
     """
     Some scene with unsaved changes is open, use template is choosen. Changes are saved
     """
@@ -79,6 +82,7 @@ def test_scene_open_use_template_has_changes_save(create_new_manager):
 
 
 def test_scene_open_use_template_has_changes_cancel(create_new_manager):
+    # type: (CreateNewManager) -> None
     """
     Some scene with unsaved changes is open, use template is choosen. Changes are not saved, cancel is choosen
     """
@@ -97,6 +101,7 @@ def test_scene_open_use_template_has_changes_cancel(create_new_manager):
 
 
 def test_scene_open_use_template_has_changes_no_save(create_new_manager):
+    # type: (CreateNewManager) -> None
     """
     Some scene with unsaved changes is open, use template is choosen. Changes are not saved
     """
@@ -115,6 +120,7 @@ def test_scene_open_use_template_has_changes_no_save(create_new_manager):
 
 
 def test_scene_open_no_template(create_new_manager):
+    # type: (CreateNewManager) -> None
     """
     Some scene is open, save current as new is chosen.
     """
@@ -134,6 +140,7 @@ def test_scene_open_no_template(create_new_manager):
 ##################### TEST ACTIONS ###########################
 
 def test_create_from_template(create_new_manager):
+    # type: (CreateNewManager) -> None
     create_new_manager._save_current_as_new = MagicMock()
 
     create_new_manager._create_from_template()
@@ -143,6 +150,7 @@ def test_create_from_template(create_new_manager):
 
 
 def test_save_current_as_new_no_workfile(create_new_manager):
+    # type: (CreateNewManager) -> None
     """
     tests save current as new with no preexisting workfile
     """
@@ -160,6 +168,7 @@ def test_save_current_as_new_no_workfile(create_new_manager):
 
 
 def test_save_current_as_new_preexisting_workfile(create_new_manager):
+    # type: (CreateNewManager) -> None
     """
     tests save current as new with no preexisting workfile
     """
@@ -177,6 +186,7 @@ def test_save_current_as_new_preexisting_workfile(create_new_manager):
 
 
 def test__update_context(create_new_manager):
+    # type: (CreateNewManager) -> None
     create_new_manager._update_context()
 
     assert create_new_manager._engine.update_file_for_context.called

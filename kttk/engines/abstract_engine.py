@@ -1,4 +1,6 @@
-# TODO engine should be Singleton
+import ktrack_api
+
+from kttk import logger
 from kttk.context import Context
 
 
@@ -30,6 +32,11 @@ class AbstractEngine(object):
         :return:
         """
         # extract contest from the workfile
+        # load full workfile
+        kt = ktrack_api.get_ktrack()
+
+        new_file = kt.find_one('workfile', new_file['id'])
+
         project = new_file['project']
         task = new_file['entity']
         step = task['step']
@@ -61,14 +68,16 @@ class AbstractEngine(object):
         Opens given workfile in DCC. Opened file will become current workfile. Will call change file
         :param file_to_open: workfile to open
         """
+        logger.info("Opening file {}".format(file_to_open))
         self.change_file(file_to_open)
+
 
     def open_file_by_path(self, path):
         # type: (str) -> None
         """
         Opens file path in DCC
         """
-        pass
+        logger.info("Opening file {}".format(path))
 
     def save(self):
         """
@@ -83,6 +92,7 @@ class AbstractEngine(object):
         :param file_to_save_to: workfile, path field will be used for file location
         :return:
         """
+        logger.info("Save as to path {}".format(file_to_save_to['path']))
         self.change_file(file_to_save_to)
 
     def update_file_for_context(self):
@@ -91,7 +101,9 @@ class AbstractEngine(object):
         Will also call serialize_context_to_file
         :return:
         """
-        pass
+        logger.info("Updating file for new context..")
+        logger.info("Serialize current context to file..")
+        self.serialize_context_to_file()
 
     def serialize_context_to_file(self):
         pass
@@ -112,5 +124,3 @@ class AbstractEngine(object):
 
     def has_ui(self):
         pass
-
-    # todo add method to add / create a widget and parent it to the main window

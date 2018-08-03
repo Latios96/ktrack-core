@@ -2,7 +2,7 @@ import getpass
 import pickle
 
 import ktrack_api
-from kttk import template_manager, user_manager
+from kttk import template_manager, user_manager, utils
 
 
 class InvalidEntityException(Exception):
@@ -26,15 +26,14 @@ class Context(object):
     Context is immutable!!!
     """
 
-    # todo create context_changed signal / callback
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
         # project
         self._validate_entity_dict(project)
-        self._project = project
+        self._project = utils.entity_id_dict(project)
 
         # entity
         self._validate_entity_dict(entity)
-        self._entity = entity
+        self._entity = utils.entity_id_dict(entity)
 
         # step
         self._validate_step(step)
@@ -42,15 +41,15 @@ class Context(object):
 
         # task
         self._validate_entity_dict(task)
-        self._task = task
+        self._task = utils.entity_id_dict(task)
 
         # workfile
         self._validate_entity_dict(workfile)
-        self._workfile = workfile
+        self._workfile = utils.entity_id_dict(workfile)
 
         # user
         self._validate_entity_dict(user)
-        self._user = user
+        self._user = utils.entity_id_dict(user)
 
     @property
     def project(self):
@@ -242,12 +241,15 @@ class Context(object):
         # type: () -> dict
         avaible_tokens = {}
 
+        kt = ktrack_api.get_ktrack()
+
         if self.project:
-            avaible_tokens['project_name'] = self.project['name']
+            project = kt.find_one('project', self.project['id'])
+            avaible_tokens['project_name'] = project['name']
 
         # make sure to query all fields from ktrack, because we might only have id and type
 
-        kt = ktrack_api.get_ktrack()
+
 
         if self.entity:
             entity = kt.find_one(self.entity['type'], self.entity['id'])
@@ -260,7 +262,8 @@ class Context(object):
             avaible_tokens['step'] = self.step
 
         if self.task:
-            avaible_tokens['task_name'] = self.task['name']
+            task = kt.find_one('task', self.task['id'])
+            avaible_tokens['task_name'] = task['name']
 
         if self.workfile:
             workfile = kt.find_one('workfile', self.workfile['id'])
