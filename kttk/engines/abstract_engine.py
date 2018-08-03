@@ -102,7 +102,8 @@ class AbstractEngine(object):
         :return:
         """
         logger.info("Updating file for new context..")
-        # todo serialize context to file
+        logger.info("Serialize current context to file..")
+        self.serialize_context_to_file()
 
     def serialize_context_to_file(self):
         pass
