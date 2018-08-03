@@ -106,8 +106,35 @@ def test_update_file_for_context(maya_engine, saved_file, populated_context, tmp
 
         maya_engine.update_file_for_context()
 
-        assert os.path.normpath(pm.workspace( q=True, rd=True)) == os.path.normpath(expected_project_path)
+        assert os.path.normpath(pm.workspace(q=True, rd=True)) == os.path.normpath(expected_project_path)
 
         assert mock_get_vray.fileNamePrefix.set.assert_called
 
-# todo add tests for serialize / deserialize context
+
+
+def test_context_serialization(maya_engine, empty_file, populated_context):
+    # test if serialization is working correctly in generall
+
+    maya_engine.context = populated_context
+    maya_engine.serialize_context_to_file()
+
+    restored_context = maya_engine.deserialize_context_from_file()
+
+    assert populated_context == restored_context
+
+
+def test_context_serialization_with_save(maya_engine, saved_file, populated_context):
+    # test if serialization is working correctly in generall
+    # save context
+    maya_engine.context = populated_context
+    maya_engine.serialize_context_to_file()
+
+    # save file
+    pm.saveFile()
+
+    pm.newFile()
+    pm.openFile(saved_file)
+
+    restored_context = maya_engine.deserialize_context_from_file()
+
+    assert populated_context == restored_context

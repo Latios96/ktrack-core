@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Added
+- Maya Engine: serialize / deserialize context
 ### Changed
 - Context: now only takes type and id on construction
 ## 0.2.0 - 2017-07-26
