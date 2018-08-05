@@ -1,2 +1,3 @@
 echo running regular tests...
-pytest --junitxml=junit_xml_tests.xml -o junit_suite_name=tests
+coverage run --source=kttk,ktrack_api,kttk_widgets venv/Scripts/pytest-script.py --junitxml=junit_xml_tests.xml -o junit_suite_name=tests
+coverage xml -o coverage_tests.xml
