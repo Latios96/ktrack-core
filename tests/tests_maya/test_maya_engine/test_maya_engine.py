@@ -1,18 +1,19 @@
 from kttk import template_manager
-from kttk.context import Context
-
-print "loading Maya..."
-import pymel.core as pm
-import maya.cmds as cmds
-
-print "Maya loaded!"
+from tests.tests_maya.test_maya_engine import maya_only
 
 import pytest
-from mock import patch, MagicMock
+from mock import patch, MagicMock, mock
 import os
 
-from kttk.engines.maya_engine import MayaEngine
+try:
+    print "loading Maya..."
+    import pymel.core as pm
+    import maya.cmds as cmds
+    from kttk.engines.maya_engine import MayaEngine
+except:
+    pass
 
+print "Maya loaded!"
 
 @pytest.fixture
 def empty_file():
@@ -34,27 +35,33 @@ def maya_engine():
     return MayaEngine()
 
 
+@maya_only
 def test_current_file_path_empty_scene(maya_engine, empty_file):
     assert maya_engine.current_file_path() is None
 
 
+@maya_only
 def test_current_file_path_saved_scene(maya_engine, saved_file):
     assert os.path.normpath(maya_engine.current_file_path()) == os.path.normpath(saved_file)
 
 
-def test_open_file(maya_engine, populated_context, saved_file):
+@maya_only
+def test_open_file(maya_engine, workfile_dict, saved_file):
     pm.newFile(force=True)
 
-    # make sure workfile has a valid maya scene path
-    populated_context.workfile['path'] = saved_file
+    with mock.patch('kttk.engines.maya_engine.MayaEngine.change_file') as mock_change_file:
+        # make sure workfile has a valid maya scene path
+        workfile_dict['path'] = saved_file
 
-    file_to_open = populated_context.workfile
+        file_to_open = workfile_dict
 
-    maya_engine.open_file(file_to_open)
+        maya_engine.open_file(file_to_open)
 
-    assert os.path.normpath(pm.sceneName()) == os.path.normpath(saved_file)
+        assert os.path.normpath(pm.sceneName()) == os.path.normpath(saved_file)
+        mock_change_file.assert_called()
 
 
+@maya_only
 def test_unsaved_changes(maya_engine, empty_file):
     assert maya_engine.has_unsaved_changes() == False
 
@@ -64,6 +71,7 @@ def test_unsaved_changes(maya_engine, empty_file):
     assert maya_engine.has_unsaved_changes() == True
 
 
+@maya_only
 def test_save(maya_engine, saved_file):
     pm.polyCube()
 
@@ -72,22 +80,26 @@ def test_save(maya_engine, saved_file):
     assert cmds.file(q=True, modified=True) == False
 
 
-def test_save_as(maya_engine, saved_file, populated_context):
+@maya_only
+def test_save_as(maya_engine, saved_file, workfile_dict):
     pm.polyCube()
 
     assert cmds.file(q=True, modified=True) == True
 
-    name, ext = os.path.splitext(saved_file)
-    path = name + "_test" + ext
+    with mock.patch('kttk.engines.maya_engine.MayaEngine.change_file') as mock_change_file:
+        name, ext = os.path.splitext(saved_file)
+        path = name + "_test" + ext
 
-    file_to_save_to = populated_context.workfile
-    file_to_save_to['path'] = path
+        file_to_save_to = workfile_dict
+        file_to_save_to['path'] = path
 
-    maya_engine.save_as(file_to_save_to)
-    assert cmds.file(q=True, modified=True) == False
-    assert os.path.normpath(pm.sceneName()) == os.path.normpath(path)
+        maya_engine.save_as(file_to_save_to)
+        assert cmds.file(q=True, modified=True) == False
+        assert os.path.normpath(pm.sceneName()) == os.path.normpath(path)
+        mock_change_file.assert_called()
 
 
+@maya_only
 def test_update_file_for_context(maya_engine, saved_file, populated_context, tmpdir):
     maya_engine.context = populated_context
 
@@ -111,7 +123,7 @@ def test_update_file_for_context(maya_engine, saved_file, populated_context, tmp
         assert mock_get_vray.fileNamePrefix.set.assert_called
 
 
-
+@maya_only
 def test_context_serialization(maya_engine, empty_file, populated_context):
     # test if serialization is working correctly in generall
 
@@ -123,6 +135,7 @@ def test_context_serialization(maya_engine, empty_file, populated_context):
     assert populated_context == restored_context
 
 
+@maya_only
 def test_context_serialization_with_save(maya_engine, saved_file, populated_context):
     # test if serialization is working correctly in generall
     # save context

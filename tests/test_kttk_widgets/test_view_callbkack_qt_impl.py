@@ -1,9 +1,12 @@
 import mock
+import pytest
 from Qt import QtWidgets
 
 from kttk_widgets.view_callback_mixin.view_callback_qt_impl import ViewCallbackQtImplementation
+from tests.test_kttk_widgets import pyside_only
 
 
+@pyside_only
 def test_ask_for_save_save(qtbot):
     """
     Tests if ask for save returns True if Save is clicked
@@ -15,6 +18,7 @@ def test_ask_for_save_save(qtbot):
         assert qt_impl.ask_for_save() == True
 
 
+@pyside_only
 def test_ask_for_save_discard(qtbot):
     """
     Tests if ask for save returns False if Discard is clicked
@@ -26,6 +30,7 @@ def test_ask_for_save_discard(qtbot):
         assert qt_impl.ask_for_save() == False
 
 
+@pyside_only
 def test_ask_for_save_cancel(qtbot):
     """
     Tests if ask for save returns 'cancel' if Cancel is clicked
@@ -37,6 +42,7 @@ def test_ask_for_save_cancel(qtbot):
         assert qt_impl.ask_for_save() == "cancel"
 
 
+@pyside_only
 def test_ask_for_reload_yes(qtbot):
     """
     Tests if ask for save returns True if Save is clicked
@@ -48,6 +54,7 @@ def test_ask_for_reload_yes(qtbot):
         assert qt_impl.ask_for_reload() == True
 
 
+@pyside_only
 def test_ask_for_reload_no(qtbot):
     """
     Tests if ask for save returns False if Discard is clicked
@@ -59,6 +66,7 @@ def test_ask_for_reload_no(qtbot):
         assert qt_impl.ask_for_reload() == False
 
 
+@pyside_only
 def test_ask_for_reload_cancel(qtbot):
     """
     Tests if ask for save returns 'cancel' if Cancel is clicked
@@ -69,6 +77,8 @@ def test_ask_for_reload_cancel(qtbot):
 
         assert qt_impl.ask_for_reload() == "cancel"
 
+
+@pyside_only
 def test_ask_for_comment_ok(qtbot):
     with mock.patch('Qt.QtWidgets.QInputDialog.getText') as mock_getText:
         mock_getText.return_value = "test", True
@@ -78,6 +88,8 @@ def test_ask_for_comment_ok(qtbot):
         assert useroption == True
         assert comment
 
+
+@pyside_only
 def test_ask_for_comment_cancel(qtbot):
     with mock.patch('Qt.QtWidgets.QInputDialog.getText') as mock_getText:
         mock_getText.return_value = "test", False,
@@ -86,4 +98,3 @@ def test_ask_for_comment_cancel(qtbot):
         useroption, comment = qt_impl.ask_for_comment()
         assert useroption == False
         assert comment
-
