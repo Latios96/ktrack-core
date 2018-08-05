@@ -31,8 +31,6 @@ def test_save_as(abstract_engine, workfile_dict):
 
 
 def test_change_file(abstract_engine, populated_context, ktrack_instance):
-    with mock.patch('ktrack_api.ktrack.Ktrack.find_one') as mock_find_one:
-        mock_find_one.return_value = ktrack_instance.find_one('workfile', populated_context.workfile['id'])
         file_to_open = populated_context.workfile
         abstract_engine.change_file(file_to_open)
 

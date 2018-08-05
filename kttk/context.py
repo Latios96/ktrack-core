@@ -1,10 +1,13 @@
-import getpass
+import pickle
 import pickle
 
+from frozendict import frozendict
+
 import ktrack_api
-from kttk import template_manager, user_manager, utils
+from kttk import template_manager, utils
 
 
+# todo use ArgumentError instead
 class InvalidEntityException(Exception):
 
     def __init__(self, type_missing, id_missing):
@@ -15,11 +18,10 @@ class InvalidEntityException(Exception):
 class InvalidStepException(Exception):
 
     def __init__(self, step):
-        super(InvalidStepException, self).__init__("Invalid step, {} is not a non-empty string, its {}!".format(step, type(step)))
+        super(InvalidStepException, self).__init__(
+            "Invalid step, {} is not a non-empty string, its {}!".format(step, type(step)))
 
 
-# todo make them contain only type and id
-# todo step should be taken from task if task is provided
 class Context(object):
     # todo add docs
     """
@@ -29,11 +31,11 @@ class Context(object):
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
         # project
         self._validate_entity_dict(project)
-        self._project = utils.entity_id_dict(project)
+        self._project = utils.frozen_entity_id_dict(project)
 
         # entity
         self._validate_entity_dict(entity)
-        self._entity = utils.entity_id_dict(entity)
+        self._entity = utils.frozen_entity_id_dict(entity)
 
         # step
         self._validate_step(step)
@@ -41,24 +43,24 @@ class Context(object):
 
         # task
         self._validate_entity_dict(task)
-        self._task = utils.entity_id_dict(task)
+        self._task = utils.frozen_entity_id_dict(task)
 
         # workfile
         self._validate_entity_dict(workfile)
-        self._workfile = utils.entity_id_dict(workfile)
+        self._workfile = utils.frozen_entity_id_dict(workfile)
 
         # user
         self._validate_entity_dict(user)
-        self._user = utils.entity_id_dict(user)
+        self._user = utils.frozen_entity_id_dict(user)
 
     @property
     def project(self):
-        # type: () -> dict
+        # type: () -> frozendict
         return self._project
 
     @property
     def entity(self):
-        # type: () -> dict
+        # type: () -> frozendict
         return self._entity
 
     @property
@@ -68,17 +70,17 @@ class Context(object):
 
     @property
     def task(self):
-        # type: () -> dict
+        # type: () -> frozendict
         return self._task
 
     @property
     def workfile(self):
-        # type: () -> dict
+        # type: () -> frozendict
         return self._workfile
 
     @property
     def user(self):
-        # type: () -> dict
+        # type: () -> frozendict
         return self._user
 
     @staticmethod
@@ -91,7 +93,7 @@ class Context(object):
         """
         if step is not None:
             if isinstance(step, str) or isinstance(step, unicode):
-                if len(step) >0:
+                if len(step) > 0:
                     return True
             raise InvalidStepException(step)
         else:
@@ -249,8 +251,6 @@ class Context(object):
 
         # make sure to query all fields from ktrack, because we might only have id and type
 
-
-
         if self.entity:
             entity = kt.find_one(self.entity['type'], self.entity['id'])
             avaible_tokens['code'] = entity['code']
@@ -320,3 +320,68 @@ class Context(object):
             _user = user
 
         return Context(_project, _entity, _step, _task, _workfile, _user)
+
+    def populate_context(self):
+        """
+        Returns a PopulatedContext context instance based on this context
+        :return:
+        """
+        return PopulatedContext(project=self.project,
+                                entity=self.entity,
+                                step=self.step,
+                                task=self.task,
+                                workfile=self.workfile,
+                                user=self.user)
+
+
+class PopulatedContext(Context):
+
+    def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
+        """
+        Guarantes that provided entites are fully populated from database
+        :param project:
+        :param entity:
+        :param step:
+        :param task:
+        :param workfile:
+        :param user:
+        """
+        kt = ktrack_api.get_ktrack()
+        # project
+        self._validate_entity_dict(project)
+        if project:
+            self._project = kt.find_one('project', project['id'])
+        else:
+            self._project = None
+
+        # entity
+        self._validate_entity_dict(entity)
+        if entity:
+            self._entity = kt.find_one(entity['type'], entity['id'])
+        else:
+            self._entity = None
+
+        # step
+        self._validate_step(step)
+        self._step = step
+
+        # task
+        self._validate_entity_dict(task)
+        if task:
+            self._task = kt.find_one('task', task['id'])
+        else:
+            self._task = None
+
+        # workfile
+        self._validate_entity_dict(workfile)
+        if workfile:
+            self._workfile = kt.find_one('workfile', workfile['id'])
+        else:
+            self._workfile = None
+
+        # user
+        self._validate_entity_dict(user)
+        if user:
+            self._user = kt.find_one('user', user['id'])
+        else:
+            self._user = None

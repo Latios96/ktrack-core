@@ -38,7 +38,8 @@ class AbstractEngine(object):
         new_file = kt.find_one('workfile', new_file['id'])
 
         project = new_file['project']
-        task = new_file['entity']
+
+        task = kt.find_one('task', new_file['entity']['id'])
         step = task['step']
         entity = task['entity']  # entity here means shot / asset...
 

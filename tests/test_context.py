@@ -1,4 +1,5 @@
 import pytest
+from mock import mock
 
 from kttk.context import Context, InvalidEntityException, InvalidStepException
 
@@ -9,7 +10,8 @@ def _is_entity_id_dict(entity_dict):
 
 
 def test_creation(project_dict, shot_dict, task_dict, workfile_dict, user_dict):
-    context = Context(project=project_dict, entity=shot_dict, step='anim', task=task_dict, workfile=workfile_dict, user=user_dict)
+    context = Context(project=project_dict, entity=shot_dict, step='anim', task=task_dict, workfile=workfile_dict,
+                      user=user_dict)
     # check everything was set correctly
     assert context.project['id'] == '1'
     assert context.entity['id'] == '2'
@@ -301,3 +303,50 @@ def test_context__ne__(populated_context):
 
     # test not matching user
     assert populated_context != populated_context.copy_context(user={'type': 'project', 'id': 123})
+
+
+# todo add Context Integration tests
+def test_populate_context(populated_context):
+    with mock.patch('kttk.context.PopulatedContext.__init__') as mock_populated:
+        mock_populated.return_value = None
+
+        populated = populated_context.populate_context()
+        args, kwargs = mock_populated.call_args
+        assert kwargs['project']['type'] == populated_context.project['type']
+        assert kwargs['project']['type'] == populated_context.project['type']
+
+        assert kwargs['entity']['type'] == populated_context.entity['type']
+        assert kwargs['entity']['type'] == populated_context.entity['type']
+
+        assert kwargs['step'] == populated_context.step
+
+        assert kwargs['task']['type'] == populated_context.task['type']
+        assert kwargs['task']['type'] == populated_context.task['type']
+
+        assert kwargs['workfile']['type'] == populated_context.workfile['type']
+        assert kwargs['workfile']['type'] == populated_context.workfile['type']
+
+        assert kwargs['user']['type'] == populated_context.user['type']
+        assert kwargs['user']['type'] == populated_context.user['type']
+
+
+def test_context_frozen_dicts(populated_context):
+    """
+    Tests that no modification of the context is possible
+    :param populated_context:
+    :return:
+    """
+    with pytest.raises(TypeError):
+        populated_context.project['id'] = 123
+
+    with pytest.raises(TypeError):
+        populated_context.entity['id'] = 123
+
+    with pytest.raises(TypeError):
+        populated_context.task['id'] = 123
+
+    with pytest.raises(TypeError):
+        populated_context.workfile['id'] = 123
+
+    with pytest.raises(TypeError):
+        populated_context.user['id'] = 123
