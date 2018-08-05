@@ -2,8 +2,10 @@ import pytest
 from kttk.context import Context
 
 from kttk_widgets.context_widget import ContextWidget
+from tests.test_kttk_widgets import has_pyside, pyside_only
 
 
+@pyside_only
 def test_context_setter(qtbot, populated_context):
     context_widget = ContextWidget(None)
     qtbot.add_widget(context_widget)
@@ -31,6 +33,7 @@ def test_context_setter(qtbot, populated_context):
         context_widget.context = ContextWidget
 
 
+@pyside_only
 def test_render_context_full(qtbot, fully_populated_context):
     context_widget = ContextWidget(None)
     qtbot.add_widget(context_widget)
@@ -47,6 +50,7 @@ def test_render_context_full(qtbot, fully_populated_context):
     assert context_widget._user_name_label.text() == fully_populated_context.user['name']
 
 
+@pyside_only
 def test_render_context_empty(qtbot, fully_populated_context):
     context_widget = ContextWidget(None)
     qtbot.add_widget(context_widget)
