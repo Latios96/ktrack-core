@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+## 0.4.0 - 2018-08-05
 ### Added
 - PopulatedContext class
 - Test for ContextWidget
 ### Changed
 - Context: use frozendict for entity dict
+- moved all tests into single folder and made them skip if enviroment is not ok
 ## 0.3.0 - 2018-08-03
 ### Added
 - Maya Engine: serialize / deserialize context
