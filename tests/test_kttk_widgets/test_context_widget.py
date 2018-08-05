@@ -2,7 +2,7 @@ import pytest
 from kttk.context import Context
 
 from kttk_widgets.context_widget import ContextWidget
-from tests.test_kttk_widgets import has_pyside, pyside_only
+from tests.test_kttk_widgets import pyside_only
 
 
 @pyside_only

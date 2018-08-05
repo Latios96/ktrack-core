@@ -1,23 +1,30 @@
+import os
+
 import pytest
 
 
-def has_pyside():
+def has_pyside_no_maya():
     # type: () -> bool
     """
     Checks if PySioe or PySide2 is avaible
     :return: True if avaible, False otherwise
     """
     try:
+        import maya.cmds as cmds
+        return False
+    except:
+        pass
+    try:
         import PySide
         return True
     except:
-        print "no PySide"
+        pass
     try:
         import PySide2
         return True
     except:
-        print "no PySide2"
+        pass
     return False
 
 
-pyside_only = pytest.mark.skipif(not has_pyside(), reason="requires PySide")
+pyside_only = pytest.mark.skipif(not has_pyside_no_maya(), reason="requires PySide")

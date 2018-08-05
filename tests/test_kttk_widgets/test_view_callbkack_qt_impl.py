@@ -3,7 +3,7 @@ import pytest
 from Qt import QtWidgets
 
 from kttk_widgets.view_callback_mixin.view_callback_qt_impl import ViewCallbackQtImplementation
-from tests.test_kttk_widgets import has_pyside, pyside_only
+from tests.test_kttk_widgets import pyside_only
 
 
 @pyside_only
