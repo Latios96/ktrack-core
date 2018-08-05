@@ -5,3 +5,4 @@ Qt.py
 fire
 tabulate
 typing
+frozendict

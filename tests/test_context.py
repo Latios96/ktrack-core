@@ -328,3 +328,25 @@ def test_populate_context(populated_context):
 
         assert kwargs['user']['type'] == populated_context.user['type']
         assert kwargs['user']['type'] == populated_context.user['type']
+
+
+def test_context_frozen_dicts(populated_context):
+    """
+    Tests that no modification of the context is possible
+    :param populated_context:
+    :return:
+    """
+    with pytest.raises(TypeError):
+        populated_context.project['id'] = 123
+
+    with pytest.raises(TypeError):
+        populated_context.entity['id'] = 123
+
+    with pytest.raises(TypeError):
+        populated_context.task['id'] = 123
+
+    with pytest.raises(TypeError):
+        populated_context.workfile['id'] = 123
+
+    with pytest.raises(TypeError):
+        populated_context.user['id'] = 123

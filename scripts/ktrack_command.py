@@ -10,7 +10,7 @@ import kttk
 from kttk import logger
 
 
-# todo writing tests for this makes sense?
+# todo write tests
 
 def get_name_or_code(entity):
     # type: (dict) -> str

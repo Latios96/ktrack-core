@@ -1,8 +1,11 @@
-import getpass
+import pickle
 import pickle
 
+from frozendict import frozendict
+
 import ktrack_api
-from kttk import template_manager, user_manager, utils
+from kttk import template_manager, utils
+
 
 # todo use ArgumentError instead
 class InvalidEntityException(Exception):
@@ -28,11 +31,11 @@ class Context(object):
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
         # project
         self._validate_entity_dict(project)
-        self._project = utils.entity_id_dict(project)
+        self._project = utils.frozen_entity_id_dict(project)
 
         # entity
         self._validate_entity_dict(entity)
-        self._entity = utils.entity_id_dict(entity)
+        self._entity = utils.frozen_entity_id_dict(entity)
 
         # step
         self._validate_step(step)
@@ -40,24 +43,24 @@ class Context(object):
 
         # task
         self._validate_entity_dict(task)
-        self._task = utils.entity_id_dict(task)
+        self._task = utils.frozen_entity_id_dict(task)
 
         # workfile
         self._validate_entity_dict(workfile)
-        self._workfile = utils.entity_id_dict(workfile)
+        self._workfile = utils.frozen_entity_id_dict(workfile)
 
         # user
         self._validate_entity_dict(user)
-        self._user = utils.entity_id_dict(user)
+        self._user = utils.frozen_entity_id_dict(user)
 
     @property
     def project(self):
-        # type: () -> dict
+        # type: () -> frozendict
         return self._project
 
     @property
     def entity(self):
-        # type: () -> dict
+        # type: () -> frozendict
         return self._entity
 
     @property
@@ -67,17 +70,17 @@ class Context(object):
 
     @property
     def task(self):
-        # type: () -> dict
+        # type: () -> frozendict
         return self._task
 
     @property
     def workfile(self):
-        # type: () -> dict
+        # type: () -> frozendict
         return self._workfile
 
     @property
     def user(self):
-        # type: () -> dict
+        # type: () -> frozendict
         return self._user
 
     @staticmethod
