@@ -7,21 +7,6 @@ import ktrack_api
 from kttk import template_manager, utils
 
 
-# todo use ArgumentError instead
-class InvalidEntityException(Exception):
-
-    def __init__(self, type_missing, id_missing):
-        super(InvalidEntityException, self).__init__(
-            "Entity is invalid: type missing: {}, id missing: {}".format(type_missing, id_missing))
-
-
-class InvalidStepException(Exception):
-
-    def __init__(self, step):
-        super(InvalidStepException, self).__init__(
-            "Invalid step, {} is not a non-empty string, its {}!".format(step, type(step)))
-
-
 class Context(object):
     # todo add docs
     """
@@ -89,13 +74,13 @@ class Context(object):
         """
         Validates the given step. A step can be null or string or unicode, but not empty string
         :param step: step to validate
-        :return: True if step is valid, raises InvalidStepException if not
+        :return: True if step is valid, raises ValueError if not
         """
         if step is not None:
             if isinstance(step, str) or isinstance(step, unicode):
                 if len(step) > 0:
                     return True
-            raise InvalidStepException(step)
+            raise ValueError("Invalid step, {} is not a non-empty string, its {}!".format(step, type(step)))
         else:
             return True
 
@@ -114,7 +99,7 @@ class Context(object):
             if has_type and has_id:
                 return True
             else:
-                raise InvalidEntityException(not has_type, not has_id)
+                raise ValueError("Entity is invalid: type missing: {}, id missing: {}".format(not has_type, not has_id))
         else:
             return True
 

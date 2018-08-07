@@ -1,7 +1,7 @@
 import pytest
 from mock import mock
 
-from kttk.context import Context, InvalidEntityException, InvalidStepException
+from kttk.context import Context
 
 
 def _is_entity_id_dict(entity_dict):
@@ -103,15 +103,15 @@ def test_validate_entity_dict():
     context._validate_entity_dict({'type': 'project', 'id': '123'})
 
     # test missing id
-    with pytest.raises(InvalidEntityException):
+    with pytest.raises(ValueError):
         context._validate_entity_dict({'type': 'project'})
 
     # test missing type
-    with pytest.raises(InvalidEntityException):
+    with pytest.raises(ValueError):
         context._validate_entity_dict({'id': '123'})
 
     # test missing type and id
-    with pytest.raises(InvalidEntityException):
+    with pytest.raises(ValueError):
         context._validate_entity_dict({})
 
 
@@ -119,11 +119,11 @@ def test_valid_step():
     # test _validate_step method
     assert Context._validate_step(None)
 
-    with pytest.raises(InvalidStepException):
+    with pytest.raises(ValueError):
         assert Context._validate_step("")
         assert Context._validate_step(u"")
 
-    with pytest.raises(InvalidStepException):
+    with pytest.raises(ValueError):
         assert Context._validate_step(dict)
         assert Context._validate_step(list)
 
@@ -134,11 +134,11 @@ def test_valid_step():
 
     context = Context(step=None)
 
-    with pytest.raises(InvalidStepException):
+    with pytest.raises(ValueError):
         context = Context(step="")
         context = Context(step=u"")
 
-    with pytest.raises(InvalidStepException):
+    with pytest.raises(ValueError):
         context = Context(step=dict)
         context = Context(step=list)
 

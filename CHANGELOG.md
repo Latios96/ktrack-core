@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [Unreleased]
+### Changed
+- Rework Exceptions: reduce throwing and custom exceptions
 ## 0.4.0 - 2018-08-05
 ### Added
 - PopulatedContext class
