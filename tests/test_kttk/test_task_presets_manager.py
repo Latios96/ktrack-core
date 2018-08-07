@@ -27,8 +27,9 @@ def test_validate_presets_invalid():
                 'name': 'anim',
             }
     }
-    with pytest.raises(AssertionError):
-        task_presets_manager.validate_presets(data)
+    valid, reason = task_presets_manager.validate_presets(data)
+    assert valid == False
+    assert len(reason) > 0
 
     # test preset is not dict
     data = {
@@ -36,8 +37,9 @@ def test_validate_presets_invalid():
             []
         ]
     }
-    with pytest.raises(AssertionError):
-        assert not task_presets_manager.validate_presets(data)
+    valid, reason = task_presets_manager.validate_presets(data)
+    assert valid == False
+    assert len(reason) > 0
 
     # test preset missing step / anim
 
@@ -49,21 +51,9 @@ def test_validate_presets_invalid():
             }
         ]
     }
-    with pytest.raises(AssertionError):
-        assert task_presets_manager.validate_presets(data)
-
-    # test preset unsupported keys
-    data = {
-        'asset': [
-            {
-                'step': 'anim',
-                'name': 'anim',
-                'unssupported_key': 123
-            }
-        ]
-    }
-    with pytest.raises(AssertionError):
-        assert not task_presets_manager.validate_presets(data)
+    valid, reason = task_presets_manager.validate_presets(data)
+    assert valid == False
+    assert len(reason) > 0
 
 
 def test_get_task_presets():
