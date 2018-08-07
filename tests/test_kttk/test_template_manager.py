@@ -144,14 +144,14 @@ def test_route_template():
         with pytest.raises(template_manager.RouteNotExists):
             template_manager.get_route_template('this route does not exist')
 
+
 def test_validate_routes():
     # test valid
-    is_valid, reason = template_manager._validate_routes({'test', '123'})
+    is_valid, reason = template_manager._validate_routes({'test': '123'})
     assert is_valid
     assert reason == ''
 
     # test invalid
-    is_valid, reason = template_manager._validate_routes({'test', []})
+    is_valid, reason = template_manager._validate_routes({'test': []})
     assert is_valid == False
-    assert len(reason) >0
-
+    assert len(reason) > 0
