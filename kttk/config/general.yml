@@ -1,0 +1,1 @@
+# Contains generall key-value pairs, for example for database connection. Expected are str -> str mappings

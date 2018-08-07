@@ -5,13 +5,15 @@ import platform
 import re
 
 import datetime
+
+import valideer
 import yaml
+
+from kttk.config import config_manager
 
 ROUTES_YML = 'routes.yml'
 
 FOLDER_TEMPLATES_YML = 'folder_templates.yml'
-
-KTRACK_TEMPLATE_DIR = 'KTRACK_TEMPLATE_DIR'
 
 
 class RouteNotExists(KeyError):
@@ -20,34 +22,31 @@ class RouteNotExists(KeyError):
         super(RouteNotExists, self).__init__(
             "Route with name {} does not exist! Please head over to {} and create your route!".format(route_name,
                                                                                                       os.path.join(
-                                                                                                          get_template_dir(),
+                                                                                                          config_manager.get_config_folder(),
                                                                                                           ROUTES_YML)))
 
 
-def get_template_dir():
-    # type: () -> str
+def _validate_routes(route_data):
     """
-    Returns the path of the directory where the template files can be found.
-    Default is dirname(__file__). Can be overriden by enviroment variable KTRACK_TEMPLATE_DIR
-    :return: path of the directory where the template files can be found.
+    Validates route data, has to be Dict[str, str]
+    :param route_data:
+    :return: (True, '') if valid, (False, reason) if invalid
     """
-    if KTRACK_TEMPLATE_DIR in os.environ.keys():
-        return os.environ[KTRACK_TEMPLATE_DIR]
-    else:
-        return os.path.join(os.path.dirname(__file__), 'config')
+    schema = valideer.Mapping(
+        key_schema=valideer.String,
+        value_schema=valideer.String)
+    try:
+        schema.validate(route_data)
+        return True, ''
+    except valideer.ValidationError as e:
+        return False, e.message
 
 
 # load data for folders
-yml_file_folders = os.path.join(get_template_dir(), FOLDER_TEMPLATES_YML)
-
-with open(yml_file_folders) as file_descriptor:
-    _data_folders = yaml.load(file_descriptor)
+_data_folders = config_manager.load_file(FOLDER_TEMPLATES_YML, None)  # todo add validator
 
 # load data for routes
-yml_file_routes = os.path.join(get_template_dir(), ROUTES_YML)
-
-with open(yml_file_routes) as file_descriptor:
-    _data_routes = yaml.load(file_descriptor)
+_data_routes = config_manager.load_file(ROUTES_YML, _validate_routes)  # todo add validator
 
 
 def get_file_templates(entity_type):
@@ -69,7 +68,7 @@ def get_folder_templates(entity_type):
     # type: (str) -> list[str]
     """
     Returns a list of folder templates for one entity. A folder template is a single string with {tokens}.
-    Templates are configured in folder_templates.yml, in dirname(__file__) or in KTRACK_TEMPLATE_DIR enviroment variable
+    Templates are configured in folder_templates.yml, in dirname(__file__) or in config_manager.KTRACK_TEMPLATE_DIR enviroment variable
     :param entity_type:
     :return:
     """
@@ -125,6 +124,7 @@ def get_file_and_folder_templates(entity_type):
 
     return all_files, all_folders
 
+
 # todo add get_formatted_template, where we can pass route name and context and get formatted route
 def get_route_template(route_name):
     # type: (str) -> str
@@ -173,7 +173,7 @@ def format_template(template, context_dict={}):
         'second': current_time.second,
         'user': getpass.getuser(),
         'config_root': os.path.join(os.path.dirname(__file__), 'config')
-    # todo add test coverage for config_root default context
+        # todo add test coverage for config_root default context
     }
     version_number = context_dict.get('version')
     if version_number:

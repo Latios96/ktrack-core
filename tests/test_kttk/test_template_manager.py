@@ -6,19 +6,6 @@ from mock import patch
 from kttk import template_manager
 
 
-def test_get_template_dir():
-    template_dir = template_manager.get_template_dir()
-
-    assert template_dir
-
-    TEST_PATH = 'test_path'
-
-    with patch.dict(os.environ, {template_manager.KTRACK_TEMPLATE_DIR: TEST_PATH}):
-        template_dir = template_manager.get_template_dir()
-
-        assert template_dir == TEST_PATH
-
-
 def test_load_folder_template():
     yml_data = {'asset':
         {'folders': {
@@ -156,3 +143,15 @@ def test_route_template():
 
         with pytest.raises(template_manager.RouteNotExists):
             template_manager.get_route_template('this route does not exist')
+
+
+def test_validate_routes():
+    # test valid
+    is_valid, reason = template_manager._validate_routes({'test': '123'})
+    assert is_valid
+    assert reason == ''
+
+    # test invalid
+    is_valid, reason = template_manager._validate_routes({'test': []})
+    assert is_valid == False
+    assert len(reason) > 0
