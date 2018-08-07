@@ -4,7 +4,7 @@ import pytest
 from mock import MagicMock, patch
 
 from kttk.context import Context
-from kttk.file_manager.file_creation_helper import FileCreationHelper, InvalidContextException
+from kttk.file_manager.file_creation_helper import FileCreationHelper
 
 
 
@@ -29,19 +29,19 @@ def test_context_is_valid(file_creation_helper,project_dict, shot_dict, task_dic
     assert file_creation_helper._context_is_valid_for_file_creation(context)
 
     # invalid contexts
-    with pytest.raises(InvalidContextException):
+    with pytest.raises(ValueError):
         context = Context(project=project_dict, entity=shot_dict, task=task_dict)
         assert file_creation_helper._context_is_valid_for_file_creation(context) == False
 
-    with pytest.raises(InvalidContextException):
+    with pytest.raises(ValueError):
         context = Context(project=project_dict, entity=shot_dict)
         assert file_creation_helper._context_is_valid_for_file_creation(context) == False
 
-    with pytest.raises(InvalidContextException):
+    with pytest.raises(ValueError):
         context = Context(project=project_dict)
         assert file_creation_helper._context_is_valid_for_file_creation(context) == False
 
-    with pytest.raises(InvalidContextException):
+    with pytest.raises(ValueError):
         context = Context()
         assert file_creation_helper._context_is_valid_for_file_creation(context) == False
 

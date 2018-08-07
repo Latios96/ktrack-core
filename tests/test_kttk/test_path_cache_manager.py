@@ -31,10 +31,10 @@ def test_good_path():
 
 
 def test_register_invalid_path():
-    with pytest.raises(path_cache_manager.InvalidPath):
+    with pytest.raises(ValueError):
         path_cache_manager.register_path(None, None)
 
-    with pytest.raises(path_cache_manager.InvalidPath):
+    with pytest.raises(ValueError):
         path_cache_manager.register_path("", None)
 
 
@@ -55,13 +55,11 @@ def test_register_path(ktrack_instance, context_for_testing):
 
 
 def test_restore_context_no_path_registered():
-    with pytest.raises(path_cache_manager.PathNotRegistered):
-        path_cache_manager.context_from_path(str(uuid.uuid4()))
+    assert path_cache_manager.context_from_path(str(uuid.uuid4())) is None
 
 
 def test_unregister_path(context_for_testing, ktrack_instance):
-    with pytest.raises(path_cache_manager.PathNotRegistered):
-        path_cache_manager.unregister_path("sommovtrnitrui")
+    assert path_cache_manager.unregister_path("sommovtrnitrui") == False
 
     PATH = "s<eihsdhisdi"
     path_cache_manager.register_path(PATH, context_for_testing)

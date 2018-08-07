@@ -2,17 +2,6 @@ import ktrack_api
 from kttk.context import Context
 
 
-class PathNotRegistered(Exception):
-
-    def __init__(self, path):
-        super(PathNotRegistered, self).__init__("No Context registered for path {}".format(path))
-
-
-class InvalidPath(Exception):
-
-    def __init__(self, path):
-        super(InvalidPath, self).__init__("Path {} is not valid to be registered in database".format(path))
-
 
 def register_path(path, context):
     # type: (str, Context) -> dict
@@ -24,7 +13,7 @@ def register_path(path, context):
     """
     # check if path is valid
     if not is_valid_path(path):
-        raise InvalidPath(path)
+        raise ValueError(path)
 
     # make path beautifull
     path = __good_path(path)
@@ -43,7 +32,7 @@ def unregister_path(path):
     """
     Unregisters a path from database
     :param path:
-    :return:
+    :return: True if path was registered in database and deleted, False otherwise
     """
     # make path beautifull
     path = __good_path(path)
@@ -57,8 +46,9 @@ def unregister_path(path):
     if entry_found:
         for path_entry in path_entries:
             kt.delete('path_entry', path_entry['id'])
+        return True
     else:
-        raise PathNotRegistered(path)  # todo better return boolean if path was unregistered
+        return False
 
 
 def context_from_path(path):
@@ -80,7 +70,7 @@ def context_from_path(path):
         context = Context.from_dict(context_dicts[0]['context'])
         return context
     else:
-        raise PathNotRegistered(path)  # todo better return None
+        return None
 
 
 def is_valid_path(path):

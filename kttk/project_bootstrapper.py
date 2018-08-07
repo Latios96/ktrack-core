@@ -5,7 +5,6 @@ import ktrack_api
 import kttk
 from ktrack_api.ktrack import KtrackIdType
 from kttk import name_sanitizer, task_presets_manager, logger, template_manager
-from kttk.path_cache_manager import PathNotRegistered
 
 _project_names = [
     'Toy Story',
@@ -154,11 +153,8 @@ def remove_bootstrapped_project(project_id):
     for root, dirs, files in os.walk(project_folder):
         path = root
 
-        try:
-            kttk.path_cache_manager.unregister_path(path)
+        if kttk.path_cache_manager.unregister_path(path):
             logger.info("Unregistered path {}".format(path))
-        except PathNotRegistered:
-            pass
 
     # delete all entities
     logger.info("Deleting entities...")

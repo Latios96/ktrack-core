@@ -1,7 +1,7 @@
 import getpass
 import pytest
 
-from ktrack_api.Exceptions import EntityMissing, EntityNotFoundException
+from ktrack_api.exceptions import EntityMissing, EntityNotFoundException
 from ktrack_api.mongo_impl.entities import Project, entities
 from ktrack_api.mongo_impl.ktrack_mongo_impl import KtrackMongoImpl
 
@@ -152,8 +152,7 @@ def test_find_one(ktrack_instance):
         ktrack_instance.find_one("<agt<eydrzuyaerz", SOME_OBJECT_ID)
 
     # test delete with not existing entity id
-    with pytest.raises(EntityNotFoundException):
-        ktrack_instance.find_one('project', SOME_OBJECT_ID)
+    assert ktrack_instance.find_one('project', SOME_OBJECT_ID) is None
 
     # create one object
 
