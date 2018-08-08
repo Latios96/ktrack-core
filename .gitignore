@@ -201,3 +201,7 @@ coverage_tests_maya\.xml
 coverage_tests_nuke\.xml
 
 junit_xml_test_nuke\.xml
+
+coverage_tests_standalone_python\.xml
+
+junit_xml_test_standalone_python\.xml
