@@ -205,3 +205,7 @@ junit_xml_test_nuke\.xml
 coverage_tests_standalone_python\.xml
 
 junit_xml_test_standalone_python\.xml
+
+coverage_tests_houdini\.xml
+
+junit_xml_test_houdini\.xml

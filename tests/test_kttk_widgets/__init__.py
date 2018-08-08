@@ -20,6 +20,11 @@ def has_pyside_no_dcc():
     except:
         pass
     try:
+        import hou
+        return False
+    except:
+        pass
+    try:
         import PySide
         return True
     except:

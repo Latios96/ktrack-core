@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rework Exceptions: reduce throwing and custom exceptions
 - Config Manager is used to load config data
 - reduced boilerplate code needed for validation with valideer
+- Running tests: unified to single run_tests.py
 ## 0.4.0 - 2018-08-05
 ### Added
 - PopulatedContext class
