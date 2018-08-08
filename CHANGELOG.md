@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Config Manager for unified way to load and validate config files
-- Tests can also run in Nuke
+- Tests can also run in Nuke and Houdini
 ### Changed
 - Rework Exceptions: reduce throwing and custom exceptions
 - Config Manager is used to load config data
