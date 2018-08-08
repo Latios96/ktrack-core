@@ -9,9 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Config Manager for unified way to load and validate config files
+- Tests can also run in Nuke
 ### Changed
 - Rework Exceptions: reduce throwing and custom exceptions
 - Config Manager is used to load config data
+- reduced boilerplate code needed for validation with valideer
 ## 0.4.0 - 2018-08-05
 ### Added
 - PopulatedContext class

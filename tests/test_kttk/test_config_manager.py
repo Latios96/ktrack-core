@@ -1,6 +1,7 @@
 import os
 
 import pytest
+import valideer
 from mock import mock, MagicMock
 from valideer import ValidationError
 
@@ -80,22 +81,18 @@ def test_load_file_validator_invalid():
                     data = config_manager.load_file('blabla', mock_validator)
 
 
-def test_validate_general_data():
+def test_general_data_schema():
     # test valid
-    is_valid, reason = config_manager._validate_general_data({'test': 'test'})
-    assert is_valid == True
-    assert reason == ''
+    assert config_manager.general_data_schema.validate({'test': 'test'}) # would raise ValidationError if invalid
 
-    is_valid, reason = config_manager._validate_general_data({'test': []})
-    assert is_valid == False
-    assert isinstance(reason, str)
-    assert len(reason) > 0
+    with pytest.raises(valideer.ValidationError):
+        config_manager.general_data_schema.validate({'test': []})
 
 
 def test_load_general_data():
     with mock.patch('kttk.config.config_manager.load_file') as mock_load_data:
         config_manager._load_general_data()
-        mock_load_data.assert_called_with('general.yml', config_manager._validate_general_data)
+        mock_load_data.assert_called()
 
 
 def test_get_value_with_data():

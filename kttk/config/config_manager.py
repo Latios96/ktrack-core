@@ -2,11 +2,13 @@ import os
 
 import yaml
 import valideer
-from typing import Callable, Tuple, Dict
+from typing import Callable, Tuple, Dict, Any
+from valideer import Type
 
 KTRACK_TEMPLATE_DIR = 'KTRACK_TEMPLATE_DIR'
 
 _general_data = None  # type: Dict[str, str]
+general_data_schema = valideer.Mapping(key_schema=valideer.String, value_schema=valideer.String)
 
 
 class InvalidConfigException(Exception):
@@ -28,13 +30,14 @@ def get_config_folder():
         return os.path.dirname(__file__)
 
 
-def _validate_general_data(data):
+def validate_schema(data, schema):
+    # type: (Any, Type) -> Tuple[bool, str]
     """
-    Validates general.yml, is expected to be a dict of strings
+    Validates the given schema and returns a Tuple as expected by load_file
     :param data: data to validate
-    :return: (True, '') if valid, (False, reason) if not
+    :param schema: valideer schema to validate data with
+    :return: (True, '') if data is valid, (False, reasonstring) if invalid
     """
-    schema = valideer.Mapping(key_schema=valideer.String, value_schema=valideer.String)
     try:
         schema.validate(data)
         return True, ''
@@ -43,12 +46,13 @@ def _validate_general_data(data):
 
 
 def _load_general_data():
+    # type: () -> Dict
     """
     Loads generall data and validates using _validate_general_data
     :return: loaded data
     """
     # load data
-    return load_file('general.yml', _validate_general_data)
+    return load_file('general.yml', lambda data: validate_schema(data, general_data_schema))
 
 
 def get_value(key):

@@ -12,6 +12,9 @@ import yaml
 from kttk.config import config_manager
 
 ROUTES_YML = 'routes.yml'
+route_schema = schema = valideer.Mapping(
+    key_schema=valideer.String,
+    value_schema=valideer.String)
 
 FOLDER_TEMPLATES_YML = 'folder_templates.yml'
 
@@ -26,27 +29,11 @@ class RouteNotExists(KeyError):
                                                                                                           ROUTES_YML)))
 
 
-def _validate_routes(route_data):
-    """
-    Validates route data, has to be Dict[str, str]
-    :param route_data:
-    :return: (True, '') if valid, (False, reason) if invalid
-    """
-    schema = valideer.Mapping(
-        key_schema=valideer.String,
-        value_schema=valideer.String)
-    try:
-        schema.validate(route_data)
-        return True, ''
-    except valideer.ValidationError as e:
-        return False, e.message
-
-
 # load data for folders
 _data_folders = config_manager.load_file(FOLDER_TEMPLATES_YML, None)  # todo add validator
 
 # load data for routes
-_data_routes = config_manager.load_file(ROUTES_YML, _validate_routes)  # todo add validator
+_data_routes = config_manager.load_file(ROUTES_YML, lambda data: config_manager.validate_schema(data, route_schema))
 
 
 def get_file_templates(entity_type):
