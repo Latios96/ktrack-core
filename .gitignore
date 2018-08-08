@@ -197,3 +197,7 @@ junit_xml_tests\.xml
 coverage_tests\.xml
 
 coverage_tests_maya\.xml
+
+coverage_tests_nuke\.xml
+
+junit_xml_test_nuke\.xml
