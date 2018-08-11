@@ -189,9 +189,9 @@ def test_copy_context(populated_context):
     assert new_context.user == populated_context.user
 
     # test entity
-    new_context = populated_context.copy_context(entity={'type': 'project', 'id': 123})
+    new_context = populated_context.copy_context(entity={'type': 'asset', 'id': 123})
     assert new_context.project == populated_context.project
-    assert new_context.entity == {'type': 'project', 'id': 123}
+    assert new_context.entity == {'type': 'asset', 'id': 123}
     assert new_context.step == populated_context.step
     assert new_context.task == populated_context.task
     assert new_context.workfile == populated_context.workfile
@@ -207,31 +207,31 @@ def test_copy_context(populated_context):
     assert new_context.user == populated_context.user
 
     # test task
-    new_context = populated_context.copy_context(task={'type': 'project', 'id': 123})
+    new_context = populated_context.copy_context(task={'type': 'task', 'id': 123})
     assert new_context.project == populated_context.project
     assert new_context.entity == populated_context.entity
     assert new_context.step == populated_context.step
-    assert new_context.task == {'type': 'project', 'id': 123}
+    assert new_context.task == {'type': 'task', 'id': 123}
     assert new_context.workfile == populated_context.workfile
     assert new_context.user == populated_context.user
 
     # test workfile
-    new_context = populated_context.copy_context(workfile={'type': 'project', 'id': 123})
+    new_context = populated_context.copy_context(workfile={'type': 'workfile', 'id': 123})
     assert new_context.project == populated_context.project
     assert new_context.entity == populated_context.entity
     assert new_context.step == populated_context.step
     assert new_context.task == populated_context.task
-    assert new_context.workfile == {'type': 'project', 'id': 123}
+    assert new_context.workfile == {'type': 'workfile', 'id': 123}
     assert new_context.user == populated_context.user
 
     # test user
-    new_context = populated_context.copy_context(user={'type': 'project', 'id': 123})
+    new_context = populated_context.copy_context(user={'type': 'user', 'id': 123})
     assert new_context.project == populated_context.project
     assert new_context.entity == populated_context.entity
     assert new_context.step == populated_context.step
     assert new_context.task == populated_context.task
     assert new_context.workfile == populated_context.workfile
-    assert new_context.user == {'type': 'project', 'id': 123}
+    assert new_context.user == {'type': 'user', 'id': 123}
 
 
 def test_entity_dicts_equal():
@@ -267,7 +267,7 @@ def test_context__equal__(populated_context):
     assert populated_context == populated_context
 
     # test not matching entity
-    assert not populated_context == populated_context.copy_context(entity={'type': 'project', 'id': 123})
+    assert not populated_context == populated_context.copy_context(entity={'type': 'asset', 'id': 123})
 
     # test not matching step
     assert not populated_context == populated_context.copy_context(step="test")
@@ -290,7 +290,7 @@ def test_context__ne__(populated_context):
     assert not context_left != context_right
 
     # test not matching entity
-    assert populated_context != populated_context.copy_context(entity={'type': 'project', 'id': 123})
+    assert populated_context != populated_context.copy_context(entity={'type': 'asset', 'id': 123})
 
     # test not matching step
     assert populated_context != populated_context.copy_context(step="test")

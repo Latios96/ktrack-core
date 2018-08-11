@@ -12,7 +12,7 @@ class Context(object):
     """
     Context is immutable!!!
     """
-
+    # todo make sure project, entity whatever can only be populated with correct entity types
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
         # project
         self._validate_entity_dict(project)
@@ -20,6 +20,8 @@ class Context(object):
 
         # entity
         self._validate_entity_dict(entity)
+        if entity:
+            assert entity['type'] != 'project'
         self._entity = utils.frozen_entity_id_dict(entity)
 
         # step
@@ -113,7 +115,7 @@ class Context(object):
         msg.append("  Task: %s" % str(self.task))
         msg.append("  User: %s" % str(self.user))
 
-        return "<Sgtk Context: \n%s>" % ("\n".join(msg))
+        return "<kttk Context: \n%s>" % ("\n".join(msg))
 
     def _entity_dicts_equal(self, left, right):
         # type: (dict, dict) -> bool

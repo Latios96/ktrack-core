@@ -184,28 +184,15 @@ pip-selfcheck.json
 
 
 # End of https://www.gitignore.io/api/python,pycharm,virtualenv
+junit_xml_tests\*.xml
+
+coverage_*\.xml
+
+
+junit_xml_test_houdini\.xml
+
 junit_xml_test_maya\.xml
-
-junit_xml_test_core\.xml
-
-junit_xml_test_core_maya\.xml
-
-junit_xml_test_kttk_widgets\.xml
-
-junit_xml_tests\.xml
-
-coverage_tests\.xml
-
-coverage_tests_maya\.xml
-
-coverage_tests_nuke\.xml
 
 junit_xml_test_nuke\.xml
 
-coverage_tests_standalone_python\.xml
-
 junit_xml_test_standalone_python\.xml
-
-coverage_tests_houdini\.xml
-
-junit_xml_test_houdini\.xml

@@ -142,6 +142,8 @@ def remove_bootstrapped_project(project_id):
         shot_tasks.extend(kt.find("task", [['entity', 'is', shot]]))
     entities.extend(shot_tasks)
 
+    # todo unregister workfiles
+
     # walk project folder and unregister each path
     project_folder_template = template_manager.get_route_template('project_folder')
     project_root_template = template_manager.get_route_template('project_root')
