@@ -47,6 +47,10 @@ class AbstractEngine(object):
         self.context = Context(project=project, entity=entity, step=step, task=task, workfile=new_file,
                                user=None)  # todo add context changed signal / callback
 
+        # serialize context in file
+        # todo serialize context in file
+        #self.serialize_context_to_file(self.context)
+
     def current_file_path(self):
         # type: () -> str
         """

@@ -1,4 +1,10 @@
+import kttk
+
 from kttk import template_manager
+from kttk.context import Context
+from kttk.file_manager import file_manager
+from kttk.file_manager.view_callback_mixin import ViewCallbackMixin
+from tests import integration_test_only
 from tests.tests_maya.test_maya_engine import maya_only
 
 import pytest
@@ -14,6 +20,7 @@ except:
     pass
 
 print "Maya loaded!"
+
 
 @pytest.fixture
 def empty_file():
@@ -151,3 +158,67 @@ def test_context_serialization_with_save(maya_engine, saved_file, populated_cont
     restored_context = maya_engine.deserialize_context_from_file()
 
     assert populated_context == restored_context
+
+
+@pytest.fixture
+def running_maya_engine():
+    import kttk
+    from kttk.engines import maya_engine
+    kttk.engines.start_engine(maya_engine.MayaEngine)
+
+
+@maya_only
+@integration_test_only
+def test_create_file(running_maya_engine, bootstrapped_project_with_data, empty_file):
+    """
+    We start from an empty file, so file will be created from template
+    """
+    project, project_data = bootstrapped_project_with_data
+
+    view_callback = ViewCallbackMixin()
+
+    # start engine
+    manager = file_manager.FileManager(view_callback)
+
+    context = Context(project=project_data['project'],
+                      entity=project_data['Hank'],
+                      step=project_data['Hank_modelling']['step'],
+                      task=project_data['Hank_modelling'])
+
+    workfile = manager.create(context)
+
+    # make sure file exists on disk
+    path = "M:/Projekte/2018/Finding_Dory/Assets/character/Hank/Hank_Maya/Hank_modelling_modelling_v001.mb"
+    assert os.path.exists(path)
+
+    # make sure file is opened in maya
+    assert os.path.normpath(pm.sceneName()) == os.path.normpath(path)
+
+    # make sure context is set correctly
+    file_context = kttk.engines.current_engine().context
+    assert file_context == context.copy_context(workfile=workfile)
+    assert file_context.workfile
+
+
+@maya_only
+@integration_test_only
+def test_context_serialize_deserialize(running_maya_engine, bootstrapped_project_with_data, empty_file):
+    project, project_data = bootstrapped_project_with_data
+
+    context = Context(project=project_data['project'],
+                      entity=project_data['Hank'],
+                      step=project_data['Hank_modelling']['step'],
+                      task=project_data['Hank_modelling'])
+
+    # change context
+    kttk.engines.current_engine().context = context
+
+    # serialize context
+    kttk.engines.current_engine().serialize_context_to_file()
+
+    # deserialze context and make sure they are the same
+    assert kttk.engines.current_engine().deserialize_context_from_file() == context
+
+# todo make checking if current file is correct more easy
+# todo make test render to check render output paths
+# todo also for shots

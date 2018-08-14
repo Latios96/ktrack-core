@@ -1,13 +1,39 @@
+import datetime
 import getpass
 import pytest
+from bson import ObjectId
+from mongoengine import Document, DateTimeField, StringField, DictField
 
 from ktrack_api.exceptions import EntityMissing, EntityNotFoundException
 from ktrack_api.mongo_impl.entities import Project, entities
-from ktrack_api.mongo_impl.ktrack_mongo_impl import KtrackMongoImpl
+from ktrack_api.mongo_impl.ktrack_mongo_impl import KtrackMongoImpl, _convert_to_dict
 
 SOME_OTHER_OBJECT_ID = "507f1f77bcf86cd799439011"
 
 SOME_OBJECT_ID = "507f1f77bcf86cd799439012"
+
+
+class TestEntity(Document):
+    time_field = DateTimeField(default=datetime.datetime.now())
+    string_field = StringField()
+    type = 'NonProjectEntity'
+    dict_field = DictField()
+    id=ObjectId()
+
+
+def test_convert_to_dict(ktrack_instance):
+    entity = TestEntity()
+    entity.string_field = "value"
+    entity.dict_field['bla'] = 123
+    entity.save()
+
+    entity_dict = _convert_to_dict(entity)
+
+    assert entity_dict['type'] == 'NonProjectEntity'
+    assert isinstance(entity_dict['id'], str)
+    assert isinstance(entity_dict['dict_field'], dict)
+    assert isinstance(entity_dict['string_field'], str)
+    assert isinstance(entity_dict['time_field'], datetime.datetime)
 
 
 def test_create(ktrack_instance):
@@ -161,6 +187,7 @@ def test_find_one(ktrack_instance):
     _entity = ktrack_instance.find_one('project', entity['id'])
 
     assert entity['id'] == _entity['id']
+
 
 """
 def test_project_name_unique(ktrack_instance):

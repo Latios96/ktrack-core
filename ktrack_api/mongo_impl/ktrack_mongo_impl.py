@@ -1,5 +1,6 @@
 from bson import ObjectId
-from mongoengine import connect, DictField
+from mongoengine import connect, DictField, StringField
+from mongoengine.base import BaseDict
 
 from ktrack_api.ktrack import KtrackIdType
 from ktrack_api.mongo_impl import entities
@@ -18,8 +19,6 @@ def _convert_to_dict(entity):
 
         if isinstance(field_value, ObjectId):
             obj_dict[field] = str(field_value)
-        elif isinstance(field_value, DictField):
-            obj_dict[field] = field.to_dict()
         else:
             if not field.startswith("_"):
                 obj_dict[field] = field_value

@@ -289,6 +289,9 @@ def test_context__ne__(populated_context):
     # test empty context
     assert not context_left != context_right
 
+    # test not matching project
+    assert populated_context != populated_context.copy_context(project={'type': 'project', 'id': 123})
+
     # test not matching entity
     assert populated_context != populated_context.copy_context(entity={'type': 'asset', 'id': 123})
 

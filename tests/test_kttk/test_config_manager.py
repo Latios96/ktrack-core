@@ -81,6 +81,19 @@ def test_load_file_validator_invalid():
                     data = config_manager.load_file('blabla', mock_validator)
 
 
+def test_validate_schema():
+    # create a simple test schema
+    test_schema = valideer.Mapping(key_schema=valideer.String, value_schema=valideer.String)
+
+    result, message = config_manager.validate_schema({'1': '1'}, test_schema)
+    assert result
+    assert message == ''
+
+    result, message = config_manager.validate_schema({1: 1}, test_schema)
+    assert result == False
+    assert isinstance(message, str)
+    assert len(message) > 0
+
 def test_general_data_schema():
     # test valid
     assert config_manager.general_data_schema.validate({'test': 'test'}) # would raise ValidationError if invalid
