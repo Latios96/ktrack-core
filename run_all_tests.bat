@@ -9,3 +9,5 @@ echo running tests in houdini...
 call run_tests_houdini.bat
 
 set KTRACK_ENABLE_INTEGRATION_TESTS=
+coverage combine coverage_standart.cov coverage_maya.cov coverage_nuke.cov coverage_houdini.cov
+coverage html
