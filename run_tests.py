@@ -46,7 +46,7 @@ if __name__ == '__main__':
     interpreter = get_current_interpreter()
     print "running tests in {}...".format(interpreter)
 
-    cov = coverage.Coverage(include=['kttk*', 'ktrack_api*', 'kttk_widgets*'])
+    cov = coverage.Coverage(include=['kttk*', 'ktrack_api*', 'kttk_widgets*', 'scripts*'])
     cov.start()
 
     args = ['-x', os.path.join(os.getcwd(), 'tests'), '--junitxml=junit_xml_test_{}.xml'.format(interpreter), '-o',
