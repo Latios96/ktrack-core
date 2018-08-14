@@ -22,10 +22,6 @@ echo running houdini tests...
 set COVERAGE_FILE=coverage_houdini.cov
 "C:\Program Files\Side Effects Software\Houdini 16.5.323\bin\hython.exe" run_tests.py
 
-echo running nuke tests...
-set COVERAGE_FILE=coverage_nuke.cov
-"C:\Program Files\Nuke11.1v3\Nuke11.1.exe" -nc -t run_tests.py
-
 set KTRACK_ENABLE_INTEGRATION_TESTS=
-%WORKSPACE%/venv/Scripts/coverage combine coverage_standart.cov coverage_maya.cov coverage_nuke.cov coverage_houdini.cov
+%WORKSPACE%/venv/Scripts/coverage combine coverage_standart.cov coverage_maya.cov coverage_houdini.cov
 %WORKSPACE%/venv/Scripts/coverage html
