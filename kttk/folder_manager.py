@@ -11,8 +11,12 @@ from . import logger
 def init_entity(entity_type, entity_id):
     # type: (str, KtrackIdType) -> None
     """
-    Initialises an entity for production. Will create folders for entity on disk, will register folders in database,
-    will run stup scripts, example could be USD setup
+    Initialises an entity for production.
+    This contains:
+    - creating all folders for this entity on disk
+    - register all created folders with path_cache_manager in database
+    - run setup scripts, example could be USD setup. This is currently not supported
+    Instead of lazily creating folders, we create all folders automatically, so we dont have to check if the folders already exist
     :param entity_type: type of entity to initialise, is expected to be a project entity
     :param entity_id: id of entity to initialise
     :return:
@@ -29,7 +33,7 @@ def init_entity(entity_type, entity_id):
         project = kt.find_one('project', entity['project']['id'])
 
     # construct context
-    context = Context(project=project, entity=entity)
+    context = Context(project=project, entity=None if entity_is_project else entity)
 
     # get all folders and files
     file_templates, folder_templates = template_manager.get_file_and_folder_templates(entity_type)
@@ -56,8 +60,8 @@ def init_entity(entity_type, entity_id):
             os.makedirs(path)
 
         # register folders in database with context
+        logger.info("Register path {}".format(path))
         path_cache_manager.register_path(path, context)
-        # todo register also top level path for example for asset
 
     logger.info("Creating files for {} {}..".format(entity_type,
                                                       entity.get('name') if entity.get('name') else entity.get('code')))
@@ -70,7 +74,9 @@ def init_entity(entity_type, entity_id):
             f.write(content)
 
         # register the created paths in database
-        path_cache_manager.register_path(os.path.dirname(file_path), context)
+        file_folder = os.path.dirname(file_path)
+        path_cache_manager.register_path(file_folder, context)
+        logger.info("Register path {}".format(file_folder))
 
     # register entity folder
     entity_folder_template = template_manager.get_route_template(
@@ -79,5 +85,8 @@ def init_entity(entity_type, entity_id):
 
     if entity_folder != "":
         path_cache_manager.register_path(entity_folder, context)
+        logger.info("Register path {}".format(entity_folder))
 
     # run setup hooks todo implement setup hooks
+
+# todo provide unitiliaze_entity method

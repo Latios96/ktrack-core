@@ -1,11 +1,12 @@
 import pytest
 from mock import patch
 from typing import Optional, Any
+from valideer import ValidationError
 
 from kttk import task_presets_manager
 
 
-def test_validate_presets_valid():
+def test_presets_schema_valid():
     # test valid
     data = {
         'asset': [
@@ -15,10 +16,10 @@ def test_validate_presets_valid():
             }
         ]
     }
-    assert task_presets_manager.validate_presets(data)
+    assert task_presets_manager.task_preset_schema.validate(data)
 
 
-def test_validate_presets_invalid():
+def test_presets_schema_invalid():
     # test not list of presets
     data = {
         'asset':
@@ -27,8 +28,8 @@ def test_validate_presets_invalid():
                 'name': 'anim',
             }
     }
-    with pytest.raises(AssertionError):
-        task_presets_manager.validate_presets(data)
+    with pytest.raises(ValidationError):
+        task_presets_manager.task_preset_schema.validate(data)
 
     # test preset is not dict
     data = {
@@ -36,8 +37,9 @@ def test_validate_presets_invalid():
             []
         ]
     }
-    with pytest.raises(AssertionError):
-        assert not task_presets_manager.validate_presets(data)
+    with pytest.raises(ValidationError):
+        task_presets_manager.task_preset_schema.validate(data)
+
 
     # test preset missing step / anim
 
@@ -49,21 +51,8 @@ def test_validate_presets_invalid():
             }
         ]
     }
-    with pytest.raises(AssertionError):
-        assert task_presets_manager.validate_presets(data)
-
-    # test preset unsupported keys
-    data = {
-        'asset': [
-            {
-                'step': 'anim',
-                'name': 'anim',
-                'unssupported_key': 123
-            }
-        ]
-    }
-    with pytest.raises(AssertionError):
-        assert not task_presets_manager.validate_presets(data)
+    with pytest.raises(ValidationError):
+        task_presets_manager.task_preset_schema.validate(data)
 
 
 def test_get_task_presets():

@@ -4,12 +4,6 @@ import ktrack_api
 from kttk import template_manager
 
 
-class InvalidContextException(Exception):
-
-    def __init__(self, missing):
-        super(InvalidContextException, self).__init__("Invalid context: Missing {}".format(", ".join(missing)))
-
-
 class FileCreationHelper(object):
     """
     Class containing helper methods for file creation
@@ -46,7 +40,7 @@ class FileCreationHelper(object):
             if not has_step:
                 missing.append('step')
 
-            raise InvalidContextException(missing)
+            raise ValueError("Invalid context: Missing {}".format(", ".join(missing)))
 
     def _get_highest_workfile(self, context):
         """
@@ -94,7 +88,8 @@ class FileCreationHelper(object):
         workfile_file_name = template_manager.format_template(workfile_file_name_template, tokens)
 
         # get and format template for workfile folder
-        workfile_location_template = template_manager.get_route_template('dcc_scenes_location_{}_{}'.format(context.entity['type'], self._engine.name.lower()))
+        workfile_location_template = template_manager.get_route_template(
+            'dcc_scenes_location_{}_{}'.format(context.entity['type'], self._engine.name.lower()))
         workfile_location = template_manager.format_template(workfile_location_template, tokens)
 
         # combine location and name to workfile path
@@ -121,7 +116,7 @@ class FileCreationHelper(object):
 
     def _get_template_file_path(self):
         """
-        Gets the template file based on context
+        Returns formatted template file based on context
         :return:
         """
         template_file_template = template_manager.get_route_template("template_file_dcc")

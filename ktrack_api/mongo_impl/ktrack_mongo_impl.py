@@ -1,9 +1,10 @@
 from bson import ObjectId
-from mongoengine import connect, DictField
+from mongoengine import connect, DictField, StringField
+from mongoengine.base import BaseDict
 
 from ktrack_api.ktrack import KtrackIdType
 from ktrack_api.mongo_impl import entities
-from ktrack_api.Exceptions import EntityMissing, EntityNotFoundException
+from ktrack_api.exceptions import EntityMissing, EntityNotFoundException
 from ktrack_api.mongo_impl.entities import NonProjectEntity
 
 
@@ -18,8 +19,6 @@ def _convert_to_dict(entity):
 
         if isinstance(field_value, ObjectId):
             obj_dict[field] = str(field_value)
-        elif isinstance(field_value, DictField):
-            obj_dict[field] = field.to_dict()
         else:
             if not field.startswith("_"):
                 obj_dict[field] = field_value
@@ -110,7 +109,7 @@ class KtrackMongoImpl(object):
         entity_candidates = entity_cls.objects(id=entity_id).all()
 
         if len(entity_candidates) == 0:
-            raise EntityNotFoundException(str(entity_id))  # todo would be better to return None instead of exception
+            return None
 
         return _convert_to_dict(entity_candidates[0])
 

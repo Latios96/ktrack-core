@@ -2,21 +2,9 @@ import os
 import pytest
 
 from mock import patch
+from valideer import ValidationError
 
 from kttk import template_manager
-
-
-def test_get_template_dir():
-    template_dir = template_manager.get_template_dir()
-
-    assert template_dir
-
-    TEST_PATH = 'test_path'
-
-    with patch.dict(os.environ, {template_manager.KTRACK_TEMPLATE_DIR: TEST_PATH}):
-        template_dir = template_manager.get_template_dir()
-
-        assert template_dir == TEST_PATH
 
 
 def test_load_folder_template():
@@ -156,3 +144,12 @@ def test_route_template():
 
         with pytest.raises(template_manager.RouteNotExists):
             template_manager.get_route_template('this route does not exist')
+
+
+def test_validate_routes():
+    # test valid
+    template_manager.route_schema.validate({'test': '123'})
+
+    # test invalid
+    with pytest.raises(ValidationError):
+        template_manager.route_schema.validate({'test': []})

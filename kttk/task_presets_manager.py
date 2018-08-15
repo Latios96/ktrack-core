@@ -1,70 +1,29 @@
-import os
-import yaml
+"""
+Loads task preset dataPreset data is valid if:
+- its dict with entity types as keys, containing a list of presets
+- each preset has to contain name and step keys
+example:
+{
+    'asset': [
+        {
+            'step': 'anim',
+            'name': 'anim',
+        }
+    ]
+}
+"""
+import valideer
 
-from kttk.template_manager import get_template_dir
+from kttk.config import config_manager
 
 TASK_PRESETS_YML = 'task_presets.yml'
+task_preset_schema = valideer.Mapping(
+    key_schema=valideer.String,
+    value_schema=valideer.HomogeneousSequence(item_schema=valideer.Object(required={'name': valideer.String,
+                                                                                    'step': valideer.String})))
 
-yml_file_folders = os.path.join(get_template_dir(), TASK_PRESETS_YML)
-
-
-def validate_presets(presets_data):
-    # type: (dict) -> bool
-    """
-    Validates given presets_data. Preset data is valid if:
-    - its dict with entity types as keys, containing a list of presets
-    - each preset has to contain name and step keys and must not contain more keys.
-    example:
-    {
-        'asset': [
-            {
-                'step': 'anim',
-                'name': 'anim',
-            }
-        ]
-    }
-    :param presets_data:
-    :return:
-    """
-    # check its not None
-    assert presets_data is not None
-
-    # check its a dict
-    assert isinstance(presets_data, dict)
-
-    # check this dict is not empty
-    assert len(presets_data.keys()) > 0
-
-    # check dict data
-    for entity_type, task_presets in presets_data.iteritems():
-        # make sure entity type is str or unicode
-        assert isinstance(entity_type, str) or isinstance(entity_type, unicode)
-
-        # make sure task_presets is a list
-        assert isinstance(task_presets, list)
-
-        # check presets
-        for preset in task_presets:
-            # make sure preset is a list
-            assert isinstance(preset, dict)
-
-            # make sure preset is valid
-            assert len(preset.keys()) == 2
-
-            step = preset.get('step')
-            name = preset.get('name')
-
-            assert step
-            assert name
-
-            assert isinstance(step, str) or isinstance(step, unicode)
-            assert isinstance(name, str) or isinstance(name, unicode)
-
-    return True
-
-with open(yml_file_folders) as file_descriptor:
-    _data_presets = yaml.load(file_descriptor)
-validate_presets(_data_presets)
+_data_presets = config_manager.load_file(TASK_PRESETS_YML,
+                                         lambda data: config_manager.validate_schema(data, task_preset_schema))
 
 
 def get_task_presets(entity_type):
@@ -80,9 +39,9 @@ def get_task_presets(entity_type):
     """
     raw_preset = _data_presets[entity_type]
     return [
-                {
-                    'step': preset['step'].lower(),
-                    'name': preset['name'].lower(),
-                }
-                for preset in raw_preset
-            ]
+        {
+            'step': preset['step'].lower(),
+            'name': preset['name'].lower(),
+        }
+        for preset in raw_preset
+    ]

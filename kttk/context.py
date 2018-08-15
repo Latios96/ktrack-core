@@ -7,27 +7,16 @@ import ktrack_api
 from kttk import template_manager, utils
 
 
-# todo use ArgumentError instead
-class InvalidEntityException(Exception):
-
-    def __init__(self, type_missing, id_missing):
-        super(InvalidEntityException, self).__init__(
-            "Entity is invalid: type missing: {}, id missing: {}".format(type_missing, id_missing))
-
-
-class InvalidStepException(Exception):
-
-    def __init__(self, step):
-        super(InvalidStepException, self).__init__(
-            "Invalid step, {} is not a non-empty string, its {}!".format(step, type(step)))
-
-
 class Context(object):
-    # todo add docs
     """
-    Context is immutable!!!
+    Context is an immutable object of the current project/entity/task/workfile combination, example:
+    Project: Finding_Dory
+    Entity: Hank (Asset)
+    Task: modelling
+    workfile: Hank_modelling_modelling_v001.mb
+    Context only contains id and type for each entity. If you need a context with fully populated entities, use PopulatedContext
     """
-
+    # todo make sure project, entity whatever can only be populated with correct entity types
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
         # project
         self._validate_entity_dict(project)
@@ -35,6 +24,8 @@ class Context(object):
 
         # entity
         self._validate_entity_dict(entity)
+        if entity:
+            assert entity['type'] != 'project'
         self._entity = utils.frozen_entity_id_dict(entity)
 
         # step
@@ -89,13 +80,13 @@ class Context(object):
         """
         Validates the given step. A step can be null or string or unicode, but not empty string
         :param step: step to validate
-        :return: True if step is valid, raises InvalidStepException if not
+        :return: True if step is valid, raises ValueError if not
         """
         if step is not None:
             if isinstance(step, str) or isinstance(step, unicode):
                 if len(step) > 0:
                     return True
-            raise InvalidStepException(step)
+            raise ValueError("Invalid step, {} is not a non-empty string, its {}!".format(step, type(step)))
         else:
             return True
 
@@ -114,7 +105,7 @@ class Context(object):
             if has_type and has_id:
                 return True
             else:
-                raise InvalidEntityException(not has_type, not has_id)
+                raise ValueError("Entity is invalid: type missing: {}, id missing: {}".format(not has_type, not has_id))
         else:
             return True
 
@@ -128,7 +119,7 @@ class Context(object):
         msg.append("  Task: %s" % str(self.task))
         msg.append("  User: %s" % str(self.user))
 
-        return "<Sgtk Context: \n%s>" % ("\n".join(msg))
+        return "<kttk Context: \n%s>" % ("\n".join(msg))
 
     def _entity_dicts_equal(self, left, right):
         # type: (dict, dict) -> bool
@@ -335,7 +326,9 @@ class Context(object):
 
 
 class PopulatedContext(Context):
-
+    """
+    Same as Context, but with fully populated entities instead of only type and id
+    """
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
         """
         Guarantes that provided entites are fully populated from database

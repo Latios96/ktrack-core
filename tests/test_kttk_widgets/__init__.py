@@ -3,7 +3,7 @@ import os
 import pytest
 
 
-def has_pyside_no_maya():
+def has_pyside_no_dcc():
     # type: () -> bool
     """
     Checks if PySioe or PySide2 is avaible
@@ -11,6 +11,16 @@ def has_pyside_no_maya():
     """
     try:
         import maya.cmds as cmds
+        return False
+    except:
+        pass
+    try:
+        import nuke
+        return False
+    except:
+        pass
+    try:
+        import hou
         return False
     except:
         pass
@@ -27,4 +37,4 @@ def has_pyside_no_maya():
     return False
 
 
-pyside_only = pytest.mark.skipif(not has_pyside_no_maya(), reason="requires PySide")
+pyside_only = pytest.mark.skipif(not has_pyside_no_dcc(), reason="requires PySide")

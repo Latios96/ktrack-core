@@ -1,7 +1,9 @@
 class ViewCallbackMixin(object):
     """
-    Mixin Interface which needs to be implemented by the UI Layer, because FileManager may needs to ask some stuff during file creation
+    Mixin Interface which needs to be implemented by the UI Layer, because FileManager may needs to ask some stuff during file creation.
+    A different implemenation of this interface can be useful for automated usage on renderfarm etc.
     """
+
     CANCEL = "cancel"
     def ask_for_template_use(self):
         """
@@ -30,3 +32,4 @@ class ViewCallbackMixin(object):
         :return: (useroption, comment) where useroption is True if user pressed ok, False if user canceled.
         Comment should be None if user canceled, else user comment as string (utf-8)
         """
+        raise NotImplementedError()

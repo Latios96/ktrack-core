@@ -1,3 +1,3 @@
 echo running regular tests...
-coverage run --source=kttk,ktrack_api,kttk_widgets -m pytest --junitxml=junit_xml_tests.xml -o junit_suite_name=tests
-coverage xml -o coverage_tests.xml
+set COVERAGE_FILE=coverage_standart.cov
+python run_tests.py

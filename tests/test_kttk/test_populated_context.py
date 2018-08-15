@@ -12,6 +12,7 @@ def test_populated_context_full(populated_context, ktrack_instance):
                                    workfile=populated_context.workfile,
                                    user=populated_context.user)
 
+        # make sure calls to ktrack are correct
         mock_find_one.assert_any_call('project', populated_context.project['id'])
         mock_find_one.assert_any_call(populated_context.entity['type'], populated_context.entity['id'])
         mock_find_one.assert_any_call('task', populated_context.task['id'])

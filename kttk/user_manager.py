@@ -1,3 +1,6 @@
+"""
+Provides methods for getting the current user on the machine
+"""
 import json
 import os
 import sys

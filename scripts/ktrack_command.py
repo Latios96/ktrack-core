@@ -7,7 +7,17 @@ from tabulate import tabulate
 
 import ktrack_api
 import kttk
+from ktrack_api.exceptions import EntityMissing
 from kttk import logger
+
+
+def print_result(result):
+    """
+    Wrapper around print for better testing
+    :param result:
+    :return:
+    """
+    print result
 
 
 # todo write tests
@@ -74,14 +84,15 @@ def create(entity_type, entity_name, project_id=None, asset_type=None, task_step
 
         if is_asset:
             if not asset_type:
-                print "no asset type"
+                print_result("no asset type")
                 # todo hints for asset_type
                 return
 
         if is_task:
             if not task_step:
                 # todo hints for task_step
-                raise Exception()
+                print_result("no task step")
+                return
 
         logger.info("initialise {}".format(entity_type))
 
@@ -90,6 +101,9 @@ def create(entity_type, entity_name, project_id=None, asset_type=None, task_step
         logger.info("Restore context from location {}..".format(current_location))
 
         context = kttk.context_from_path(current_location)
+        if not context:
+            print_result("No context provided for path")
+            return
 
         logger.info("Context is {context}".format(context=context))
 
@@ -105,6 +119,10 @@ def create(entity_type, entity_name, project_id=None, asset_type=None, task_step
         if is_task:
             entity_data['name'] = entity_name
             entity_data['step'] = task_step
+            if not context.entity:
+                print_result("No entity provided for task")
+                return
+
             entity_data['entity'] = context.entity
 
             entity_data['assigned'] = {'type': 'user',
@@ -139,17 +157,16 @@ def find_one(entity_type, entity_id):
 
     entity = None
     try:
-        # todo remove exception handling when find_one does not throw an exception anymore
         entity = kt.find_one(entity_type, entity_id)
-
-    except ktrack_api.Exceptions.EntityNotFoundException:
-        pass
+    except EntityMissing:
+        print_result("Entity type '{}' does not exist".format(entity_type))
+        return
 
     if entity:
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(entity)
     else:
-        print 'Entity of type "{}" and id "{}" not found..'.format(entity_type, entity_id)
+        print_result('Entity of type "{}" and id "{}" not found..'.format(entity_type, entity_id))
 
 
 # todo add sort by option
@@ -176,8 +193,8 @@ def show(entity_type, link_entity_type=None, link_entity_id=None):
         else:
             entities = kt.find(entity_type, [])
 
-    except ktrack_api.Exceptions.EntityMissing:
-        print "Entity type {} does not exist".format(entity_type)
+    except EntityMissing:
+        print_result("Entity type {} does not exist".format(entity_type))
         return
 
     # make sure we got at least one entits
@@ -201,24 +218,24 @@ def show(entity_type, link_entity_type=None, link_entity_id=None):
 
             table.append(entry)
 
-        print tabulate(table, headers=headers)
+        print_result(tabulate(table, headers=headers))
 
     else:
-        print "No entities of type {} found..".format(entity_type)
+        print_result("No entities of type {} found..".format(entity_type))
 
 
-def context(path=os.getcwd()):
+def print_context(path=os.getcwd()):
     """
     Prints the context for the fiven path
     :param path: path to print context for, default is current directory
     :return: None
     """
-    # todo print context more pretty
-    try:  # todo remove expcetion handling if context_from_path does not throw expcetions anymore
-        context = kttk.path_cache_manager.context_from_path(path)
-        print context
-    except kttk.path_cache_manager.PathNotRegistered:
-        print "No Context registered for path {}".format(path)
+    # todo print context more pretty, for example using a util
+    context = kttk.path_cache_manager.context_from_path(path)
+    if context:
+        print_result(context)
+    else:
+        print_result("No Context registered for path {}".format(path))
 
 
 def update(entity_type, entity_id, data):
@@ -230,27 +247,28 @@ def update(entity_type, entity_id, data):
 def task_preset():
     # get context
     path = os.getcwd()
-    try:  # todo remove expcetion handling if context_from_path does not throw expcetions anymore
-        context = kttk.path_cache_manager.context_from_path(path)
 
-        # make sure context has project and entity
-        assert context.project and context.entity
+    context = kttk.path_cache_manager.context_from_path(path)
 
-        # get task presets for entity
-        presets = kttk.get_task_presets(context.entity['type'])
+    # make sure path was registered and we have a context
+    if not context:
+        print_result("No Context registered for path {}".format(path))
+        return
 
-        # now create presets
-        kt = ktrack_api.get_ktrack()
+    # make sure context has project and entity
+    assert context.project and context.entity
 
-        for preset in presets:
-            print preset
-            logger.info("Creating task {} of step {}".format(preset['name'], preset['step']))
-            task = kt.create('task', {'project': context.project, 'entity': context.entity, 'name': preset['name'],
-                                      'step': preset['step']})
-            kttk.init_entity(task['type'], task['id'])
+    # get task presets for entity
+    presets = kttk.get_task_presets(context.entity['type'])
 
-    except kttk.path_cache_manager.PathNotRegistered:
-        print "No Context registered for path {}".format(path)
+    # now create presets
+    kt = ktrack_api.get_ktrack()
+
+    for preset in presets:
+        logger.info("Creating task {} of step {}".format(preset['name'], preset['step']))
+        task = kt.create('task', {'project': context.project, 'entity': context.entity, 'name': preset['name'],
+                                  'step': preset['step']})
+        kttk.init_entity(task['type'], task['id'])
 
 
 def main():
@@ -261,7 +279,7 @@ def main():
         'create': create,
         'find_one': find_one,
         'show': show,
-        'context': context,
+        'context': print_context,
         'task_preset': task_preset
         # TODO add update
     })

@@ -1,11 +1,13 @@
+import datetime
 import os
 import shutil
+
+from typing import Tuple
 
 import ktrack_api
 import kttk
 from ktrack_api.ktrack import KtrackIdType
 from kttk import name_sanitizer, task_presets_manager, logger, template_manager
-from kttk.path_cache_manager import PathNotRegistered
 
 _project_names = [
     'Toy Story',
@@ -58,11 +60,20 @@ data = {'project_name': 'Finding Dory',
 
 
 def bootstrap_project():
-    # type: () -> dict
+    # type: () -> Tuple[Dict, Dict]
     """
     Bootstraps a project. Project can be used for testing or demonstration purposes
-    :return: the bootstrapped project
+    :return: the bootstrapped project and a dict with information about the created entites,
+    example:
+    {
+        'project': {project_dict [...]},
+        'Hank': {asset_dict [...]},
+        'Hank_modelling': {task_dict [...]}
+        [...]
+    }
+    ['shot040_lsr', 'shot020_anim', 'shot040_anim', 'shot030_comp', 'Fluke_and_Rudder_modelling', 'Dory_lookdev', 'Dory_modelling', 'shot010_comp', 'shot030', 'Hank', 'project', 'shot010_anim', 'shot030_anim', 'Dory', 'Hank_lookdev', 'Hank_modelling', 'shot010_lsr', 'shot020', 'shot040', 'Fluke_and_Rudder_lookdev', 'shot030_lsr', 'Fluke_and_Rudder', 'shot020_comp', 'shot010', 'shot040_comp', 'shot020_lsr']
     """
+    project_data = {}
     kt = ktrack_api.get_ktrack()
 
     # sanitize project name
@@ -70,6 +81,7 @@ def bootstrap_project():
 
     # create project
     project = kt.create("project", {'name': project_name})
+    project_data['project'] = project
 
     # init project
     kttk.init_entity(project['type'], project['id'])
@@ -92,6 +104,7 @@ def bootstrap_project():
                 entity_data['asset_type'] = 'character'
 
             entity = kt.create(entity_type, entity_data)
+            project_data[entity_name] = entity
 
             # init asset
             kttk.init_entity(entity['type'], entity['id'])
@@ -103,11 +116,11 @@ def bootstrap_project():
                                           'step': preset['step']})
 
                 kttk.init_entity(task['type'], task['id'])
+                project_data["{}_{}".format(entity_name, preset['name'])] = task
 
-    return project
+    return project, project_data
 
 
-# todo add tests
 def remove_bootstrapped_project(project_id):
     # type: (KtrackIdType) -> None
     """
@@ -143,6 +156,10 @@ def remove_bootstrapped_project(project_id):
         shot_tasks.extend(kt.find("task", [['entity', 'is', shot]]))
     entities.extend(shot_tasks)
 
+    # workfiles
+    workfiles = kt.find('workfile', [['project', 'is', {'type': 'project', 'id': project_id}]])
+    entities.extend(workfiles)
+
     # walk project folder and unregister each path
     project_folder_template = template_manager.get_route_template('project_folder')
     project_root_template = template_manager.get_route_template('project_root')
@@ -154,11 +171,8 @@ def remove_bootstrapped_project(project_id):
     for root, dirs, files in os.walk(project_folder):
         path = root
 
-        try:
-            kttk.path_cache_manager.unregister_path(path)
+        if kttk.path_cache_manager.unregister_path(path):
             logger.info("Unregistered path {}".format(path))
-        except PathNotRegistered:
-            pass
 
     # delete all entities
     logger.info("Deleting entities...")
@@ -169,8 +183,3 @@ def remove_bootstrapped_project(project_id):
     # delete project folder and subfolders
     logger.info("Remove project folder {}".format(project_folder))
     shutil.rmtree(project_folder)
-
-
-if __name__ == '__main__':
-    project = bootstrap_project()
-    remove_bootstrapped_project(project['id'])
