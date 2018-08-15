@@ -221,6 +221,26 @@ def test_context_serialize_deserialize(running_maya_engine, bootstrapped_project
     # deserialze context and make sure they are the same
     assert kttk.engines.current_engine().deserialize_context_from_file() == context
 
-# todo make checking if current file is correct more easy
-# todo make test render to check render output paths
-# todo also for shots
+
+def check_correct_file_state(context):
+    # type: (Context) -> object
+    """
+    Checks that the currently opened file matches the expectations:
+    - file was correctly updated for context:
+        - Serialized context is correct
+        - maya project path is correct
+        - render output is correct -> render test frame
+    - engine current file name matches
+    - engine current context matches
+    :return:
+    """
+    #  make sure workfile is correctly set
+    assert kttk.engines.current_engine().current_workfile['type'] == context.workfile['type']
+    assert kttk.engines.current_engine().current_workfile['id'] == context.workfile['id']
+
+    # make sure context is correct
+    assert kttk.engines.current_engine().context == context
+
+    # check context is correct, ignore user
+    assert kttk.engines.current_engine().deserialize_context_from_file().copy_context(user=None) == context.copy_context(user=None)
+

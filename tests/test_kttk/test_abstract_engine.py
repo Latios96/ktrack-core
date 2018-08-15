@@ -11,6 +11,8 @@ def abstract_engine():
 
 
 def test_open_file(abstract_engine, workfile_dict):
+    # change file should be called
+
     change_file_mock = MagicMock()
     abstract_engine.change_file = change_file_mock
 
@@ -21,6 +23,8 @@ def test_open_file(abstract_engine, workfile_dict):
 
 
 def test_save_as(abstract_engine, workfile_dict):
+    # change file should be called
+
     change_file_mock = MagicMock()
     abstract_engine.change_file = change_file_mock
 
@@ -31,11 +35,12 @@ def test_save_as(abstract_engine, workfile_dict):
 
 
 def test_change_file(abstract_engine, populated_context, ktrack_instance):
-        file_to_open = populated_context.workfile
-        abstract_engine.change_file(file_to_open)
+    # context should be changed to the context of the file to open
+    file_to_open = populated_context.workfile
+    abstract_engine.change_file(file_to_open)
 
-        # todo we need to ignore user here, because we have no good way at the moment, because we cant simply use restore_user
-        assert abstract_engine.context == populated_context.copy_context(user=None)
+    # todo we need to ignore user here, because we have no good way at the moment, because we cant simply use restore_user
+    assert abstract_engine.context == populated_context.copy_context(user=None)
 
 
 def test_current_workfile(abstract_engine, workfile_dict):
