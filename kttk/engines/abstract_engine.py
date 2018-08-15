@@ -5,7 +5,7 @@ from kttk.context import Context
 
 
 class AbstractEngine(object):
-    context = None  # todo check if somewhere context reference is changed, make read only
+    context = None  # todo check if somewhere context reference is changed, make read only from outside -> property
 
     name = "Abstract"  # has to start with upper letter todo read only
     file_extension = ".dat"  # has to start with .
@@ -14,21 +14,26 @@ class AbstractEngine(object):
     def qt_main_window(self):
         # type: () -> QtWidgets.QMainWindow
         """
-        Returns a reference to the qt main window of the application
-        :return:
+        Returns a reference to the qt main window of the application.
+        :return: reference to qt main window if avaible, else None
         """
         raise NotImplementedError()
 
     @property
     def current_workfile(self):
         # type: () -> dict
+        """
+        The workfile currently opened in the DCC. Matches the serialized context in the file
+        :return:
+        """
         return self.context.workfile
 
     def change_file(self, new_file):
         # type: (dict) -> None
         """
-        Changes context workfile to new file. Will NOT load the file into the DCC!!!
-        :param new_file:
+        Changes context workfile to new file. Called when open or save_as change the DCC workfile.
+        Will NOT load the file into the DCC!!!
+        :param new_file: workfile which will be opened in the DCC
         :return:
         """
         # extract contest from the workfile
@@ -47,9 +52,8 @@ class AbstractEngine(object):
         self.context = Context(project=project, entity=entity, step=step, task=task, workfile=new_file,
                                user=None)  # todo add context changed signal / callback
 
-        # serialize context in file
-        # todo serialize context in file
-        #self.serialize_context_to_file(self.context)
+        # Note: cant serialize context here, change_workfile is also used when opening a file
+        # update_file_for_context will serialze context for us
 
     def current_file_path(self):
         # type: () -> str
@@ -76,7 +80,6 @@ class AbstractEngine(object):
         logger.info("Opening file {}".format(file_to_open))
         self.change_file(file_to_open)
 
-
     def open_file_by_path(self, path):
         # type: (str) -> None
         """
@@ -86,12 +89,12 @@ class AbstractEngine(object):
 
     def save(self):
         """
-        Saves current file
+        Saves current file to disk
         """
         pass
 
     def save_as(self, file_to_save_to):
-        # type: (workfile) -> None
+        # type: (dict) -> None
         """
         Saves current file to given workfile. Context and current_file will ge changed to given workfile
         :param file_to_save_to: workfile, path field will be used for file location
@@ -99,6 +102,7 @@ class AbstractEngine(object):
         """
         logger.info("Save as to path {}".format(file_to_save_to['path']))
         self.change_file(file_to_save_to)
+        self.update_file_for_context()
 
     def update_file_for_context(self):
         """
@@ -111,9 +115,19 @@ class AbstractEngine(object):
         self.serialize_context_to_file()
 
     def serialize_context_to_file(self):
+        """
+        Serializes the current context of the engine to the DCC scene file. So everytime the scene file is opened,
+        the context can be extracted
+        Will NOT serialize the User, because the user can change.
+        :return:
+        """
         pass
 
     def deserialize_context_from_file(self):
+        """
+        Deserialzies context from scene file, will populate the user with the current user field
+        :return:
+        """
         pass
 
     ## Ideas, not so important and not implemented at the moment##

@@ -4,6 +4,9 @@ from kttk.file_manager.file_creation_helper import FileCreationHelper
 
 
 class OpenManager(object):
+    """
+    Class responsible for the Control Flow for creation of opening a workfile
+    """
 
     def __init__(self, engine, view_callback_provider, context):
         self._engine = engine

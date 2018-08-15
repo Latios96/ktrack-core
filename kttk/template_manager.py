@@ -1,13 +1,34 @@
+"""
+Provides access to file, folder and route templates based on config files
+
+A file template is dictionary with path and content
+Example:
+{
+    'path': 'path_template_with_{tokens},
+    'content': 'file content with {tokens}
+}
+Specified in folder_templates.yml
+
+A folder template is a single string with {tokens}
+Example:
+{project_root}/{project_name}/Assets/{asset_type}/{code}
+Specified in folder_templates.yml
+
+A route template is a string with {tokens}.
+Routes are used for single file paths, for example the name of a workfile or the location of Alembic files for a shot
+Example:
+{config_root}/templates/template{dcc_extension}
+Specified in routes.yml
+"""
+
 import copy
+import datetime
 import getpass
 import os
 import platform
 import re
 
-import datetime
-
 import valideer
-import yaml
 
 from kttk.config import config_manager
 
@@ -40,11 +61,6 @@ def get_file_templates(entity_type):
     # type: (str) -> list[dict[str, str]]
     """
     Returns a list of file templates for one entity.
-    A file template is dictionary like this:
-    {
-        'path': 'path_template_with_{tokens},
-        'content': 'file content woth {tokens}
-    }
     :param entity_type: entity to get file templates for
     :return: a list of file templates
     """
@@ -54,7 +70,7 @@ def get_file_templates(entity_type):
 def get_folder_templates(entity_type):
     # type: (str) -> list[str]
     """
-    Returns a list of folder templates for one entity. A folder template is a single string with {tokens}.
+    Returns a list of folder templates for one entity.
     Templates are configured in folder_templates.yml, in dirname(__file__) or in config_manager.KTRACK_TEMPLATE_DIR enviroment variable
     :param entity_type:
     :return:

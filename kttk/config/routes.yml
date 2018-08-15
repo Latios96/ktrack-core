@@ -1,21 +1,61 @@
+# Routes are used for single file paths, for example the name of a workfile or the location of Alembic files for a shot
+# simple key-value pairs, values can contain {tokens}}
+
+# location where all projects are placed
 project_root : "M:/Projekte/{year}"
+
+# project folder full path on disk
 project_folder: "{project_root}/{project_name}"
+
+# folder where all template files for Maya, Nuke etc are placed
 template_file_dcc: "{config_root}/templates/template{dcc_extension}"
+
+######### ASSET #########
+
+# full path to the asset folder of a project
 asset_folder: "{project_root}/{project_name}/Assets/{asset_type}/{code}"
+
+## full path to the alembic folder of an asset, all alembics are placed here
 asset_alembic: "{project_root}/{project_name}/Assets/{asset_type}/{code}/{code}_Alembic"
+
+# full path to folder where all renders of asset are placed
 asset_renderoutput_3D: "{project_root}/{project_name}/Assets/{asset_type}/{code}/{code}_Input_3D"
+
+# full path to folder of maya Workspace for asset
 asset_maya_workspace_location: "{project_root}/{project_name}/Assets/{asset_type}/{code}/{code}_Maya"
+
+# location where maya files are saved for asset
 dcc_scenes_location_asset_maya: "{project_root}/{project_name}/Assets/{asset_type}/{code}/{code}_Maya"
+
+# location where all playblasts are saved for asset
 asset_playblast_location: "{project_root}/{project_name}/Assets/{asset_type}/{code}/{code}_out/playblast"
 
+######### SHOT #########
+
+# full path to the asset folder of a project
 shot_folder: "{project_root}/{project_name}/Shots/{code}"
+
+## full path to the alembic folder of an asset, all alembics are placed here
 shot_alembic: "{project_root}/{project_name}/Shots/{code}/{code}_Alembic"
+
+# full path to folder where all renders of asset are placed
 shot_renderoutput_3D: "{project_root}/{project_name}/Shots/{code}/{code}_Input_3D"
+
+# full path to folder of maya Workspace for shot
 shot_maya_workspace_location: "{project_root}/{project_name}/Shots/{code}/{code}_Maya"
+
+# location where maya files are saved for shot
 dcc_scenes_location_shot_maya: "{project_root}/{project_name}/Shots/{code}/{code}_Maya"
+
+# location where all playblasts are saved for shot
 shot_playblast_location: "{project_root}/{project_name}/Shots/{code}/{code}_out/playblast"
 
+# task has currently no extra folder
 task_folder: ""
 
+# all rendered 3D images are named after this schema
+# todo add 2d image name
 render_image_file_name: "<RenderLayer>/{version}/<Scene>"
+
+# workfiles are named like this, Asset example: Hank_modelling_modellung_v001.mb
 workfile_file_name: "{code}_{task_name}_{step}_{version}{dcc_extension}"

@@ -11,8 +11,12 @@ from . import logger
 def init_entity(entity_type, entity_id):
     # type: (str, KtrackIdType) -> None
     """
-    Initialises an entity for production. Will create folders for entity on disk, will register folders in database,
-    will run stup scripts, example could be USD setup
+    Initialises an entity for production.
+    This contains:
+    - creating all folders for this entity on disk
+    - register all created folders with path_cache_manager in database
+    - run setup scripts, example could be USD setup. This is currently not supported
+    Instead of lazily creating folders, we create all folders automatically, so we dont have to check if the folders already exist
     :param entity_type: type of entity to initialise, is expected to be a project entity
     :param entity_id: id of entity to initialise
     :return:
@@ -84,3 +88,5 @@ def init_entity(entity_type, entity_id):
         logger.info("Register path {}".format(entity_folder))
 
     # run setup hooks todo implement setup hooks
+
+# todo provide unitiliaze_entity method

@@ -65,9 +65,14 @@ def bootstrap_project():
     Bootstraps a project. Project can be used for testing or demonstration purposes
     :return: the bootstrapped project and a dict with information about the created entites,
     example:
+    {
+        'project': {project_dict [...]},
+        'Hank': {asset_dict [...]},
+        'Hank_modelling': {task_dict [...]}
+        [...]
+    }
     ['shot040_lsr', 'shot020_anim', 'shot040_anim', 'shot030_comp', 'Fluke_and_Rudder_modelling', 'Dory_lookdev', 'Dory_modelling', 'shot010_comp', 'shot030', 'Hank', 'project', 'shot010_anim', 'shot030_anim', 'Dory', 'Hank_lookdev', 'Hank_modelling', 'shot010_lsr', 'shot020', 'shot040', 'Fluke_and_Rudder_lookdev', 'shot030_lsr', 'Fluke_and_Rudder', 'shot020_comp', 'shot010', 'shot040_comp', 'shot020_lsr']
     """
-    # todo give docs example
     project_data = {}
     kt = ktrack_api.get_ktrack()
 

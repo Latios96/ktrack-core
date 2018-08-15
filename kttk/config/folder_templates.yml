@@ -1,4 +1,16 @@
-project: 
+# Folder templates config with this syntax:
+# top level key defines entity type, for example project
+
+# with folders, the folders are specified
+# each folder is a dict with a list of folders.
+# If a folder has no subfolders -> specified as string
+# If a folder has subfolders -> specified as dict with folders as strings and dicts
+# Each folder name can contain {tokens}
+
+# instead of a folders, you can specify a text file to create with __file__
+# name specifies the file name and content the text file content. Content can contain {tokens}
+
+project:
     folders:
         "{project_root}/{project_name}":
             - Assets

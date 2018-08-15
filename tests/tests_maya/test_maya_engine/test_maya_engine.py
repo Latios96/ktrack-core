@@ -94,16 +94,18 @@ def test_save_as(maya_engine, saved_file, workfile_dict):
     assert cmds.file(q=True, modified=True) == True
 
     with mock.patch('kttk.engines.maya_engine.MayaEngine.change_file') as mock_change_file:
-        name, ext = os.path.splitext(saved_file)
-        path = name + "_test" + ext
+        with mock.patch('kttk.engines.maya_engine.MayaEngine.update_file_for_context') as mock_update_file:
+            name, ext = os.path.splitext(saved_file)
+            path = name + "_test" + ext
 
-        file_to_save_to = workfile_dict
-        file_to_save_to['path'] = path
+            file_to_save_to = workfile_dict
+            file_to_save_to['path'] = path
 
-        maya_engine.save_as(file_to_save_to)
-        assert cmds.file(q=True, modified=True) == False
-        assert os.path.normpath(pm.sceneName()) == os.path.normpath(path)
-        mock_change_file.assert_called()
+            maya_engine.save_as(file_to_save_to)
+            assert cmds.file(q=True, modified=True) == False
+            assert os.path.normpath(pm.sceneName()) == os.path.normpath(path)
+            mock_change_file.assert_called()
+            mock_update_file.assert_called()
 
 
 @maya_only

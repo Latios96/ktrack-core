@@ -5,14 +5,14 @@ import re
 def sanitize_name(entity_name):
     # type: (str) -> str
     """
-        Makes project name beautifull and makes name conform to these rules:
-        - no multiple underscores
-        - no spaces
-        - no characters, which are not allowed for folder names
-        - german umlaute are replaced, ä -> ae
-        :param project_name: name of the project
-        :return: name of the project, conform to rules above
-        """
+    Makes project name beautifull and makes name conform to these rules:
+    - no multiple underscores
+    - no spaces
+    - no characters, which are not allowed for folder names
+    - german umlaute are replaced, ä -> ae
+    :param entity_name: name of the project
+    :return: name of the entity, conform to rules above
+    """
     umlaute_mapping = {
         'ä': 'ae',
         'A': 'AE',

@@ -1,3 +1,5 @@
+
+
 def entity_id_dict(entity):
     # type: (dict) -> dict
     """

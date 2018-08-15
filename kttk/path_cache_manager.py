@@ -1,6 +1,11 @@
+"""
+Module providing path <-> Context functionality.
+Sometimes we need to get the context from a path, for example the project from the current working directory.
+For this, every folder created and deleted needs to be registered/unregistered in the database.
+We store the path in the database together with the given context and can get the original context back with context_from_path
+"""
 import ktrack_api
 from kttk.context import Context
-
 
 
 def register_path(path, context):

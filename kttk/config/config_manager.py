@@ -1,3 +1,10 @@
+"""
+Module accessing config files.
+All config files are expeted to be yaml files.
+For general config a general.yml config file is provided, values can ge accessed easily by get_value(key)
+When some other modules need their own config files, for example template_manager for their routes, data can easily
+be loaded with load_file. load_file lso provives support for easy validation of config data
+"""
 import os
 
 import yaml

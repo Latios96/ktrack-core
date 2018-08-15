@@ -4,7 +4,6 @@ import ktrack_api
 from kttk import template_manager
 
 
-
 class FileCreationHelper(object):
     """
     Class containing helper methods for file creation
@@ -117,7 +116,7 @@ class FileCreationHelper(object):
 
     def _get_template_file_path(self):
         """
-        Gets the template file based on context
+        Returns formatted template file based on context
         :return:
         """
         template_file_template = template_manager.get_route_template("template_file_dcc")
