@@ -16,7 +16,6 @@ def get_ktrack():
     Change here if you want to use a different implementation
     :return:
     """
-    # connection_uri = ("mongodb://ktrack_admin:mErGSKW2hFFuYceo@cluster0-shard-00-00-2k1zb.mongodb.net:27017,cluster0-shard-00-01-2k1zb.mongodb.net:27017,cluster0-shard-00-02-2k1zb.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin")
     connection_uri = _connection_url
     mongo_impl = KtrackMongoImpl(connection_uri)
     return Ktrack(mongo_impl)
