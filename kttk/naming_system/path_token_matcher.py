@@ -48,22 +48,22 @@ class PathTokenSequenceMatcher(object):
         self._token_values_by_name = {}
 
     def matches(self):
-        # type: () -> bool
+        # type: () -> Optional[Dict[str, str]]
         for index, token in enumerate(self._tokens):
             self._fetch_next_element()
             if not self._current_element:
-                return False
+                return None
 
             self._get_token_value_if_known(token)
 
             if token.matches(self._current_element):
                 if self._exact_match_required(index) and not token.matches_exactly(self._current_element):
-                    return False
+                    return None
                 self._current_element = token.save_value_and_trim(self._current_element)
                 self._token_values_by_name[token.token.name] = token.value
             else:
-                return False
-        return True
+                return None
+        return self._token_values_by_name
 
     def _fetch_next_element(self):
         if not self._current_element and self._strings:
