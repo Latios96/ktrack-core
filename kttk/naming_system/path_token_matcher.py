@@ -1,7 +1,7 @@
 import re
 
 import attr
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from kttk.naming_system.templates import PathToken
 
@@ -26,41 +26,59 @@ class MatcherToken(object):
 
     def _do_match(self, string):
         # type: (str) -> Optional[str]
+        if self.value and string.startswith(self.value):
+            return self.value
+
         match = re.match(self.token.regex, string)
         if match:
             return match.group()
 
 
-class PathTokenMatcher(object):
+class PathTokenSequenceMatcher(object):
+    _token_values_by_name = None  # type: Dict[str, str]
+    _tokens = None  # type: List[MatcherToken]
+    _strings = None  # type: List[str]
+    _current_element = None  # type: str
 
     def __init__(self, tokens, string):
         # type: (List[PathToken], str) -> None
         self._tokens = map(lambda x: MatcherToken(token=x), tokens)
         self._strings = re.split('(/)', string)
-        self._current_element = None
+        self._current_element = ''
+        self._token_values_by_name = {}
 
     def matches(self):
         # type: () -> bool
-        for token in self._tokens:
+        for index, token in enumerate(self._tokens):
             self._fetch_next_element()
+            if not self._current_element:
+                return False
+
+            self._get_token_value_if_known(token)
 
             if token.matches(self._current_element):
-                if self._exact_match_required() and not token.matches_exactly(self._current_element):
+                if self._exact_match_required(index) and not token.matches_exactly(self._current_element):
                     return False
                 self._current_element = token.save_value_and_trim(self._current_element)
+                self._token_values_by_name[token.token.name] = token.value
             else:
                 return False
         return True
 
     def _fetch_next_element(self):
-        if not self._current_element:
+        if not self._current_element and self._strings:
             self._current_element = self._strings.pop(0)
 
-    def _exact_match_required(self):
-        is_last_element = len(self._tokens) == 1
-        next_element_is_folder_seperator = len(self._tokens) >= 2 and self._tokens[1].token.type == 'FOLDER_SEPERATOR'
+    def _exact_match_required(self, index):
+        is_last_element = index == len(self._tokens) - 1
+        next_element_is_folder_seperator = index <= len(self._tokens) - 2 and self._tokens[
+            index + 1].token.type == 'FOLDER_SEPERATOR'
 
         if is_last_element or next_element_is_folder_seperator:
             return True
 
         return False
+
+    def _get_token_value_if_known(self, token):
+        # type: (MatcherToken) -> None
+        token.value = self._token_values_by_name.get(token.token.name)
