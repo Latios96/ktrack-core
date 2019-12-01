@@ -2,7 +2,7 @@
 name = "ktrack-core"
 version = "0.1.0"
 description = "My VFX Pipeline Core Foundation"
-authors = ["Jan <jan.honsbrok@gmail.com>"]
+authors = ["Jan Honsbrok <jan.honsbrok@gmail.com>"]
 packages = [
     { include = "ktrack_api" },
     { include = "kttk" },
