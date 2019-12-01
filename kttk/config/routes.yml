@@ -2,7 +2,7 @@
 # simple key-value pairs, values can contain {tokens}}
 
 # location where all projects are placed
-project_root : "M:/Projekte/{year}"
+project_root: "M:/Projekte/{year}"
 
 # project folder full path on disk
 project_folder: "{project_root}/{project_name}"

@@ -5,6 +5,7 @@ from kttk.file_manager.create_new_manager import CreateNewManager
 from kttk.file_manager.open_manager import OpenManager
 from kttk.file_manager.view_callback_mixin import ViewCallbackMixin
 
+
 # todo make private implementation classes / modules private
 class FileManager(object):
     """

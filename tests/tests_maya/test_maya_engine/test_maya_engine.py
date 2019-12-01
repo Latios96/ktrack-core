@@ -242,5 +242,5 @@ def check_correct_file_state(context):
     assert kttk.engines.current_engine().context == context
 
     # check context is correct, ignore user
-    assert kttk.engines.current_engine().deserialize_context_from_file().copy_context(user=None) == context.copy_context(user=None)
-
+    assert kttk.engines.current_engine().deserialize_context_from_file().copy_context(
+        user=None) == context.copy_context(user=None)

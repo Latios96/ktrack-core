@@ -19,6 +19,7 @@ def populated_context(ktrack_instance):
                    workfile=workfile,
                    user=user)
 
+
 @pytest.fixture
 def fully_populated_context(ktrack_instance):
     kt = ktrack_instance

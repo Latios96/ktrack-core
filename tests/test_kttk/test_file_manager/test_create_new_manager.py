@@ -5,7 +5,6 @@ from kttk.context import Context
 from kttk.file_manager.create_new_manager import CreateNewManager
 
 
-
 @pytest.fixture
 def create_new_manager(populated_context):
     manager = CreateNewManager(MagicMock(), MagicMock(), populated_context)

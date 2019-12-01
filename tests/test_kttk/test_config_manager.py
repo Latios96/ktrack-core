@@ -94,9 +94,10 @@ def test_validate_schema():
     assert isinstance(message, str)
     assert len(message) > 0
 
+
 def test_general_data_schema():
     # test valid
-    assert config_manager.general_data_schema.validate({'test': 'test'}) # would raise ValidationError if invalid
+    assert config_manager.general_data_schema.validate({'test': 'test'})  # would raise ValidationError if invalid
 
     with pytest.raises(valideer.ValidationError):
         config_manager.general_data_schema.validate({'test': []})

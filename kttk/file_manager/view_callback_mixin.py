@@ -5,6 +5,7 @@ class ViewCallbackMixin(object):
     """
 
     CANCEL = "cancel"
+
     def ask_for_template_use(self):
         """
         Asks if a template file should be used when creating a new file

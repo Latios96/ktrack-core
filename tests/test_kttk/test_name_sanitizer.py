@@ -16,7 +16,6 @@ def test_sanitize_name():
     for char in test_str:
         assert char not in name
 
-
     # test german umlaute
     name = name_sanitizer.sanitize_name("täÄstPröÖjüÜkßts")
 

@@ -7,7 +7,6 @@ from kttk.context import Context
 from kttk.file_manager.file_creation_helper import FileCreationHelper
 
 
-
 @pytest.fixture
 def mock_engine():
     # mock engine
@@ -22,7 +21,7 @@ def file_creation_helper(mock_engine):
     return FileCreationHelper(mock_engine)
 
 
-def test_context_is_valid(file_creation_helper,project_dict, shot_dict, task_dict):
+def test_context_is_valid(file_creation_helper, project_dict, shot_dict, task_dict):
     # valid context
     context = Context(project=project_dict, entity=shot_dict, task=task_dict, step='anim')
 

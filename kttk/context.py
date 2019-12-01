@@ -16,6 +16,7 @@ class Context(object):
     workfile: Hank_modelling_modelling_v001.mb
     Context only contains id and type for each entity. If you need a context with fully populated entities, use PopulatedContext
     """
+
     # todo make sure project, entity whatever can only be populated with correct entity types
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
         # project
@@ -329,6 +330,7 @@ class PopulatedContext(Context):
     """
     Same as Context, but with fully populated entities instead of only type and id
     """
+
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
         """
         Guarantes that provided entites are fully populated from database

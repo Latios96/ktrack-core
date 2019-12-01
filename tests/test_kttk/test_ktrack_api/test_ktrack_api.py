@@ -18,7 +18,7 @@ class TestEntity(Document):
     string_field = StringField()
     type = 'NonProjectEntity'
     dict_field = DictField()
-    id=ObjectId()
+    id = ObjectId()
 
 
 def test_convert_to_dict(ktrack_instance):

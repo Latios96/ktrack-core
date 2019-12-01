@@ -16,11 +16,12 @@ def ktrack_instance():
     :return:
     """
     print "setting up ktrack instance dropping"
-    impl =  KtrackMongoImpl('mongomock://localhost')
+    impl = KtrackMongoImpl('mongomock://localhost')
     yield impl
     print "tear down up ktrack instance dropping"
     for entity_name, entity_cls in entities.entities.iteritems():
         entity_cls.objects().all().delete()
+
 
 @pytest.fixture
 def ktrack_instance_patched():
@@ -29,7 +30,7 @@ def ktrack_instance_patched():
     :return:
     """
     print "setting up ktrack instance dropping"
-    impl =  KtrackMongoImpl('mongomock://localhost')
+    impl = KtrackMongoImpl('mongomock://localhost')
     with mock.patch('ktrack_api.get_ktrack') as mock_get_ktrack:
         mock_get_ktrack.return_value = impl
         yield impl

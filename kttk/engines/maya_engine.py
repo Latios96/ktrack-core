@@ -9,10 +9,8 @@ KTTK_CONTEXT = 'kttk_context'
 
 
 class MayaEngine(AbstractEngine):
-
-
     name = "Maya"  # todo read only
-    file_extension = ".mb" # todo read only
+    file_extension = ".mb"  # todo read only
 
     @property
     def qt_main_window(self):
@@ -56,7 +54,7 @@ class MayaEngine(AbstractEngine):
 
     def save(self):
         pm.saveFile()
-    
+
     def save_as(self, file_to_save_to):
         # type: (workfile) -> None
         # call super for context change
@@ -78,7 +76,8 @@ class MayaEngine(AbstractEngine):
         elif is_shot:
             maya_workspace_location_template = template_manager.get_route_template('shot_maya_workspace_location')
         elif is_unsupported_context:
-            raise Exception("Unsupported context: entity is {}, should be an asset or shot".format(self.context.entity)) # todo create specific exception for this
+            raise Exception("Unsupported context: entity is {}, should be an asset or shot".format(
+                self.context.entity))  # todo create specific exception for this
 
         # This is handled be workspace.mel:
         # - alembic
@@ -87,7 +86,8 @@ class MayaEngine(AbstractEngine):
         # - playblast folder
 
         # format the workspace location template
-        maya_workspace_location = template_manager.format_template(maya_workspace_location_template, self.context.get_avaible_tokens())
+        maya_workspace_location = template_manager.format_template(maya_workspace_location_template,
+                                                                   self.context.get_avaible_tokens())
         maya_workspace_location = maya_workspace_location.replace("\\", "/")
 
         # now change to correct location, workspace.mel is is created together with all other folders
@@ -109,7 +109,6 @@ class MayaEngine(AbstractEngine):
         logger.info("Setting standart fileNamePrefix to {}".format(image_name))
         settings_node = self.__get_default_render_globals()
         settings_node.imageFilePrefix.set(image_name)
-
 
         # store context in file
         self.serialize_context_to_file()
@@ -133,4 +132,3 @@ class MayaEngine(AbstractEngine):
         settings_nodes = pm.ls("defaultRenderGlobals")
         if len(settings_nodes) > 0:
             return settings_nodes[0]
-
