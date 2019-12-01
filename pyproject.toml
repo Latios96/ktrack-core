@@ -22,6 +22,7 @@ attrs = "^19.3"
 typing = "^3.7"
 tabulate = "^0.8.6"
 "Qt.py" = "^1.2"
+six = "^1.13"
 
 [tool.poetry.dev-dependencies]
 coverage = "^4.5"

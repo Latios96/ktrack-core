@@ -44,7 +44,7 @@ def get_current_interpreter():
 
 if __name__ == '__main__':
     interpreter = get_current_interpreter()
-    print "running tests in {}...".format(interpreter)
+    print("running tests in {}...".format(interpreter))
 
     cov = coverage.Coverage(include=['kttk*', 'ktrack_api*', 'kttk_widgets*', 'scripts*'])
     cov.start()

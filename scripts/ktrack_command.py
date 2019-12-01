@@ -17,7 +17,7 @@ def print_result(result):
     :param result:
     :return:
     """
-    print result
+    print(result)
 
 
 # todo write tests
@@ -241,7 +241,7 @@ def print_context(path=os.getcwd()):
 def update(entity_type, entity_id, data):
     # type: (str, KtrackIdType, dict) -> None
     # FIXME not working yet
-    print "updating entity of type {} with id {} with data {}".format(entity_type, entity_id, data)
+    print("updating entity of type {} with id {} with data {}".format(entity_type, entity_id, data))
 
 
 def task_preset():

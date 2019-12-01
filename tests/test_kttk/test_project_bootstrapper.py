@@ -102,7 +102,7 @@ def test_remove_bootstrapped_project(ktrack_instance_patched):
                 # make sure all entities where deleted
 
     for entity in entities:
-        print entity['type']
+        print(entity['type'])
         assert kt.find_one(entity['type'], entity['id']) is None
 
 

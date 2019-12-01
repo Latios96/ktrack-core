@@ -22,7 +22,7 @@ def test_load_folder_template():
     with patch.object(template_manager, '_data_folders', yml_data) as mock_yml_data:
         folders = template_manager.get_folder_templates('asset')
 
-    print folders
+    print(folders)
 
     assert len(folders) is 3
 
@@ -55,7 +55,7 @@ def test_get_file_template():
     with patch.object(template_manager, '_data_folders', yml_data) as mock_yml_data:
         files = template_manager.get_file_templates('asset')
 
-    print files
+    print(files)
 
     assert len(files) is 1
 
@@ -83,7 +83,7 @@ def test_format_template():
     template = "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}/workspace.mel"
 
     formated_template = template_manager.format_template(template, context)
-    print formated_template
+    print(formated_template)
 
     assert "{" not in formated_template
 

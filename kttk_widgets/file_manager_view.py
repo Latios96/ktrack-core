@@ -109,7 +109,7 @@ class FileManagerWidget(QtWidgets.QWidget):
         self.task_model.set_entities(tasks)
 
     def _update_w(self, selected_indexes):
-        print self.workfile_model.get_entity(selected_indexes[0].row())['name']
+        print(self.workfile_model.get_entity(selected_indexes[0].row())['name'])
 
     def task_selection_changed(self, selected_indexes):
         if len(selected_indexes) > 0:

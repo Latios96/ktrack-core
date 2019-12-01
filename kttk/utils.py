@@ -30,7 +30,7 @@ class FrozenDict(dict):
     def __init__(self, data):
         # type: (dict) -> None
         super(FrozenDict, self).__init__()
-        for key, value in data.iteritems():
+        for key, value in data.items():
             super(FrozenDict, self).__setitem__(key, value)
 
     def __setitem__(self, item):

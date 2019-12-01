@@ -120,7 +120,7 @@ def test_update(ktrack_instance):
     # now check if values are correctly updated
     assert entity.thumbnail['type'] == 'thumbnail'
     assert entity.thumbnail['id'] == SOME_OBJECT_ID
-    assert entity.updated_at >= old_update_time
+    assert entity.updated_at != old_update_time
 
 
 def test_delete(ktrack_instance):

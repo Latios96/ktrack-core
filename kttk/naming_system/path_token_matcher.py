@@ -42,7 +42,7 @@ class PathTokenSequenceMatcher(object):
 
     def __init__(self, tokens, string):
         # type: (List[PathToken], str) -> None
-        self._tokens = map(lambda x: MatcherToken(token=x), tokens)
+        self._tokens = list(map(lambda x: MatcherToken(token=x), tokens))
         self._strings = re.split('(/)', string)
         self._current_element = ''
         self._token_values_by_name = {}

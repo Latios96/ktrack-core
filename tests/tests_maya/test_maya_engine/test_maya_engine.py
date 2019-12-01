@@ -12,14 +12,14 @@ from mock import patch, MagicMock, mock
 import os
 
 try:
-    print "loading Maya..."
+    print("loading Maya...")
     import pymel.core as pm
     import maya.cmds as cmds
     from kttk.engines.maya_engine import MayaEngine
 except:
     pass
 
-print "Maya loaded!"
+print("Maya loaded!")
 
 
 @pytest.fixture

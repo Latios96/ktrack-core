@@ -85,5 +85,5 @@ class ViewCallbackQtImplementation(ViewCallbackMixin):
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
     v = ViewCallbackQtImplementation()
-    print v.ask_for_comment()
+    print(v.ask_for_comment())
     app.exec_()
