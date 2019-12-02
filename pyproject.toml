@@ -23,13 +23,14 @@ typing = "^3.7"
 tabulate = "^0.8.6"
 "Qt.py" = "^1.2"
 six = "^1.13"
-pytest = "=3.5"
 
 [tool.poetry.dev-dependencies]
 coverage = "^4.5"
 mongomock = "^3.18"
 junitparser = "^1.4"
 mock = "^3.0"
+pytest = "=3.5"
+pytest-cov = "2.5.1"
 
 [build-system]
 requires = ["poetry>=0.12"]
