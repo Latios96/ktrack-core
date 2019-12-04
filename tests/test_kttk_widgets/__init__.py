@@ -35,8 +35,6 @@ def has_pyside_no_dcc():
     except:
         pass
 
-    if not os.environ.get('TRAVIS'):
-        return True
     return False
 
 
