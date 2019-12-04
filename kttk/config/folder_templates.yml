@@ -11,21 +11,21 @@
 # name specifies the file name and content the text file content. Content can contain {tokens}
 
 project:
-    folders:
-        "{project_root}/{project_name}":
-            - Assets
-            - Shots
-asset: 
-    folders:
-        "{project_root}/{project_name}/Assets/{asset_type}/{code}":
-            - "{code}_Alembic"
-            - "{code}_Textures"
-            - "{code}_Input_2D"
-            - "{code}_Input_3D"
-            - "{code}_Maya":
-                - __file__ :
-                             name: workspace.mel
-                             content: '
+  folders:
+    "{project_root}/{project_name}":
+      - Assets
+      - Shots
+asset:
+  folders:
+    "{project_root}/{project_name}/Assets/{asset_type}/{code}":
+      - "{code}_Alembic"
+      - "{code}_Textures"
+      - "{code}_Input_2D"
+      - "{code}_Input_3D"
+      - "{code}_Maya":
+          - __file__:
+              name: workspace.mel
+              content: '
                                       workspace -ot "scene" "{dcc_scenes_location_asset_maya}";
                                       workspace -ot "mayaAscii" "{dcc_scenes_location_asset_maya}";
                                       workspace -ot "mayaBinary" "{dcc_scenes_location_asset_maya}";
@@ -33,19 +33,19 @@ asset:
                                       workspace -fr "alembicCache" "{asset_alembic}";
                                       workspace -fr "movie" "asset_playblast_location";
                                       '
-            - "{code}_out":
-                - playblast
+      - "{code}_out":
+          - playblast
 shot:
-    folders:
-        "{project_root}/{project_name}/Shots/{code}":
-            - "{code}_Alembic"
-            - "{code}_Textures"
-            - "{code}_Input_2D"
-            - "{code}_Input_3D"
-            - "{code}_Maya":
-                - __file__ :
-                             name: workspace.mel
-                             content: '
+  folders:
+    "{project_root}/{project_name}/Shots/{code}":
+      - "{code}_Alembic"
+      - "{code}_Textures"
+      - "{code}_Input_2D"
+      - "{code}_Input_3D"
+      - "{code}_Maya":
+          - __file__:
+              name: workspace.mel
+              content: '
                                       workspace -ot "scene" "{dcc_scenes_location_shot_maya}";
                                       workspace -ot "mayaAscii" "{dcc_scenes_location_shot_maya}";
                                       workspace -ot "mayaBinary" "{dcc_scenes_location_shot_maya}";
@@ -53,8 +53,8 @@ shot:
                                       workspace -fr "alembicCache" "{shot_alembic}";
                                       workspace -fr "movie" "shot_playblast_location";
                                       '
-            - "{code}_out":
-                - playblast
+      - "{code}_out":
+          - playblast
 task:
-    folders:
-            "": ""
+  folders:
+    "": ""

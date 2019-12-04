@@ -1,11 +1,14 @@
 import os
 
 import pytest
+import six
 import valideer
 from mock import mock, MagicMock
 from valideer import ValidationError
 
 from kttk.config import config_manager
+
+BUILTIN_SOPEN = 'builtins.open' if six.PY3 else '__builtin__.open'
 
 
 @pytest.fixture
@@ -41,7 +44,7 @@ def test_load_file_no_validator():
     # tests loading a existing file with no validator
     with mock.patch('os.path.exists') as mock_path_exists:
         mock_path_exists.return_value = True
-        with mock.patch('__builtin__.open') as mock_file:
+        with mock.patch(BUILTIN_SOPEN) as mock_file:
             with mock.patch('yaml.load') as mock_yml_load:
                 mock_yml_load.return_value = {'db': 'path'}
 
@@ -53,7 +56,7 @@ def test_load_file_validator_valid():
     # tests loading a existing file with validator and data is valid
     with mock.patch('os.path.exists') as mock_path_exists:
         mock_path_exists.return_value = True
-        with mock.patch('__builtin__.open') as mock_file:
+        with mock.patch(BUILTIN_SOPEN) as mock_file:
             with mock.patch('yaml.load') as mock_yml_load:
                 mock_yml_load.return_value = {'db': 'path'}
 
@@ -70,7 +73,7 @@ def test_load_file_validator_invalid():
 
     with mock.patch('os.path.exists') as mock_path_exists:
         mock_path_exists.return_value = True
-        with mock.patch('__builtin__.open') as mock_file:
+        with mock.patch(BUILTIN_SOPEN) as mock_file:
             with mock.patch('yaml.load') as mock_yml_load:
                 mock_yml_load.return_value = {'db': 'path'}
 
@@ -94,9 +97,10 @@ def test_validate_schema():
     assert isinstance(message, str)
     assert len(message) > 0
 
+
 def test_general_data_schema():
     # test valid
-    assert config_manager.general_data_schema.validate({'test': 'test'}) # would raise ValidationError if invalid
+    assert config_manager.general_data_schema.validate({'test': 'test'})  # would raise ValidationError if invalid
 
     with pytest.raises(valideer.ValidationError):
         config_manager.general_data_schema.validate({'test': []})

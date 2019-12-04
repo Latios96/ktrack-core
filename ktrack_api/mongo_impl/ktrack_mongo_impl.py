@@ -51,7 +51,7 @@ class KtrackMongoImpl(object):
 
         entity = entity_cls()
 
-        for key, value in data.iteritems():
+        for key, value in data.items():
             setattr(entity, key, value)
 
         entity.save()
@@ -71,7 +71,7 @@ class KtrackMongoImpl(object):
 
         entity = entity_candidates[0]
 
-        for key, value in data.iteritems():
+        for key, value in data.items():
             setattr(entity, key, value)
 
         entity.save()

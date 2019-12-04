@@ -98,7 +98,7 @@ def get_file_and_folder_templates(entity_type):
 
     def iter_folders(folder_dict, parent=""):
 
-        for parent_folder, subfolders in folder_dict.iteritems():
+        for parent_folder, subfolders in folder_dict.items():
             parent_folder = parent + ("" if parent is "" else "/") + parent_folder
             for folder in subfolders:
                 # folder dict

@@ -16,7 +16,6 @@ def test_sanitize_name():
     for char in test_str:
         assert char not in name
 
-
     # test german umlaute
     name = name_sanitizer.sanitize_name("täÄstPröÖjüÜkßts")
 
@@ -30,7 +29,7 @@ def test_sanitize_name():
         'ß': 'ss'
     }
 
-    for key, value in umlaute_mapping.iteritems():
+    for key, value in umlaute_mapping.items():
         assert key not in name
 
     # test no multiple underscores

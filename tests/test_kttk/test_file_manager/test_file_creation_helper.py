@@ -7,7 +7,6 @@ from kttk.context import Context
 from kttk.file_manager.file_creation_helper import FileCreationHelper
 
 
-
 @pytest.fixture
 def mock_engine():
     # mock engine
@@ -22,7 +21,7 @@ def file_creation_helper(mock_engine):
     return FileCreationHelper(mock_engine)
 
 
-def test_context_is_valid(file_creation_helper,project_dict, shot_dict, task_dict):
+def test_context_is_valid(file_creation_helper, project_dict, shot_dict, task_dict):
     # valid context
     context = Context(project=project_dict, entity=shot_dict, task=task_dict, step='anim')
 
@@ -77,7 +76,7 @@ def test_create_workfile_from_non_existing(file_creation_helper, populated_conte
         assert new_workfile['version_number'] == 1
         assert new_workfile['name'] == "my_entity_task_anim_v001.mb"
         assert os.path.normpath(new_workfile['path']) == os.path.normpath(
-            'M:/Projekte/2018/my_project/Assets/prop/my_entity/my_entity_Maya/my_entity_task_anim_v001.mb')
+            'M:/Projekte/2019/my_project/Assets/prop/my_entity/my_entity_Maya/my_entity_task_anim_v001.mb')
         assert new_workfile['created_from'] is None
 
 

@@ -31,7 +31,7 @@ def sanitize_name(entity_name):
         project_name = project_name.replace(char, "_")
 
     # remove german umlaute
-    for key, value in umlaute_mapping.iteritems():
+    for key, value in umlaute_mapping.items():
         project_name = project_name.replace(key, value)
 
     # remove multiple underscores

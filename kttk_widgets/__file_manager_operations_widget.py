@@ -41,13 +41,13 @@ class _OperationsMock(object):
         return MagicMock()
 
     def open(self, workfile):
-        print "open file"
+        print("open file")
 
     def advance(self, comment=""):
-        print "advance file"
+        print("advance file")
 
     def create(self, context):
-        print "create"
+        print("create")
 
 
 if __name__ == '__main__':

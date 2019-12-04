@@ -6,6 +6,7 @@ class AdvanceManager(object):
     """
     Class responsible for the Control Flow for creation of advancing a workfile
     """
+
     def __init__(self, engine, view_callback_provider, context):
         self._engine = engine
         self._view_callback_provider = view_callback_provider
@@ -13,14 +14,15 @@ class AdvanceManager(object):
         self._helper = FileCreationHelper(self._engine)
         self.workfile = None
 
-    def do_it(self): # todo add tests
+    def do_it(self):  # todo add tests
         # ask for comment
         user_option, comment = self._view_callback_provider.ask_for_comment()
 
         if user_option == True:
             # do advance
             # create new workfile based on old
-            new_workfile = self._helper._create_workfile_from(self._engine.context, self._engine.current_workfile, comment=comment)
+            new_workfile = self._helper._create_workfile_from(self._engine.context, self._engine.current_workfile,
+                                                              comment=comment)
 
             # save current workfile as new_workfile
             self._engine.save_as(new_workfile)

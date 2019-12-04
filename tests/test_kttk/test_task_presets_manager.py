@@ -40,7 +40,6 @@ def test_presets_schema_invalid():
     with pytest.raises(ValidationError):
         task_presets_manager.task_preset_schema.validate(data)
 
-
     # test preset missing step / anim
 
     data = {

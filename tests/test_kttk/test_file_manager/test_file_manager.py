@@ -16,4 +16,4 @@ def test_create_new(file_manager, populated_context):
     with patch('kttk.file_manager.create_new_manager.CreateNewManager.do_it') as mock_do_it:
         file_manager.create(populated_context)
 
-        assert  mock_do_it.called
+        assert mock_do_it.called

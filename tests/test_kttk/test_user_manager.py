@@ -1,11 +1,13 @@
-import __builtin__
 import json
 import os
 import sys
 
+import six
 from mock import patch, MagicMock
 
 from kttk import user_manager
+
+INPUT = 'builtins.input' if six.PY3 else '__builtin__.raw_input'
 
 
 def test_get_user_information_path():
@@ -16,7 +18,7 @@ def test_get_user_information_path():
         assert path.startswith("C:")
         assert "Users" in path
     else:
-        print "running not on windows, so pass this tests"
+        print("running not on windows, so pass this tests")
 
 
 def test_generate_user_name():
@@ -49,7 +51,7 @@ def test_generate_user_name():
 
 
 def test_create_user():
-    with patch.object(__builtin__, 'raw_input') as mock_raw_input:
+    with patch(INPUT) as mock_raw_input:
         mock_raw_input.return_value = "sonny"
 
         with patch("ktrack_api.get_ktrack") as mock_kt:

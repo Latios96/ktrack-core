@@ -7,3 +7,4 @@ tabulate
 typing
 frozendict
 valideer
+attrs

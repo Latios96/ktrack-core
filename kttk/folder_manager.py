@@ -64,7 +64,7 @@ def init_entity(entity_type, entity_id):
         path_cache_manager.register_path(path, context)
 
     logger.info("Creating files for {} {}..".format(entity_type,
-                                                      entity.get('name') if entity.get('name') else entity.get('code')))
+                                                    entity.get('name') if entity.get('name') else entity.get('code')))
     # create files
     for file_template in file_templates:
         file_path = template_manager.format_template(file_template['path'], context_dict)

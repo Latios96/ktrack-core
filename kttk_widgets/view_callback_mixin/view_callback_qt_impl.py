@@ -17,7 +17,6 @@ class ViewCallbackQtImplementation(ViewCallbackMixin):
         msgBox.setWindowTitle("Use template file?")
         msgBox.setText("Use a templat file or save your current scene as new?")
 
-
         use_template_button = msgBox.addButton("Use template", QtWidgets.QMessageBox.AcceptRole)
         save_current_button = msgBox.addButton("Save current as new", QtWidgets.QMessageBox.AcceptRole)
         cancel_button = msgBox.addButton("Cancel", QtWidgets.QMessageBox.RejectRole)
@@ -80,11 +79,11 @@ class ViewCallbackQtImplementation(ViewCallbackMixin):
         Comment should be None if user canceled, else user comment as string (utf-8)
         """
         comment, useroption = QtWidgets.QInputDialog.getText(None, "Comment", "Enter comment for new file")
-        return useroption, comment.encode('utf_8','ignore')
+        return useroption, comment.encode('utf_8', 'ignore')
 
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication([])
     v = ViewCallbackQtImplementation()
-    print v.ask_for_comment()
+    print(v.ask_for_comment())
     app.exec_()

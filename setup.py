@@ -3,6 +3,7 @@ import os
 
 os.system("pip install -r requirements.txt")
 
+
 def read_version_number():
     import re
     VERSIONFILE = "kttk/__init__.py"
@@ -14,6 +15,7 @@ def read_version_number():
         return verstr.replace("__version__", "").strip()
     else:
         raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
+
 
 setup(
     name='ktrack-core',

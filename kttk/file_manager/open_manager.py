@@ -19,7 +19,7 @@ class OpenManager(object):
         # check if scene is already open
         if self._engine.current_file_path() == workfile['path']:
             # ask for reload
-            if self._view_callback_provider.ask_for_reload() == True: # explicit True, can also return "canceled"
+            if self._view_callback_provider.ask_for_reload() == True:  # explicit True, can also return "canceled"
                 self._open_scene()
             else:
                 return
@@ -34,5 +34,5 @@ class OpenManager(object):
                 return
         self._open_scene(workfile)
 
-    def _open_scene(self,workfile):
+    def _open_scene(self, workfile):
         self._engine.open_file(workfile)

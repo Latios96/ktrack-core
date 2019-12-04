@@ -5,6 +5,8 @@ import json
 import os
 import sys
 
+import six
+
 import ktrack_api
 
 KTRACK_USER_JSON = ".ktrack_user.json"
@@ -113,10 +115,18 @@ def create_user():
     """
     # todo do command line version and PySide Gui Version
     # ask for first name
-    first_name = raw_input("Enter first name: ")
+    first_name_text = "Enter first name: "
+    if six.PY3:
+        first_name = input(first_name_text)
+    else:
+        first_name = raw_input(first_name_text)
 
     # ask for second name
-    second_name = raw_input("Enter second name: ")
+    second_name_text = "Enter second name: "
+    if six.PY3:
+        second_name = input(second_name_text)
+    else:
+        second_name = raw_input(second_name_text)
 
     # genereate user name
     username = generate_user_name(first_name, second_name)

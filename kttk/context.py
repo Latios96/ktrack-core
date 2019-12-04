@@ -1,6 +1,7 @@
-import pickle
+import json
 import pickle
 
+import six
 from frozendict import frozendict
 
 import ktrack_api
@@ -16,6 +17,7 @@ class Context(object):
     workfile: Hank_modelling_modelling_v001.mb
     Context only contains id and type for each entity. If you need a context with fully populated entities, use PopulatedContext
     """
+
     # todo make sure project, entity whatever can only be populated with correct entity types
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
         # project
@@ -83,7 +85,7 @@ class Context(object):
         :return: True if step is valid, raises ValueError if not
         """
         if step is not None:
-            if isinstance(step, str) or isinstance(step, unicode):
+            if isinstance(step, six.string_types):
                 if len(step) > 0:
                     return True
             raise ValueError("Invalid step, {} is not a non-empty string, its {}!".format(step, type(step)))
@@ -223,12 +225,12 @@ class Context(object):
         Serializes this context to a pickle string
         :return:
         """
-        return pickle.dumps(self.as_dict())
+        return json.dumps(self.as_dict())
 
     @classmethod
     def deserialize(cls, string):
         # type: (str) -> Context
-        return cls.from_dict(pickle.loads(string))
+        return cls.from_dict(json.loads(string))
 
     def get_avaible_tokens(self):
         # type: () -> dict
@@ -329,6 +331,7 @@ class PopulatedContext(Context):
     """
     Same as Context, but with fully populated entities instead of only type and id
     """
+
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
         """
         Guarantes that provided entites are fully populated from database
