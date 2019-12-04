@@ -40,5 +40,4 @@ def has_pyside_no_dcc():
     return False
 
 
-
 pyside_only = pytest.mark.skipif(not has_pyside_no_dcc(), reason="requires PySide")
