@@ -2,7 +2,6 @@ C:\Python27\Scripts\virtualenv venv
 set PATH=%WORKSPACE%/venv/Scripts/;%PATH%
 %WORKSPACE%/venv/Scripts/python setup.py install
 %WORKSPACE%/venv/Scripts/pip install -r requirements_ci.txt
-%WORKSPACE%/venv/Scripts/pip install -r requirements_ci_jenkins.txt
 
 echo "activating integration tests..."
 set KTRACK_ENABLE_INTEGRATION_TESTS=runTrue

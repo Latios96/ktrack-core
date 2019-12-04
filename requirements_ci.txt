@@ -5,3 +5,6 @@ mock
 mongomock
 junitparser
 coverage
+pytest-qt
+PySide;python_version <= '2.7'
+PySide2;python_version >= '3.7'
