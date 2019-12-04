@@ -10,7 +10,10 @@ def has_pyside_no_dcc():
     :return: True if avaible, False otherwise
     """
     if os.environ.get("TRAVIS"):
+        print("running on travis")
         return False
+    else:
+        print("not running on travis")
     try:
         import maya.cmds as cmds
         return False
