@@ -9,6 +9,8 @@ def has_pyside_no_dcc():
     Checks if PySioe or PySide2 is avaible
     :return: True if avaible, False otherwise
     """
+    if os.environ.get("TRAVIS"):
+        return False
     try:
         import maya.cmds as cmds
         return False
