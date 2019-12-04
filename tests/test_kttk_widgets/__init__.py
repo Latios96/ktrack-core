@@ -34,7 +34,11 @@ def has_pyside_no_dcc():
         return True
     except:
         pass
+
+    if not os.environ.get('TRAVIS'):
+        return True
     return False
+
 
 
 pyside_only = pytest.mark.skipif(not has_pyside_no_dcc(), reason="requires PySide")
