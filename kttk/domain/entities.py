@@ -74,6 +74,9 @@ class Task(ProjectEntity):
 
 
 def _parse_version_number(version_identifier):
+    if not version_identifier:
+        return version_identifier
+
     if isinstance(version_identifier, int):
         return version_identifier
 
@@ -89,8 +92,10 @@ class VersionNumber(object):
 
     @number.validator
     def check(self, attribute, value):
+        if not value:
+            raise ValueError("version number has to be > 0 and <= 999, was {}".format(value))
         if value <= 0 or value > 999:
-            raise ValueError("version number has to be > 0 and <= 999")
+            raise ValueError("version number has to be > 0 and <= 999, was {}".format(value))
 
     @property
     def version_str(self):

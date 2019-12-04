@@ -21,9 +21,20 @@ class TestVersionNumber(object):
         ("1", 1),
         (1, 1),
     ])
-    def test_parse_correctly(self, version_identifier, version_number):
+    def test_parse_correct(self, version_identifier, version_number):
         version = VersionNumber(version_identifier)
         assert version.number == version_number
+
+    @pytest.mark.parametrize("version_identifier", [
+        "v000",
+        "v1000",
+        "abc",
+        "wurst",
+        None,
+    ])
+    def test_parse_incorrect(self, version_identifier):
+        with pytest.raises(ValueError):
+            assert VersionNumber(version_identifier)
 
     def test_correct_version_string(self):
         version = VersionNumber(1)
