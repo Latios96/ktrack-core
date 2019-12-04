@@ -7,35 +7,35 @@ KtrackId = str
 
 @attr.s
 class BasicEntity(object):
-    id = attr.ib(type=KtrackId)
-    created_at = attr.ib(type=datetime.datetime)
-    updated_at = attr.ib(type=datetime.datetime)
+    id = attr.ib(type=KtrackId, default=None)
+    created_at = attr.ib(type=datetime.datetime, default=None)
+    updated_at = attr.ib(type=datetime.datetime, default=None)
 
 
 @attr.s
 class Thumbnail(BasicEntity):
-    path = attr.ib(type=str)
+    path = attr.ib(type=str, default=None)
 
 
 @attr.s
 class NonProjectEntity(BasicEntity):
-    thumbnail = attr.ib(type=Thumbnail)
+    thumbnail = attr.ib(type=Thumbnail, default=None)
 
 
 @attr.s
 class Project(NonProjectEntity):
-    name = attr.ib(type=str)
+    name = attr.ib(type=str, default=None)
 
 
 @attr.s
 class ProjectEntity(NonProjectEntity):
-    project = attr.ib(type=KtrackId)
+    project = attr.ib(type=KtrackId, default=None)
 
 
 @attr.s
 class Asset(ProjectEntity):
-    name = attr.ib(type=str)
-    type = attr.ib(type=str)
+    name = attr.ib(type=str, default=None)
+    type = attr.ib(type=str, default=None)
 
 
 @attr.s
@@ -56,8 +56,8 @@ class CutInformation(object):
 
 @attr.s
 class Shot(ProjectEntity):
-    code = attr.ib(type=str)
-    cut_information = attr.ib(type=CutInformation)
+    code = attr.ib(type=str, default=None)
+    cut_information = attr.ib(type=CutInformation, default=None)
 
 
 @attr.s
@@ -68,9 +68,9 @@ class EntityLink(object):
 
 @attr.s
 class Task(ProjectEntity):
-    name = attr.ib(type=str)
-    step = attr.ib(type=str)
-    entity = attr.ib(type=EntityLink)
+    name = attr.ib(type=str, default=None)
+    step = attr.ib(type=str, default=None)
+    entity = attr.ib(type=EntityLink, default=None)
 
 
 def _parse_version_number(version_identifier):
@@ -104,12 +104,12 @@ class VersionNumber(object):
 
 @attr.s
 class Workfile(ProjectEntity):
-    name = attr.ib(type=str)
-    entity = attr.ib(type=EntityLink)
-    path = attr.ib(type=str)
-    comment = attr.ib(type=str)
-    version_number = attr.ib(type=VersionNumber)
-    created_from = attr.ib(type=KtrackId)
+    name = attr.ib(type=str, default=None)
+    entity = attr.ib(type=EntityLink, default=None)
+    path = attr.ib(type=str, default=None)
+    comment = attr.ib(type=str, default=None)
+    version_number = attr.ib(type=VersionNumber, default=None)
+    created_from = attr.ib(type=KtrackId, default=None)
 
 
 class User(NonProjectEntity):
