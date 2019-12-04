@@ -1,8 +1,11 @@
 import mock
-import pytest
-from Qt import QtWidgets
 
-from kttk_widgets.view_callback_mixin.view_callback_qt_impl import ViewCallbackQtImplementation
+try:
+    from Qt import QtWidgets
+    from kttk_widgets.view_callback_mixin.view_callback_qt_impl import ViewCallbackQtImplementation
+except ImportError:
+    pass
+
 from tests.test_kttk_widgets import pyside_only
 
 

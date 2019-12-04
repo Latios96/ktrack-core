@@ -4,7 +4,3 @@ mock
 mongomock
 junitparser
 coverage
-pytest-qt
-PySide
-
-

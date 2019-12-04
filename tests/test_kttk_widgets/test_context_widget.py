@@ -1,7 +1,11 @@
 import pytest
 from kttk.context import Context
 
-from kttk_widgets.context_widget import ContextWidget
+try:
+    from kttk_widgets.context_widget import ContextWidget
+except ImportError:
+    pass
+
 from tests.test_kttk_widgets import pyside_only
 
 
