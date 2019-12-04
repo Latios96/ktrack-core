@@ -2,6 +2,7 @@ import datetime
 import getpass
 
 from mongoengine import signals, Document, DateTimeField, StringField, DictField, IntField
+from typing import Dict
 
 
 def update_modified(sender, document):
@@ -10,7 +11,7 @@ def update_modified(sender, document):
 
 signals.pre_save.connect(update_modified)
 
-entities = {}  # type: dict[str, NonProjectEntity]
+entities = {}  # type: Dict[str, NonProjectEntity]
 
 
 def register_entity(name, entity_cls):
@@ -30,16 +31,13 @@ class NonProjectEntity(Document):
     type = 'NonProjectEntity'
     thumbnail = DictField()  # dict like {'path': thumbnail_path}
 
-    meta = {'allow_inheritance': True,
-            'collection': 'ktrack_api_entities'}
-
-    # currently unused
-    """def to_link(self):
-        return {'type': self.type, 'id': self.id} # todo add test"""
+    meta = {'abstract': True}
 
 
 class ProjectEntity(NonProjectEntity):
     project = DictField(required=True)
+
+    meta = {'abstract': True}
 
 
 class Project(NonProjectEntity):
