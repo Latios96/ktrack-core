@@ -1,10 +1,11 @@
-from bson import ObjectId
-from mongoengine import connect, DictField, StringField
-from mongoengine.base import BaseDict
+from typing import List, Optional, Dict
 
+from bson import ObjectId
+from mongoengine import connect
+
+from ktrack_api.exceptions import EntityMissing, EntityNotFoundException
 from ktrack_api.ktrack import KtrackIdType
 from ktrack_api.mongo_impl import entities
-from ktrack_api.exceptions import EntityMissing, EntityNotFoundException
 from ktrack_api.mongo_impl.entities import NonProjectEntity
 
 
@@ -77,7 +78,7 @@ class KtrackMongoImpl(object):
         entity.save()
 
     def find(self, entity_type, filters):
-        # type: (str, list) -> list[dict]
+        # type: (str, list) -> List[dict]
 
         try:
             entity_cls = entities.entities[entity_type]
@@ -100,7 +101,7 @@ class KtrackMongoImpl(object):
         return [_convert_to_dict(x) for x in entity_candidates]
 
     def find_one(self, entity_type, entity_id):
-        # type: (str, KtrackIdType) -> dict
+        # type: (str, KtrackIdType) -> Optional[Dict]
         try:
             entity_cls = entities.entities[entity_type]
         except KeyError:
