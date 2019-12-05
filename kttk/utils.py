@@ -25,6 +25,7 @@ def frozen_entity_id_dict(entity):
         return FrozenDict({'type': entity['type'], 'id': entity['id']})
     return None
 
+
 # todo WTF is this?
 class FrozenDict(dict):
     """
