@@ -1,5 +1,4 @@
 import json
-import pickle
 
 import six
 from frozendict import frozendict
@@ -9,14 +8,6 @@ from kttk import template_manager, utils
 
 
 class Context(object):
-    """
-    Context is an immutable object of the current project/entity/task/workfile combination, example:
-    Project: Finding_Dory
-    Entity: Hank (Asset)
-    Task: modelling
-    workfile: Hank_modelling_modelling_v001.mb
-    Context only contains id and type for each entity. If you need a context with fully populated entities, use PopulatedContext
-    """
 
     # todo make sure project, entity whatever can only be populated with correct entity types
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
@@ -79,11 +70,6 @@ class Context(object):
     @staticmethod
     def _validate_step(step):
         # type: (str) -> bool
-        """
-        Validates the given step. A step can be null or string or unicode, but not empty string
-        :param step: step to validate
-        :return: True if step is valid, raises ValueError if not
-        """
         if step is not None:
             if isinstance(step, six.string_types):
                 if len(step) > 0:
@@ -95,11 +81,6 @@ class Context(object):
     @staticmethod
     def _validate_entity_dict(entity_dict):
         # type: (dict) -> bool
-        """
-        Validates the given entity dict. Should have at least a type and a id and they are not None
-        :param dic:
-        :return: true if entity has type and id, otherwise invalid entity Exception is thrown
-        """
         if entity_dict is not None:
             has_type = entity_dict.get("type")
             has_id = entity_dict.get("id")
@@ -113,7 +94,6 @@ class Context(object):
 
     def __repr__(self):
         # type: () -> str
-        # multi line repr
         msg = []
         msg.append("  Project: %s" % str(self.project))
         msg.append("  Entity: %s" % str(self.entity))
@@ -125,12 +105,6 @@ class Context(object):
 
     def _entity_dicts_equal(self, left, right):
         # type: (dict, dict) -> bool
-        """
-        Tests if two entity dicts are equal. They are equal if both type and id match or both are None
-        :param left:
-        :param right:
-        :return:
-        """
         if left == right == None:
             return True
         if left == None or right == None:
@@ -139,12 +113,6 @@ class Context(object):
 
     def __eq__(self, other):
         # type: (Context) -> bool
-        """
-        Tests if two context are equal. Contexts are considered equal, if both type and id attributes of containing entities
-        match and step string matches
-        :param other:
-        :return:
-        """
 
         if not isinstance(other, Context):
             return NotImplemented
@@ -177,12 +145,6 @@ class Context(object):
 
     def __ne__(self, other):
         # type: (Context) -> bool
-        """
-        Test if this Context instance is not equal to the other Context instance
-
-        :param other:   The other Context instance to compare with
-        :returns:       True if self != other, False otherwise
-        """
         is_equal = self.__eq__(other)
         if is_equal is NotImplemented:
             return NotImplemented
@@ -190,10 +152,6 @@ class Context(object):
 
     def as_dict(self):
         # type: () -> dict
-        """
-        Converts this context into a dictionary
-        :return: this context as dict
-        """
         context_dict = {}
         context_dict['project'] = self.project
         context_dict['entity'] = self.entity
@@ -207,11 +165,6 @@ class Context(object):
     @classmethod
     def from_dict(cls, context_dict):
         # type: (dict) -> Context
-        """
-        Constructs a new Context from given dictionary
-        :param context_dict:
-        :return: a new Context object
-        """
         return Context(project=context_dict.get('project'),
                        entity=context_dict.get('entity'),
                        step=context_dict.get('step'),
@@ -221,10 +174,6 @@ class Context(object):
 
     def serialize(self):
         # type: () -> str
-        """
-        Serializes this context to a pickle string
-        :return:
-        """
         return json.dumps(self.as_dict())
 
     @classmethod
@@ -276,18 +225,6 @@ class Context(object):
 
     def copy_context(self, project=0, entity=0, step=0, task=0, workfile=0, user=0):
         # type: (dict, dict, str, dict, dict, dict) -> Context
-        """
-        Copy util. Returns a new context instance, will contain values from this context if not overriden by keyword args
-        Note: We use 0 here instead of None, so we can override with None
-        :param self:
-        :param project: project to override on new Context
-        :param entity: entity to override on new Context
-        :param step: step to override on new Context
-        :param task: task to override on new Context
-        :param workfile: workfile to override on new Context
-        :param user: user to override on new Context
-        :return: Context, values not overriden are the same as in this instance
-        """
         _project = self.project
         if project != 0:
             _project = project
@@ -315,10 +252,6 @@ class Context(object):
         return Context(_project, _entity, _step, _task, _workfile, _user)
 
     def populate_context(self):
-        """
-        Returns a PopulatedContext context instance based on this context
-        :return:
-        """
         return PopulatedContext(project=self.project,
                                 entity=self.entity,
                                 step=self.step,
@@ -328,20 +261,8 @@ class Context(object):
 
 
 class PopulatedContext(Context):
-    """
-    Same as Context, but with fully populated entities instead of only type and id
-    """
 
     def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
-        """
-        Guarantes that provided entites are fully populated from database
-        :param project:
-        :param entity:
-        :param step:
-        :param task:
-        :param workfile:
-        :param user:
-        """
         kt = ktrack_api.get_ktrack()
         # project
         self._validate_entity_dict(project)
