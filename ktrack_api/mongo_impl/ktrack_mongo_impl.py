@@ -28,9 +28,6 @@ def _convert_to_dict(entity):
 
 
 class KtrackMongoImpl(object):
-    """
-    Mongo DB Implementation of the ktrack api interface. Uses mongoengine as a database mapper
-    """
 
     def __init__(self, connection_uri):
         connect("mongoeengine_test",
@@ -38,13 +35,7 @@ class KtrackMongoImpl(object):
 
     def create(self, entity_type, data={}):
         # type: (str, dict) -> dict
-        """
-        Creates a new entity instance of given type and applies given data.
-        Returns new created entity
-        :param entity_type: type of the new entity
-        :param data: data for entity
-        :return: newly created entity
-        """
+
         try:
             entity_cls = entities.entities[entity_type.lower()]
         except KeyError:
