@@ -8,8 +8,8 @@ KtrackId = str
 @attr.s
 class BasicEntity(object):
     id = attr.ib(type=KtrackId, default=None)
-    created_at = attr.ib(type=datetime.datetime, default=None)
-    updated_at = attr.ib(type=datetime.datetime, default=None)
+    created_at = attr.ib(type=datetime.datetime, default=None, eq=False)
+    updated_at = attr.ib(type=datetime.datetime, default=None, eq=False)
 
 
 @attr.s
@@ -19,7 +19,7 @@ class Thumbnail(BasicEntity):
 
 @attr.s
 class NonProjectEntity(BasicEntity):
-    thumbnail = attr.ib(type=Thumbnail, default=None)
+    thumbnail = attr.ib(type=Thumbnail, default=None, eq=False)
 
 
 @attr.s
