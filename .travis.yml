@@ -1,5 +1,8 @@
 language: python
 cache: pip
+os:
+  - linux
+  - windows
 python:
   - "2.7"
   - "3.7"
