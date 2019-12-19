@@ -1,6 +1,6 @@
-from typing import TypeVar, Generic, Iterable, Optional
+from typing import TypeVar, Generic, Iterable, Optional, Union, List
 
-from kttk.domain.entities import Project
+from kttk.domain.entities import Project, Asset
 
 T = TypeVar('T')
 ID = TypeVar('ID')
@@ -27,3 +27,10 @@ class AbstractRepository(Generic[T, ID]):
 
 class ProjectRepository(AbstractRepository[Project, ID]):
     pass
+
+
+class AssetRepository(AbstractRepository[Project, ID]):
+
+    def find_by_project(self, project):
+        # type: (Union[ID, Project]) -> List[Asset]
+        raise NotImplementedError()

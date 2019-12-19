@@ -16,9 +16,9 @@ entities = {}  # type: Dict[str, NonProjectEntity]
 
 def register_entity(name, entity_cls):
     """
-    Registers a new entity by their name
-    :param name: entity name, all names are handled in lower-case
-    :param entity_cls: class of entity to register
+    Registers a new domain_entity by their name
+    :param name: domain_entity name, all names are handled in lower-case
+    :param entity_cls: class of domain_entity to register
     :return:
     """
     entities[name.lower()] = entity_cls
@@ -42,7 +42,7 @@ class ProjectEntity(NonProjectEntity):
 
 class Project(NonProjectEntity):
     type = 'project'
-    # name = StringField(unique=True) todo make project name unique and fix mocked version, tests will fail otherwise
+    # name = StringField(unique=True) todo make domain_entity name unique and fix mocked version, tests will fail otherwise
     name = StringField()
 
 

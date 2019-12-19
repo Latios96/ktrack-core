@@ -1,10 +1,10 @@
 from collections import Iterable
 
-from typing import Optional
+from typing import Optional, List
 
-from ktrack_api.mongo_impl.entities import Project as MongoProject
-from ktrack_api.repositories import ProjectRepository
-from kttk.domain.entities import Project, Thumbnail
+from ktrack_api.mongo_impl.entities import Project as MongoProject, Asset as MongoAsset
+from ktrack_api.repositories import ProjectRepository, AssetRepository
+from kttk.domain.entities import Project, Thumbnail, Asset
 
 
 class MongoProjectRepository(ProjectRepository[str]):
@@ -47,3 +47,54 @@ class MongoProjectRepository(ProjectRepository[str]):
     def save_all(self, entities):
         # type: (Iterable[Project]) -> Iterable[Project]
         return list(map(self.save, entities))
+
+
+class MongoAssetRepository(AssetRepository):
+
+    @classmethod
+    def to_mongo_entity(cls, domain_entity):
+        # type: (Asset) -> MongoAsset
+        if domain_entity:
+            return MongoAsset(id=domain_entity.id,
+                              created_at=domain_entity.created_at,
+                              updated_at=domain_entity.updated_at,
+                              thumbnail={'path': domain_entity.thumbnail.path} if domain_entity.thumbnail else {},
+                              code=domain_entity.name,
+                              asset_type=domain_entity.asset_type,
+                              project={'type': 'project', 'id': domain_entity.project} if domain_entity.project else None)
+
+    @classmethod
+    def to_domain_entity(cls, mongo_entity):
+        # type: (MongoAsset) -> Asset
+        if mongo_entity:
+            return Asset(id=mongo_entity.id,
+                         created_at=mongo_entity.created_at,
+                         updated_at=mongo_entity.updated_at,
+                         thumbnail=Thumbnail(path=mongo_entity.thumbnail.get('path')),
+                         name=mongo_entity.code,
+                         asset_type=mongo_entity.asset_type,
+                         project=mongo_entity.project['id'])
+
+    def find_one(self, the_id):
+        # type: (str) -> Optional[Asset]
+        mongo_entity = MongoAsset.objects(id=the_id).first()
+        return MongoAssetRepository.to_domain_entity(mongo_entity)
+
+    def find_all(self):
+        # type: () -> Iterable[Asset]
+        return list(map(self.to_domain_entity, MongoAsset.objects.all()))
+
+    def save(self, entity):
+        # type: (Asset) -> Asset
+        mongo_asset = MongoAssetRepository.to_mongo_entity(entity)
+        mongo_asset.save()
+        return MongoAssetRepository.to_domain_entity(mongo_asset)
+
+    def save_all(self, entities):
+        # type: (Iterable[Asset]) -> Iterable[Asset]
+        return list(map(self.save, entities))
+
+    def find_by_project(self, project):
+        # type: (str) -> List[Asset]
+        mongo_entity = MongoAsset.objects(project__id=project).all()
+        return list(map(self.to_domain_entity, mongo_entity))

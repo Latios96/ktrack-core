@@ -35,7 +35,7 @@ class ProjectEntity(NonProjectEntity):
 @attr.s
 class Asset(ProjectEntity):
     name = attr.ib(type=str, default=None)
-    type = attr.ib(type=str, default=None)
+    asset_type = attr.ib(type=str, default=None)
 
 
 @attr.s
