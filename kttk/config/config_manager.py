@@ -97,7 +97,7 @@ def load_file(yml_file_name, validator=None):
 
     # load data
     with open(yml_file_path) as file_descriptor:
-        yml_data = yaml.load(file_descriptor)
+        yml_data = yaml.load(file_descriptor, Loader=yaml.BaseLoader)
 
     # apply validator
 
