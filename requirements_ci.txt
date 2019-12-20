@@ -7,3 +7,5 @@ junitparser
 coverage
 PySide;python_version <= '2.7'
 PySide2;python_version >= '3.7'
+mypy;python_version >= '3.7'
+black;python_version >= '3.7'
