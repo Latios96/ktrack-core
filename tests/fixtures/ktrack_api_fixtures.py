@@ -11,10 +11,6 @@ ktrack._connection_url = "mongomock://localhost"
 
 @pytest.fixture
 def ktrack_instance():
-    """
-    KtrackMongoImpl using mongomock Will tear down and clean up database
-    :return:
-    """
     print("setting up ktrack instance dropping")
     impl = KtrackMongoImpl("mongomock://localhost")
     yield impl
@@ -25,10 +21,6 @@ def ktrack_instance():
 
 @pytest.fixture
 def ktrack_instance_patched():
-    """
-    KtrackMongoImpl using mongomock, will also mock ktrack_api.get_ktrack() Will tear down and clean up database
-    :return:
-    """
     print("setting up ktrack instance dropping")
     impl = KtrackMongoImpl("mongomock://localhost")
     with mock.patch("ktrack_api.get_ktrack") as mock_get_ktrack:
@@ -41,8 +33,4 @@ def ktrack_instance_patched():
 
 @pytest.fixture
 def ktrack_instance_non_dropping():
-    """
-    KtrackMongoImpl using mongomock. Will NOT tear down and clean up database
-    :return:
-    """
     return KtrackMongoImpl("mongomock://localhost")
