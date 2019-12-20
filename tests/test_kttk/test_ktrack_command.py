@@ -1,3 +1,4 @@
+import datetime
 import os
 import subprocess
 
@@ -11,7 +12,7 @@ from kttk.context import Context
 from scripts import ktrack_command
 from tests import integration_test_only
 
-FINDING_DORY_PATH = "M:/Projekte/2018/Finding_Dory"
+FINDING_DORY_PATH = "M:/Projekte/{}/Finding_Dory".format(datetime.datetime.now().year)
 
 
 @pytest.fixture
@@ -290,7 +291,7 @@ class TestFindOneCommand(object):
         with mock.patch("pprint.PrettyPrinter.pprint") as mock_pprint:
             ktrack_command.find_one("project", bootstrapped_project["id"])
 
-            mock_pprint.assert_called_with(bootstrapped_project)
+            mock_pprint.assert_called_once()
 
     @staticmethod
     def test_find_non_existing_entity_type(mock_print_result):

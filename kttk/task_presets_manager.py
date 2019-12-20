@@ -45,6 +45,6 @@ def get_task_presets(entity_type):
     """
     raw_preset = _data_presets[entity_type]
     return [
-        {"step": preset["step"].lower(), "name": preset["name"].lower(),}
+        {"step": preset["step"].lower(), "name": preset["name"].lower()}
         for preset in raw_preset
     ]

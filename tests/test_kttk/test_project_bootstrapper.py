@@ -123,11 +123,16 @@ def test_remove_bootstrapped_project(ktrack_instance_patched):
 @integration_test_only
 def test_project_bootstrapping():
     project, project_data = project_bootstrapper.bootstrap_project()
+    year = project["created_at"].year
 
-    assert os.path.isdir("M:/Projekte/2018/Finding_Dory")
-    assert os.path.isdir("M:/Projekte/2018/Finding_Dory/Assets/character/Hank")
+    assert os.path.isdir("M:/Projekte/{}/Finding_Dory".format(year))
+    assert os.path.isdir(
+        "M:/Projekte/{}/Finding_Dory/Assets/character/Hank".format(year)
+    )
 
     project_bootstrapper.remove_bootstrapped_project(project["id"])
 
-    assert not os.path.isdir("M:/Projekte/2018/Finding_Dory")
-    assert not os.path.isdir("M:/Projekte/2018/Finding_Dory/Assets/character/Hank")
+    assert not os.path.isdir("M:/Projekte/{}/Finding_Dory".format(year))
+    assert not os.path.isdir(
+        "M:/Projekte/{}/Finding_Dory/Assets/character/Hank".format(year)
+    )

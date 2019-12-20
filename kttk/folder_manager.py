@@ -50,6 +50,7 @@ def init_entity(entity_type, entity_id):
 
     context_dict["project_root"] = template_manager.get_route_template("project_root")
     context_dict["project_name"] = project["name"]
+    context_dict["project_year"] = project["created_at"].year
 
     logger.info(
         "Creating folders for {} {}..".format(

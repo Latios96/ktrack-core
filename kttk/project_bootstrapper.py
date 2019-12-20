@@ -178,7 +178,11 @@ def remove_bootstrapped_project(project_id):
     project_root_template = template_manager.get_route_template("project_root")
     project_folder = template_manager.format_template(
         project_folder_template,
-        {"project_name": project["name"], "project_root": project_root_template, 'project_year': project['created_at'].year},
+        {
+            "project_name": project["name"],
+            "project_root": project_root_template,
+            "project_year": project["created_at"].year,
+        },
     )
 
     logger.info("Unregister paths...")
