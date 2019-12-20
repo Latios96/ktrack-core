@@ -1,3 +1,5 @@
+import datetime
+
 import pytest
 from mock import mock
 
@@ -96,6 +98,7 @@ def test_get_avaible_tokens(populated_context):
     tokens = populated_context.get_avaible_tokens()
 
     assert tokens["project_name"] == "my_project"
+    assert tokens["project_year"] == datetime.datetime.now().year
     assert tokens["code"] == "my_entity"
     assert tokens["asset_type"] == "prop"
     assert tokens["step"] == "anim"

@@ -202,6 +202,7 @@ class Context(object):
         if self.project:
             project = kt.find_one("project", self.project["id"])
             avaible_tokens["project_name"] = project["name"]
+            avaible_tokens["project_year"] = project["created_at"].year
 
         # make sure to query all fields from ktrack, because we might only have id and type
 
