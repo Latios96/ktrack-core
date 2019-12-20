@@ -2,6 +2,10 @@ import os
 import shutil
 import uuid
 
+from typing import Optional, Dict
+
+from ktrack_api.ktrack_impl import AbtractKtrackImpl
+
 KtrackIdType = str
 from ktrack_api.mongo_impl.ktrack_mongo_impl import KtrackMongoImpl
 
@@ -17,21 +21,20 @@ def get_ktrack():
 
 
 class Ktrack(object):
-
     def __init__(self, impl):
-        # type: (Ktrack) -> None
+        # type: (AbtractKtrackImpl) -> None
         self._impl = impl
 
     def create(self, entity_type, data={}):
         # type: (str, dict) -> dict
-        assert (isinstance(entity_type, str) or isinstance(entity_type, unicode))
+        assert isinstance(entity_type, str) or isinstance(entity_type, unicode)
         assert isinstance(data, dict)
 
         return self._impl.create(entity_type, data)
 
     def update(self, entity_type, entity_id, data):
         # type: (str, KtrackIdType, dict) -> None
-        assert (isinstance(entity_type, str) or isinstance(entity_type, unicode))
+        assert isinstance(entity_type, str) or isinstance(entity_type, unicode)
         assert isinstance(entity_id, str)
         assert isinstance(data, dict)
 
@@ -40,22 +43,22 @@ class Ktrack(object):
     def find(self, entity_type, filters=[]):
         # type: (str, list) -> list
 
-        assert (isinstance(entity_type, str) or isinstance(entity_type, unicode))
+        assert isinstance(entity_type, str) or isinstance(entity_type, unicode)
         assert isinstance(filters, list)
 
         return self._impl.find(entity_type, filters)
 
     def find_one(self, entity_type, entity_id):
-        # type: (str, KtrackIdType) -> dict
+        # type: (str, KtrackIdType) -> Optional[Dict]
 
-        assert (isinstance(entity_type, str) or isinstance(entity_type, unicode))
-        assert (isinstance(entity_id, str) or isinstance(entity_id, unicode))
+        assert isinstance(entity_type, str) or isinstance(entity_type, unicode)
+        assert isinstance(entity_id, str) or isinstance(entity_id, unicode)
         return self._impl.find_one(entity_type, entity_id)
 
     def delete(self, entity_type, entity_id):
         # type: (str, KtrackIdType) -> None
 
-        assert (isinstance(entity_type, str) or isinstance(entity_type, unicode))
+        assert isinstance(entity_type, str) or isinstance(entity_type, unicode)
         assert isinstance(entity_id, str)
 
         return self._impl.delete(entity_type, entity_id)
@@ -70,9 +73,11 @@ class Ktrack(object):
 
         # todo should resize thumbnail
         thumbnail_path_template = self._get_thumbnail_path_template()
-        thumbnail_path = thumbnail_path_template.format(entity_type=entity_type,
-                                                        entity_id=entity_id,
-                                                        uuid=uuid.uuid4(),
-                                                        ext=os.path.splitext(path)[1])
+        thumbnail_path = thumbnail_path_template.format(
+            entity_type=entity_type,
+            entity_id=entity_id,
+            uuid=uuid.uuid4(),
+            ext=os.path.splitext(path)[1],
+        )
         shutil.copy(path, thumbnail_path)
-        self.update(entity_type, entity_id, {'thumbnail': {'path': thumbnail_path}})
+        self.update(entity_type, entity_id, {"thumbnail": {"path": thumbnail_path}})

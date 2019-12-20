@@ -223,7 +223,7 @@ def test_context_serialize_deserialize(running_maya_engine, bootstrapped_project
 
 
 def check_correct_file_state(context):
-    # type: (Context) -> object
+    # type: (Context) -> None
     """
     Checks that the currently opened file matches the expectations:
     - file was correctly updated for context:

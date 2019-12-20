@@ -5,6 +5,7 @@ from mongoengine import connect
 
 from ktrack_api.exceptions import EntityMissing, EntityNotFoundException
 from ktrack_api.ktrack import KtrackIdType
+from ktrack_api.ktrack_impl import AbtractKtrackImpl
 from ktrack_api.mongo_impl import entities
 from ktrack_api.mongo_impl.entities import NonProjectEntity
 
@@ -13,7 +14,7 @@ def _convert_to_dict(entity):
     # type: (NonProjectEntity) -> dict
     obj_dict = {}
 
-    obj_dict['type'] = entity.type
+    obj_dict["type"] = entity.type
 
     for field in entity._fields_ordered:
         field_value = getattr(entity, field)
@@ -27,11 +28,11 @@ def _convert_to_dict(entity):
     return obj_dict
 
 
-class KtrackMongoImpl(object):
-
+class KtrackMongoImpl(AbtractKtrackImpl):
     def __init__(self, connection_uri):
-        connect("mongoeengine_test",
-                host=connection_uri)
+        # type: (str) -> None
+        super(KtrackMongoImpl, self).__init__(connection_uri)
+        connect("mongoeengine_test", host=connection_uri)
 
     def create(self, entity_type, data={}):
         # type: (str, dict) -> dict
@@ -81,7 +82,7 @@ class KtrackMongoImpl(object):
         if len(filters) > 0:
             for f in filters:
                 if isinstance(f[2], dict):
-                    filter_dict["{}__id".format(f[0])] = f[2]['id']
+                    filter_dict["{}__id".format(f[0])] = f[2]["id"]
                 else:
                     field_name = f[0]
                     field_value = f[2]

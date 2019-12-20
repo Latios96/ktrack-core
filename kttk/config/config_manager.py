@@ -9,12 +9,12 @@ import os
 
 import yaml
 import valideer
-from typing import Callable, Tuple, Dict, Any
+from typing import Callable, Tuple, Dict, Any, Optional
 from valideer import Type
 
 KTRACK_TEMPLATE_DIR = 'KTRACK_TEMPLATE_DIR'
 
-_general_data = None  # type: Dict[str, str]
+_general_data = None  # type: Optional[Dict[str, str]]
 general_data_schema = valideer.Mapping(key_schema=valideer.String, value_schema=valideer.String)
 
 
