@@ -97,10 +97,7 @@ def test_ask_for_comment_ok(qtbot):
 @pyside_only
 def test_ask_for_comment_cancel(qtbot):
     with mock.patch("Qt.QtWidgets.QInputDialog.getText") as mock_getText:
-        mock_getText.return_value = (
-            "test",
-            False,
-        )
+        mock_getText.return_value = ("test", False)
         qt_impl = ViewCallbackQtImplementation()
 
         useroption, comment = qt_impl.ask_for_comment()

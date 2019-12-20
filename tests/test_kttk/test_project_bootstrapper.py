@@ -13,8 +13,8 @@ data = {
 }
 
 task_presets = {
-    "asset": [{"step": "anim", "name": "anim",}],
-    "shot": [{"step": "anim", "name": "anim",}],
+    "asset": [{"step": "anim", "name": "anim"}],
+    "shot": [{"step": "anim", "name": "anim"}],
 }
 
 

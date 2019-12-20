@@ -15,15 +15,14 @@ class TestCutInformation(object):
 
 class TestVersionNumber(object):
     @pytest.mark.parametrize(
-        "version_identifier,version_number",
-        [("v001", 1), ("001", 1), ("1", 1), (1, 1),],
+        "version_identifier,version_number", [("v001", 1), ("001", 1), ("1", 1), (1, 1)]
     )
     def test_parse_correct(self, version_identifier, version_number):
         version = VersionNumber(version_identifier)
         assert version.number == version_number
 
     @pytest.mark.parametrize(
-        "version_identifier", ["v000", "v1000", "abc", "wurst", None,]
+        "version_identifier", ["v000", "v1000", "abc", "wurst", None]
     )
     def test_parse_incorrect(self, version_identifier):
         with pytest.raises(ValueError):

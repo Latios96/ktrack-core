@@ -30,11 +30,7 @@ def task_dict(shot_dict):
 
 @pytest.fixture
 def workfile_dict():
-    return {
-        "type": "workfile",
-        "id": "5",
-        "path": "some_path",
-    }
+    return {"type": "workfile", "id": "5", "path": "some_path"}
 
 
 @pytest.fixture
