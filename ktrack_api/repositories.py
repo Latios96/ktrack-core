@@ -29,8 +29,8 @@ class ProjectRepository(AbstractRepository[Project, ID]):
     pass
 
 
-class AssetRepository(AbstractRepository[Project, ID]):
+class AssetRepository(AbstractRepository[Asset, ID]):
 
     def find_by_project(self, project):
-        # type: (Union[ID, Project]) -> List[Asset]
+        # type: (ID) -> List[Asset]
         raise NotImplementedError()
