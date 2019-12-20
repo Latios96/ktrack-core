@@ -10,7 +10,6 @@ import ktrack_api
 from kttk import path_cache_manager
 from kttk.context import Context
 from scripts import ktrack_command
-from tests import integration_test_only
 
 FINDING_DORY_PATH = "M:/Projekte/{}/Finding_Dory".format(datetime.datetime.now().year)
 
@@ -137,7 +136,7 @@ def test_print_context_valid_path(mock_print_result):
         mock_print_result.assert_called_once_with(mock_from_path.return_value)
 
 
-@integration_test_only
+@pytest.mark.integration_test_only
 class TestContextCommand(object):
     @staticmethod
     def test_valid_path(bootstrapped_project, mock_print_result):
@@ -153,7 +152,7 @@ class TestContextCommand(object):
         )
 
 
-@integration_test_only
+@pytest.mark.integration_test_only
 class TestCreateCommand(object):
     @staticmethod
     def test_create_project():
@@ -274,7 +273,7 @@ class TestCreateCommand(object):
         # todo make sure current user is assigned
 
 
-@integration_test_only
+@pytest.mark.integration_test_only
 class TestFindOneCommand(object):
     @staticmethod
     def test_find_non_existing_id(mock_print_result):
@@ -303,7 +302,7 @@ class TestFindOneCommand(object):
         )
 
 
-@integration_test_only
+@pytest.mark.integration_test_only
 class TestShowCommand(object):
     @staticmethod
     def test_missing_entity_type(mock_print_result):
@@ -326,7 +325,7 @@ class TestShowCommand(object):
         ktrack_command.show("project")
 
 
-@integration_test_only
+@pytest.mark.integration_test_only
 class TestTaskPresetCommand(object):
     @staticmethod
     def test_task_preset_shot(bootstrapped_project, mock_print_result, cwd_shot010):

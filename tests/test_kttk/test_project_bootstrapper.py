@@ -1,10 +1,10 @@
 import os
 
+import pytest
 from mock import mock, patch
 
 import kttk
 from kttk import project_bootstrapper
-from tests import integration_test_only
 
 data = {
     "project_name": "Finding Dory",
@@ -120,7 +120,7 @@ def test_remove_bootstrapped_project(ktrack_instance_patched):
         assert kt.find_one(entity["type"], entity["id"]) is None
 
 
-@integration_test_only
+@pytest.mark.integration_test_only
 def test_project_bootstrapping():
     project, project_data = project_bootstrapper.bootstrap_project()
     year = project["created_at"].year

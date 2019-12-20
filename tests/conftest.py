@@ -17,3 +17,21 @@ from tests.fixtures.integration_fixtures import (
     bootstrapped_project,
     bootstrapped_project_with_data,
 )
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--integration-tests", action="store_true", default=False, help="run integration tests"
+    )
+
+
+def pytest_configure(config):
+    config.addinivalue_line("markers", "slow: mark test as slow to run")
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--integration-tests"):
+        return
+    skip_integration_tests_not_activated = pytest.mark.skip(reason="need --integration-tests option to run")
+    for item in items:
+        if "integration_test_only" in item.keywords:
+            item.add_marker(skip_integration_tests_not_activated)

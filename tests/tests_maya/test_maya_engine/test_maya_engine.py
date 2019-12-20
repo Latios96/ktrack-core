@@ -1,15 +1,14 @@
-import kttk
+import os
 
+import pytest
+from mock import patch, MagicMock, mock
+
+import kttk
 from kttk import template_manager
 from kttk.context import Context
 from kttk.file_manager import file_manager
 from kttk.file_manager.view_callback_mixin import ViewCallbackMixin
-from tests import integration_test_only
 from tests.tests_maya.test_maya_engine import maya_only
-
-import pytest
-from mock import patch, MagicMock, mock
-import os
 
 try:
     print("loading Maya...")
@@ -185,7 +184,7 @@ def running_maya_engine():
 
 
 @maya_only
-@integration_test_only
+@pytest.mark.integration_test_only
 def test_create_file(running_maya_engine, bootstrapped_project_with_data, empty_file):
     """
     We start from an empty file, so file will be created from template
@@ -220,7 +219,7 @@ def test_create_file(running_maya_engine, bootstrapped_project_with_data, empty_
 
 
 @maya_only
-@integration_test_only
+@pytest.mark.integration_test_only
 def test_context_serialize_deserialize(
     running_maya_engine, bootstrapped_project_with_data, empty_file
 ):
