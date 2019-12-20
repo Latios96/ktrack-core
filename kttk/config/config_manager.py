@@ -12,16 +12,19 @@ import valideer
 from typing import Callable, Tuple, Dict, Any, Optional
 from valideer import Type
 
-KTRACK_TEMPLATE_DIR = 'KTRACK_TEMPLATE_DIR'
+KTRACK_TEMPLATE_DIR = "KTRACK_TEMPLATE_DIR"
 
 _general_data = None  # type: Optional[Dict[str, str]]
-general_data_schema = valideer.Mapping(key_schema=valideer.String, value_schema=valideer.String)
+general_data_schema = valideer.Mapping(
+    key_schema=valideer.String, value_schema=valideer.String
+)
 
 
 class InvalidConfigException(Exception):
-
     def __init__(self, file_name, reason):
-        super(InvalidConfigException, self).__init__("Error when loading config file {}: {}".format(file_name, reason))
+        super(InvalidConfigException, self).__init__(
+            "Error when loading config file {}: {}".format(file_name, reason)
+        )
 
 
 def get_config_folder():
@@ -47,7 +50,7 @@ def validate_schema(data, schema):
     """
     try:
         schema.validate(data)
-        return True, ''
+        return True, ""
     except valideer.ValidationError as e:
         return False, e.message
 
@@ -59,7 +62,9 @@ def _load_general_data():
     :return: loaded data
     """
     # load data
-    return load_file('general.yml', lambda data: validate_schema(data, general_data_schema))
+    return load_file(
+        "general.yml", lambda data: validate_schema(data, general_data_schema)
+    )
 
 
 def get_value(key):

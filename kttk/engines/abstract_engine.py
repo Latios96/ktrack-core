@@ -40,17 +40,23 @@ class AbstractEngine(object):
         # load full workfile
         kt = ktrack_api.get_ktrack()
 
-        new_file = kt.find_one('workfile', new_file['id'])
+        new_file = kt.find_one("workfile", new_file["id"])
 
-        project = new_file['project']
+        project = new_file["project"]
 
-        task = kt.find_one('task', new_file['entity']['id'])
-        step = task['step']
-        entity = task['entity']  # entity here means shot / asset...
+        task = kt.find_one("task", new_file["entity"]["id"])
+        step = task["step"]
+        entity = task["entity"]  # entity here means shot / asset...
 
         # todo what to do with user? usermanager.restore_user() can lead to issues in travis ci
-        self.context = Context(project=project, entity=entity, step=step, task=task, workfile=new_file,
-                               user=None)  # todo add context changed signal / callback
+        self.context = Context(
+            project=project,
+            entity=entity,
+            step=step,
+            task=task,
+            workfile=new_file,
+            user=None,
+        )  # todo add context changed signal / callback
 
         # Note: cant serialize context here, change_workfile is also used when opening a file
         # update_file_for_context will serialze context for us
@@ -100,7 +106,7 @@ class AbstractEngine(object):
         :param file_to_save_to: workfile, path field will be used for file location
         :return:
         """
-        logger.info("Save as to path {}".format(file_to_save_to['path']))
+        logger.info("Save as to path {}".format(file_to_save_to["path"]))
         self.change_file(file_to_save_to)
         self.update_file_for_context()
 

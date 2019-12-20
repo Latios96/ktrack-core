@@ -79,7 +79,7 @@ def test_open_scene_unsaved_changes_no_save(open_manager):
     """
     Opens a scene when a scene is currently open with unsaved changes which are not saved
     """
-    open_manager._engine.current_file_path.return_value = 'some_path'
+    open_manager._engine.current_file_path.return_value = "some_path"
     open_manager._engine.has_unsaved_changes.return_value = True
     open_manager._view_callback_provider.ask_for_save.return_value = False
 
@@ -95,7 +95,7 @@ def test_open_scene_unsaved_changes_save(open_manager):
     """
     Opens a scene when a scene is currently open with unsaved changes which are  saved
     """
-    open_manager._engine.current_file_path.return_value = 'some_path'
+    open_manager._engine.current_file_path.return_value = "some_path"
     open_manager._engine.has_unsaved_changes.return_value = True
     open_manager._view_callback_provider.ask_for_save.return_value = True
 
@@ -111,12 +111,12 @@ def test_open_scene_already_open_no_reload(open_manager):
     """
     Opens a scene when the scene is already open, no reload is performed
     """
-    open_manager._engine.current_file_path.return_value = 'some_path'
+    open_manager._engine.current_file_path.return_value = "some_path"
     open_manager._view_callback_provider.ask_for_reload.return_value = False
 
     open_manager._open_scene = MagicMock()
 
-    open_manager.do_it({'path': 'some_path'})
+    open_manager.do_it({"path": "some_path"})
 
     assert not open_manager._open_scene.called
 
@@ -125,12 +125,12 @@ def test_open_scene_already_open_do_reload(open_manager):
     """
     Opens a scene when the scene is already open, reload is performed
     """
-    open_manager._engine.current_file_path.return_value = 'some_path'
+    open_manager._engine.current_file_path.return_value = "some_path"
     open_manager._view_callback_provider.ask_for_reload.return_value = True
 
     open_manager._open_scene = MagicMock()
 
-    open_manager.do_it({'path': 'some_path'})
+    open_manager.do_it({"path": "some_path"})
 
     assert open_manager._open_scene.called
 
@@ -139,11 +139,11 @@ def test_open_scene_already_open_reload_cancel(open_manager):
     """
     Opens a scene when the scene is already open, reload is canceled
     """
-    open_manager._engine.current_file_path.return_value = 'some_path'
+    open_manager._engine.current_file_path.return_value = "some_path"
     open_manager._view_callback_provider.ask_for_reload.return_value = "cancel"
 
     open_manager._open_scene = MagicMock()
 
-    open_manager.do_it({'path': 'some_path'})
+    open_manager.do_it({"path": "some_path"})
 
     assert not open_manager._open_scene.called

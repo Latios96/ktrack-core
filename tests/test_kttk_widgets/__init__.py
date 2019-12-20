@@ -16,26 +16,31 @@ def has_pyside_no_dcc():
         print("not running on travis")
     try:
         import maya.cmds as cmds
+
         return False
     except:
         pass
     try:
         import nuke
+
         return False
     except:
         pass
     try:
         import hou
+
         return False
     except:
         pass
     try:
         import PySide
+
         return True
     except:
         pass
     try:
         import PySide2
+
         return True
     except:
         pass

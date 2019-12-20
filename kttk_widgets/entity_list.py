@@ -2,7 +2,6 @@ from Qt import QtCore, QtGui, QtWidgets
 
 
 class EntityListModel(QtCore.QAbstractListModel):
-
     def __init__(self):
         super(EntityListModel, self).__init__()
 
@@ -42,7 +41,7 @@ class EntityListModel(QtCore.QAbstractListModel):
         return self._entities[row]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QtWidgets.QApplication([])
     model = EntityListModel()
     model.set_entities(["zaser", "buvz", "azulk", "casdr"])

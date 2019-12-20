@@ -17,8 +17,12 @@ class ViewCallbackQtImplementation(ViewCallbackMixin):
         msgBox.setWindowTitle("Use template file?")
         msgBox.setText("Use a templat file or save your current scene as new?")
 
-        use_template_button = msgBox.addButton("Use template", QtWidgets.QMessageBox.AcceptRole)
-        save_current_button = msgBox.addButton("Save current as new", QtWidgets.QMessageBox.AcceptRole)
+        use_template_button = msgBox.addButton(
+            "Use template", QtWidgets.QMessageBox.AcceptRole
+        )
+        save_current_button = msgBox.addButton(
+            "Save current as new", QtWidgets.QMessageBox.AcceptRole
+        )
         cancel_button = msgBox.addButton("Cancel", QtWidgets.QMessageBox.RejectRole)
 
         ret = msgBox.exec_()
@@ -41,7 +45,10 @@ class ViewCallbackQtImplementation(ViewCallbackMixin):
         msgBox.setText("The scene has been modified.")
         msgBox.setInformativeText("Do you want to save your changes?")
         msgBox.setStandardButtons(
-            QtWidgets.QMessageBox.Save | QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Cancel)
+            QtWidgets.QMessageBox.Save
+            | QtWidgets.QMessageBox.Discard
+            | QtWidgets.QMessageBox.Cancel
+        )
         msgBox.setDefaultButton(QtWidgets.QMessageBox.Save)
         ret = msgBox.exec_()
         if ret == QtWidgets.QMessageBox.Save:
@@ -62,7 +69,10 @@ class ViewCallbackQtImplementation(ViewCallbackMixin):
         msgBox.setText("This scene is already open")
         msgBox.setInformativeText("Do you want to reload the file?")
         msgBox.setStandardButtons(
-            QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No | QtWidgets.QMessageBox.Cancel)
+            QtWidgets.QMessageBox.Yes
+            | QtWidgets.QMessageBox.No
+            | QtWidgets.QMessageBox.Cancel
+        )
         msgBox.setDefaultButton(QtWidgets.QMessageBox.No)
         ret = msgBox.exec_()
         if ret == QtWidgets.QMessageBox.Yes:
@@ -78,11 +88,13 @@ class ViewCallbackQtImplementation(ViewCallbackMixin):
         :return: (useroption, comment) where useroption is True if user pressed ok, False if user canceled.
         Comment should be None if user canceled, else user comment as string (utf-8)
         """
-        comment, useroption = QtWidgets.QInputDialog.getText(None, "Comment", "Enter comment for new file")
-        return useroption, comment.encode('utf_8', 'ignore')
+        comment, useroption = QtWidgets.QInputDialog.getText(
+            None, "Comment", "Enter comment for new file"
+        )
+        return useroption, comment.encode("utf_8", "ignore")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QtWidgets.QApplication([])
     v = ViewCallbackQtImplementation()
     print(v.ask_for_comment())

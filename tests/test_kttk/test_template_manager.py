@@ -8,19 +8,19 @@ from kttk import template_manager
 
 
 def test_load_folder_template():
-    yml_data = {'asset':
-        {'folders': {
-            "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}": [
-                "{asset_name}_Textures",
-                {'__file__': {'name': 'workspace.mel', 'content': 'test'}},
-                {'out': [{
-                    'playblast': ['test']
-                }]}
-            ]
+    yml_data = {
+        "asset": {
+            "folders": {
+                "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}": [
+                    "{asset_name}_Textures",
+                    {"__file__": {"name": "workspace.mel", "content": "test"}},
+                    {"out": [{"playblast": ["test"]}]},
+                ]
+            }
         }
-        }}
-    with patch.object(template_manager, '_data_folders', yml_data) as mock_yml_data:
-        folders = template_manager.get_folder_templates('asset')
+    }
+    with patch.object(template_manager, "_data_folders", yml_data) as mock_yml_data:
+        folders = template_manager.get_folder_templates("asset")
 
     print(folders)
 
@@ -28,8 +28,14 @@ def test_load_folder_template():
 
     # check file
     assert "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}" in folders
-    assert "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}/{asset_name}_Textures" in folders
-    assert "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}/out/playblast/test" in folders
+    assert (
+        "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}/{asset_name}_Textures"
+        in folders
+    )
+    assert (
+        "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}/out/playblast/test"
+        in folders
+    )
 
 
 def test_load_folder_template_not_existing_entity():
@@ -37,23 +43,28 @@ def test_load_folder_template_not_existing_entity():
     Tests if a key error is thrown when trying to get templates for a non existing entity type
     """
     with pytest.raises(KeyError):
-        template_manager.get_folder_templates('not_existing_entity')
+        template_manager.get_folder_templates("not_existing_entity")
 
 
 def test_get_file_template():
-    yml_data = {'asset':
-        {'folders': {
-            "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}": [
-                "{asset_name}_Textures",
-                {'__file__': {'name': 'workspace.mel', 'content': 'some_awesome_content'}},
-                {'out': [{
-                    'playblast': ['test']
-                }]}
-            ]
+    yml_data = {
+        "asset": {
+            "folders": {
+                "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}": [
+                    "{asset_name}_Textures",
+                    {
+                        "__file__": {
+                            "name": "workspace.mel",
+                            "content": "some_awesome_content",
+                        }
+                    },
+                    {"out": [{"playblast": ["test"]}]},
+                ]
+            }
         }
-        }}
-    with patch.object(template_manager, '_data_folders', yml_data) as mock_yml_data:
-        files = template_manager.get_file_templates('asset')
+    }
+    with patch.object(template_manager, "_data_folders", yml_data) as mock_yml_data:
+        files = template_manager.get_file_templates("asset")
 
     print(files)
 
@@ -62,32 +73,42 @@ def test_get_file_template():
     file_template = files[0]
 
     assert len(file_template.keys()) == 2
-    assert 'content' in file_template.keys()
-    assert 'path' in file_template.keys()
+    assert "content" in file_template.keys()
+    assert "path" in file_template.keys()
 
-    assert file_template['path'] == "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}/workspace.mel"
+    assert (
+        file_template["path"]
+        == "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}/workspace.mel"
+    )
 
-    assert file_template['content'] == "some_awesome_content"
+    assert file_template["content"] == "some_awesome_content"
 
 
 def test_format_template():
     """
     Tests if format template works correctly
     """
-    context = {'project_root': '/mnt/media/active/{year}',
-               'project_name': 'awesome_project',
-               'asset_type': 'Prop',
-               'asset_name': 'my_awesome_asset',
-               'year': 2018}
+    context = {
+        "project_root": "/mnt/media/active/{year}",
+        "project_name": "awesome_project",
+        "asset_type": "Prop",
+        "asset_name": "my_awesome_asset",
+        "year": 2018,
+    }
 
-    template = "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}/workspace.mel"
+    template = (
+        "{project_root}/{project_name}/Assets/{asset_type}/{asset_name}/workspace.mel"
+    )
 
     formated_template = template_manager.format_template(template, context)
     print(formated_template)
 
     assert "{" not in formated_template
 
-    assert formated_template == "/mnt/media/active/2018/awesome_project/Assets/Prop/my_awesome_asset/workspace.mel"
+    assert (
+        formated_template
+        == "/mnt/media/active/2018/awesome_project/Assets/Prop/my_awesome_asset/workspace.mel"
+    )
 
 
 def test_not_all_tokens_provided():
@@ -101,7 +122,9 @@ def test_not_all_tokens_provided():
         formated_template = template_manager.format_template(template)
 
     with pytest.raises(KeyError):
-        formated_template = template_manager.format_template(template, context_dict={'useless_key': 'some_value'})
+        formated_template = template_manager.format_template(
+            template, context_dict={"useless_key": "some_value"}
+        )
 
 
 def test_format_template_default_tokens():
@@ -114,12 +137,12 @@ def test_format_template_default_tokens():
 
     formated_template = template_manager.format_template(template)
 
-    for token in ['year', 'platform', 'hour', 'minute', 'second', 'user']:
+    for token in ["year", "platform", "hour", "minute", "second", "user"]:
         assert token not in formated_template
 
     # context provided, overrides some default values
 
-    context = {'year': 2019}
+    context = {"year": 2019}
 
     formated_template = template_manager.format_template(template, context_dict=context)
 
@@ -129,27 +152,27 @@ def test_format_template_default_tokens():
 def test_format_tempate_version_number():
     template = "{version}"
 
-    formated_template = template_manager.format_template(template, {'version': 1})
+    formated_template = template_manager.format_template(template, {"version": 1})
 
     assert formated_template == "v001"
 
 
 def test_route_template():
-    yml_data = {'project_root': 'somewhere_over_the_rainbow'}
+    yml_data = {"project_root": "somewhere_over_the_rainbow"}
 
-    with patch.object(template_manager, '_data_routes', yml_data) as mock_yml_data:
-        project_root = template_manager.get_route_template('project_root')
+    with patch.object(template_manager, "_data_routes", yml_data) as mock_yml_data:
+        project_root = template_manager.get_route_template("project_root")
 
         assert project_root is not None
 
         with pytest.raises(template_manager.RouteNotExists):
-            template_manager.get_route_template('this route does not exist')
+            template_manager.get_route_template("this route does not exist")
 
 
 def test_validate_routes():
     # test valid
-    template_manager.route_schema.validate({'test': '123'})
+    template_manager.route_schema.validate({"test": "123"})
 
     # test invalid
     with pytest.raises(ValidationError):
-        template_manager.route_schema.validate({'test': []})
+        template_manager.route_schema.validate({"test": []})

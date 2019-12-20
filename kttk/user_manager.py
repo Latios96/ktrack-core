@@ -14,6 +14,7 @@ KTRACK_USER_JSON = ".ktrack_user.json"
 
 # todo make sure this is the semantic: user_information: dict with type and id, user: complete user entity
 
+
 def restore_user():
     # type: () -> dict
     """
@@ -33,7 +34,7 @@ def restore_user():
 
         if data_is_valid:
             # return fresh dict, maybe someone has saved useless stuff in the dict
-            return {'type': 'user', 'id': data['id']}
+            return {"type": "user", "id": data["id"]}
 
     # no information is avaible, so create it
     user = create_user()
@@ -52,7 +53,7 @@ def get_user_information_path():
     Returns the expanded path to ~/.ktrack_user.json
     :return: the expanded path to ~/.ktrack_user.json
     """
-    is_windows = sys.platform.startswith('win')
+    is_windows = sys.platform.startswith("win")
     username = os.environ["username"] if is_windows else os.path.expanduser("~")
     user_folder = "C:/Users/{username}".format(username=username)
 
@@ -69,7 +70,7 @@ def save_user_information(user_information):
     """
     user_information_path = get_user_information_path()
 
-    data = {'type': 'user', 'id': user_information['id']}
+    data = {"type": "user", "id": user_information["id"]}
 
     with open(user_information_path, "w") as f:
         json.dump(data, f)
@@ -136,8 +137,10 @@ def create_user():
     # create user in db
     kt = ktrack_api.get_ktrack()
 
-    user = kt.create("user", {'name': username, 'first_name': first_name, 'second_name': second_name})
-    user_information = {'type': 'user', 'id': user['id']}
+    user = kt.create(
+        "user", {"name": username, "first_name": first_name, "second_name": second_name}
+    )
+    user_information = {"type": "user", "id": user["id"]}
 
     # return user information
     return user_information

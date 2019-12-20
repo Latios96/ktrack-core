@@ -32,10 +32,12 @@ def test_scene_open_use_template_cancel(create_new_manager):
     """
     Some scene without unsaved changes is open, use template is canceled.
     """
-    create_new_manager._engine.current_file_path.return_value = 'some_path'
+    create_new_manager._engine.current_file_path.return_value = "some_path"
     create_new_manager._engine.has_unsaved_changes.return_value = False
 
-    create_new_manager._view_callback_provider.ask_for_template_use.return_value = "cancel"
+    create_new_manager._view_callback_provider.ask_for_template_use.return_value = (
+        "cancel"
+    )
 
     create_new_manager._create_from_template = MagicMock()
 
@@ -49,7 +51,7 @@ def test_scene_open_use_template_no_changes(create_new_manager):
     """
     Some scene without unsaved changes is open, use template is choosen.
     """
-    create_new_manager._engine.current_file_path.return_value = 'some_path'
+    create_new_manager._engine.current_file_path.return_value = "some_path"
     create_new_manager._engine.has_unsaved_changes.return_value = False
 
     create_new_manager._view_callback_provider.ask_for_template_use.return_value = True
@@ -66,7 +68,7 @@ def test_scene_open_use_template_has_changes_save(create_new_manager):
     """
     Some scene with unsaved changes is open, use template is choosen. Changes are saved
     """
-    create_new_manager._engine.current_file_path.return_value = 'some_path'
+    create_new_manager._engine.current_file_path.return_value = "some_path"
     create_new_manager._engine.has_unsaved_changes.return_value = True
 
     create_new_manager._view_callback_provider.ask_for_template_use.return_value = True
@@ -85,7 +87,7 @@ def test_scene_open_use_template_has_changes_cancel(create_new_manager):
     """
     Some scene with unsaved changes is open, use template is choosen. Changes are not saved, cancel is choosen
     """
-    create_new_manager._engine.current_file_path.return_value = 'some_path'
+    create_new_manager._engine.current_file_path.return_value = "some_path"
     create_new_manager._engine.has_unsaved_changes.return_value = True
 
     create_new_manager._view_callback_provider.ask_for_template_use.return_value = True
@@ -104,7 +106,7 @@ def test_scene_open_use_template_has_changes_no_save(create_new_manager):
     """
     Some scene with unsaved changes is open, use template is choosen. Changes are not saved
     """
-    create_new_manager._engine.current_file_path.return_value = 'some_path'
+    create_new_manager._engine.current_file_path.return_value = "some_path"
     create_new_manager._engine.has_unsaved_changes.return_value = True
 
     create_new_manager._view_callback_provider.ask_for_template_use.return_value = True
@@ -123,7 +125,7 @@ def test_scene_open_no_template(create_new_manager):
     """
     Some scene is open, save current as new is chosen.
     """
-    create_new_manager._engine.current_file_path.return_value = 'some_path'
+    create_new_manager._engine.current_file_path.return_value = "some_path"
 
     create_new_manager._view_callback_provider.ask_for_template_use.return_value = False
 
@@ -137,6 +139,7 @@ def test_scene_open_no_template(create_new_manager):
 
 
 ##################### TEST ACTIONS ###########################
+
 
 def test_create_from_template(create_new_manager):
     # type: (CreateNewManager) -> None
@@ -172,7 +175,10 @@ def test_save_current_as_new_preexisting_workfile(create_new_manager):
     tests save current as new with no preexisting workfile
     """
     # mock highest workfile
-    create_new_manager._helper._get_highest_workfile.return_value = {'version_number': 1, 'type': 'workfile'}
+    create_new_manager._helper._get_highest_workfile.return_value = {
+        "version_number": 1,
+        "type": "workfile",
+    }
 
     create_new_manager._update_context = MagicMock()
 

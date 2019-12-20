@@ -45,13 +45,23 @@ def test_render_context_full(qtbot, fully_populated_context):
     # test renders correctly with populated_context
     context_widget.context = fully_populated_context
 
-    assert context_widget._project_name_label.text() == fully_populated_context.project['name']
-    assert context_widget._entity_name_label.text() == "{} <i>{}</i>".format(fully_populated_context.entity['code'],
-                                                                             fully_populated_context.entity['type'])
-    assert context_widget._task_name_label.text() == "{} <i>{}</i>".format(fully_populated_context.task['name'],
-                                                                           fully_populated_context.task['step'])
-    assert context_widget._workfile_name_label.text() == fully_populated_context.workfile['name']
-    assert context_widget._user_name_label.text() == fully_populated_context.user['name']
+    assert (
+        context_widget._project_name_label.text()
+        == fully_populated_context.project["name"]
+    )
+    assert context_widget._entity_name_label.text() == "{} <i>{}</i>".format(
+        fully_populated_context.entity["code"], fully_populated_context.entity["type"]
+    )
+    assert context_widget._task_name_label.text() == "{} <i>{}</i>".format(
+        fully_populated_context.task["name"], fully_populated_context.task["step"]
+    )
+    assert (
+        context_widget._workfile_name_label.text()
+        == fully_populated_context.workfile["name"]
+    )
+    assert (
+        context_widget._user_name_label.text() == fully_populated_context.user["name"]
+    )
 
 
 @pyside_only

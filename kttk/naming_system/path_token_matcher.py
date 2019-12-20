@@ -22,7 +22,7 @@ class MatcherToken(object):
     def save_value_and_trim(self, string):
         # type: (str) -> str
         self.value = self._do_match(string)
-        return string[len(self.value):]
+        return string[len(self.value) :]
 
     def _do_match(self, string):
         # type: (str) -> Optional[str]
@@ -43,8 +43,8 @@ class PathTokenSequenceMatcher(object):
     def __init__(self, tokens, string):
         # type: (List[PathToken], str) -> None
         self._tokens = list(map(lambda x: MatcherToken(token=x), tokens))
-        self._strings = re.split('(/)', string)
-        self._current_element = ''
+        self._strings = re.split("(/)", string)
+        self._current_element = ""
         self._token_values_by_name = {}
 
     def matches(self):
@@ -57,7 +57,9 @@ class PathTokenSequenceMatcher(object):
             self._get_token_value_if_known(token)
 
             if token.matches(self._current_element):
-                if self._exact_match_required(index) and not token.matches_exactly(self._current_element):
+                if self._exact_match_required(index) and not token.matches_exactly(
+                    self._current_element
+                ):
                     return None
                 self._current_element = token.save_value_and_trim(self._current_element)
                 self._token_values_by_name[token.token.name] = token.value
@@ -71,8 +73,10 @@ class PathTokenSequenceMatcher(object):
 
     def _exact_match_required(self, index):
         is_last_element = index == len(self._tokens) - 1
-        next_element_is_folder_seperator = index <= len(self._tokens) - 2 and self._tokens[
-            index + 1].token.type == 'FOLDER_SEPERATOR'
+        next_element_is_folder_seperator = (
+            index <= len(self._tokens) - 2
+            and self._tokens[index + 1].token.type == "FOLDER_SEPERATOR"
+        )
 
         if is_last_element or next_element_is_folder_seperator:
             return True

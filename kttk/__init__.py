@@ -1,9 +1,9 @@
-__version__ = '0.5.0'
+__version__ = "0.5.0"
 
 import logging
 
 # create logger with 'spam_application'
-logger = logging.getLogger('kttk')
+logger = logging.getLogger("kttk")
 logger.setLevel(logging.INFO)
 # create file handler which logs even debug messages
 # fh = logging.FileHandler('kttk.log')
@@ -12,7 +12,7 @@ logger.setLevel(logging.INFO)
 ch = logging.StreamHandler()
 ch.setLevel(logging.INFO)
 # create formatter and add it to the handlers
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 # fh.setFormatter(formatter)
 ch.setFormatter(formatter)
 # add the handlers to the logger

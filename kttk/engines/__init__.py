@@ -6,7 +6,6 @@ g_current_engine = None
 
 
 class NoEngineRunning(Exception):
-
     def __init__(self):
         super(NoEngineRunning, self).__init__("No engine is currently running!")
 

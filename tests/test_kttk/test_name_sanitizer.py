@@ -20,13 +20,13 @@ def test_sanitize_name():
     name = name_sanitizer.sanitize_name("täÄstPröÖjüÜkßts")
 
     umlaute_mapping = {
-        'ä': 'ae',
-        'A': 'AE',
-        'ö': 'oe',
-        'Ö': 'OE',
-        'ü': 'ue',
-        'Ü': 'UE',
-        'ß': 'ss'
+        "ä": "ae",
+        "A": "AE",
+        "ö": "oe",
+        "Ö": "OE",
+        "ü": "ue",
+        "Ü": "UE",
+        "ß": "ss",
     }
 
     for key, value in umlaute_mapping.items():

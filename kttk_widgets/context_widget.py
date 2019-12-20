@@ -45,7 +45,7 @@ class ContextWidget(QtWidgets.QWidget):
         # todo create and use central entity nice formatter
         # project
         if self.context.project:
-            project_name = self.context.project['name']
+            project_name = self.context.project["name"]
             project_text = project_name if project_name else NONE_TEXT
             self._project_name_label.setText(project_text)
         else:
@@ -53,25 +53,29 @@ class ContextWidget(QtWidgets.QWidget):
 
         # entity
         if self.context.entity:
-            entity_code = self.context.entity['code']
-            entity_type = self.context.entity['type']
-            entity_text = "{} <i>{}</i>".format(entity_code if entity_code else None, entity_type)
+            entity_code = self.context.entity["code"]
+            entity_type = self.context.entity["type"]
+            entity_text = "{} <i>{}</i>".format(
+                entity_code if entity_code else None, entity_type
+            )
             self._entity_name_label.setText(entity_text)
         else:
             self._entity_name_label.setText(NONE_TEXT)
 
         # task
         if self.context.task:
-            task_name = self.context.task['name']
-            task_step = self.context.task['step']
-            entity_text = "{} <i>{}</i>".format(task_name if task_name else None, task_step if task_step else "None")
+            task_name = self.context.task["name"]
+            task_step = self.context.task["step"]
+            entity_text = "{} <i>{}</i>".format(
+                task_name if task_name else None, task_step if task_step else "None"
+            )
             self._task_name_label.setText(entity_text)
         else:
             self._task_name_label.setText(NONE_TEXT)
 
         # workfile
         if self.context.workfile:
-            workfile_name = self.context.workfile['name']
+            workfile_name = self.context.workfile["name"]
             workfile_text = workfile_name if workfile_name else NONE_TEXT
             self._workfile_name_label.setText(workfile_text)
         else:
@@ -79,7 +83,7 @@ class ContextWidget(QtWidgets.QWidget):
 
         # user
         if self.context.user:
-            user_name = self.context.user['name']
+            user_name = self.context.user["name"]
             user_text = user_name if user_name else NONE_TEXT
             self._user_name_label.setText(user_text)
         else:
@@ -125,12 +129,14 @@ class ContextWidget(QtWidgets.QWidget):
         self._layout.addWidget(self._user_name_label, 4, 1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QtWidgets.QApplication([])
-    context = Context(project={'type': 'project', 'name': None},
-                      entity={'type': 'shot', 'code': 'shot010'},
-                      task={'type': 'task', 'name': 'Anim', 'step': 'anim'},
-                      workfile={'type': 'workfile', 'name': 'shot010_anim_v002.mb'})
+    context = Context(
+        project={"type": "project", "name": None},
+        entity={"type": "shot", "code": "shot010"},
+        task={"type": "task", "name": "Anim", "step": "anim"},
+        workfile={"type": "workfile", "name": "shot010_anim_v002.mb"},
+    )
     widget = ContextWidget(context)
     widget.show()
     app.exec_()

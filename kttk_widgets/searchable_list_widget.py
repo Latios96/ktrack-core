@@ -25,7 +25,9 @@ class SearchableListWidget(QtWidgets.QWidget):
         self._proxy_model.setSortCaseSensitivity(QtCore.Qt.CaseInsensitive)
         self._proxy_model.setSourceModel(self._source_model)
         self._proxy_model.setDynamicSortFilter(True)
-        self._proxy_model.sort(0, QtCore.Qt.AscendingOrder)  # todo fix sorting in combination with filtering
+        self._proxy_model.sort(
+            0, QtCore.Qt.AscendingOrder
+        )  # todo fix sorting in combination with filtering
 
         self._view.setModel(self._proxy_model)
 
@@ -35,19 +37,30 @@ class SearchableListWidget(QtWidgets.QWidget):
         self.setFocus()
 
         # connect signal
-        self._search_line.textChanged.connect(lambda text: self._proxy_model.setFilterRegExp(text))
+        self._search_line.textChanged.connect(
+            lambda text: self._proxy_model.setFilterRegExp(text)
+        )
 
-        selection_model = self._view.selectionModel()  # use this two line version, otherwise will crash !!!!
+        selection_model = (
+            self._view.selectionModel()
+        )  # use this two line version, otherwise will crash !!!!
         selection_model.selectionChanged.connect(
-            lambda x: self.selection_changed.emit([self._proxy_model.mapToSource(a) for a in x.indexes()]))
+            lambda x: self.selection_changed.emit(
+                [self._proxy_model.mapToSource(a) for a in x.indexes()]
+            )
+        )
 
     def selected_indexes(self):
-        selection_model = self._view.selectionModel()  # use this two line version, otherwise will crash !!!!
+        selection_model = (
+            self._view.selectionModel()
+        )  # use this two line version, otherwise will crash !!!!
         # return selection_model.selectedIndexes()
-        return [self._proxy_model.mapToSource(a) for a in selection_model.selectedIndexes()]
+        return [
+            self._proxy_model.mapToSource(a) for a in selection_model.selectedIndexes()
+        ]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QtWidgets.QApplication([])
     model = QtCore.QStringListModel()
     model.setStringList(["zaser", "buvz", "azulk", "casdr"])

@@ -15,9 +15,11 @@ class PathTemplate(object):
     expanded_template = attr.ib()  # type: str
 
 
-FOLDER_SEPERATOR = PathToken('folder_seperator', 'FOLDER_SEPERATOR', r'\/')
-YEAR = PathToken('year', 'STRING', r'\d{4}')
-PROJECT_LOCATION = PathToken('project_location', 'KNOWN_STRING', 'M:/Projekte')
-ASSET_TYPE = PathToken('project_drive', 'STRING', '.*')
+FOLDER_SEPERATOR = PathToken("folder_seperator", "FOLDER_SEPERATOR", r"\/")
+YEAR = PathToken("year", "STRING", r"\d{4}")
+PROJECT_LOCATION = PathToken("project_location", "KNOWN_STRING", "M:/Projekte")
+ASSET_TYPE = PathToken("project_drive", "STRING", ".*")
 
-p = PathTemplate('vrscene_location_asset', '{project_location}/{asset_type}', 'M:/{asset_type}')
+p = PathTemplate(
+    "vrscene_location_asset", "{project_location}/{asset_type}", "M:/{asset_type}"
+)

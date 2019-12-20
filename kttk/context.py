@@ -10,7 +10,9 @@ from kttk import template_manager, utils
 class Context(object):
 
     # todo make sure project, entity whatever can only be populated with correct entity types
-    def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
+    def __init__(
+        self, project=None, entity=None, step=None, task=None, workfile=None, user=None
+    ):
         # project
         self._validate_entity_dict(project)
         self._project = utils.frozen_entity_id_dict(project)
@@ -18,7 +20,7 @@ class Context(object):
         # entity
         self._validate_entity_dict(entity)
         if entity:
-            assert entity['type'] != 'project'
+            assert entity["type"] != "project"
         self._entity = utils.frozen_entity_id_dict(entity)
 
         # step
@@ -74,7 +76,11 @@ class Context(object):
             if isinstance(step, six.string_types):
                 if len(step) > 0:
                     return True
-            raise ValueError("Invalid step, {} is not a non-empty string, its {}!".format(step, type(step)))
+            raise ValueError(
+                "Invalid step, {} is not a non-empty string, its {}!".format(
+                    step, type(step)
+                )
+            )
         else:
             return True
 
@@ -88,7 +94,11 @@ class Context(object):
             if has_type and has_id:
                 return True
             else:
-                raise ValueError("Entity is invalid: type missing: {}, id missing: {}".format(not has_type, not has_id))
+                raise ValueError(
+                    "Entity is invalid: type missing: {}, id missing: {}".format(
+                        not has_type, not has_id
+                    )
+                )
         else:
             return True
 
@@ -153,24 +163,26 @@ class Context(object):
     def as_dict(self):
         # type: () -> dict
         context_dict = {}
-        context_dict['project'] = self.project
-        context_dict['entity'] = self.entity
-        context_dict['step'] = self.step
-        context_dict['task'] = self.task
-        context_dict['workfile'] = self.workfile
-        context_dict['user'] = self.user
+        context_dict["project"] = self.project
+        context_dict["entity"] = self.entity
+        context_dict["step"] = self.step
+        context_dict["task"] = self.task
+        context_dict["workfile"] = self.workfile
+        context_dict["user"] = self.user
 
         return context_dict
 
     @classmethod
     def from_dict(cls, context_dict):
         # type: (dict) -> Context
-        return Context(project=context_dict.get('project'),
-                       entity=context_dict.get('entity'),
-                       step=context_dict.get('step'),
-                       task=context_dict.get('task'),
-                       workfile=context_dict.get('workfile'),
-                       user=context_dict.get('user'))
+        return Context(
+            project=context_dict.get("project"),
+            entity=context_dict.get("entity"),
+            step=context_dict.get("step"),
+            task=context_dict.get("task"),
+            workfile=context_dict.get("workfile"),
+            user=context_dict.get("user"),
+        )
 
     def serialize(self):
         # type: () -> str
@@ -188,38 +200,42 @@ class Context(object):
         kt = ktrack_api.get_ktrack()
 
         if self.project:
-            project = kt.find_one('project', self.project['id'])
-            avaible_tokens['project_name'] = project['name']
+            project = kt.find_one("project", self.project["id"])
+            avaible_tokens["project_name"] = project["name"]
 
         # make sure to query all fields from ktrack, because we might only have id and type
 
         if self.entity:
-            entity = kt.find_one(self.entity['type'], self.entity['id'])
-            avaible_tokens['code'] = entity['code']
+            entity = kt.find_one(self.entity["type"], self.entity["id"])
+            avaible_tokens["code"] = entity["code"]
 
-            if entity['type'] == 'asset':
-                avaible_tokens['asset_type'] = entity['asset_type']
+            if entity["type"] == "asset":
+                avaible_tokens["asset_type"] = entity["asset_type"]
 
         if self.step:
-            avaible_tokens['step'] = self.step
+            avaible_tokens["step"] = self.step
 
         if self.task:
-            task = kt.find_one('task', self.task['id'])
-            avaible_tokens['task_name'] = task['name']
+            task = kt.find_one("task", self.task["id"])
+            avaible_tokens["task_name"] = task["name"]
 
         if self.workfile:
-            workfile = kt.find_one('workfile', self.workfile['id'])
+            workfile = kt.find_one("workfile", self.workfile["id"])
 
-            avaible_tokens['work_file_name'] = workfile['name']
-            avaible_tokens['work_file_path'] = workfile['path']
-            avaible_tokens['work_file_comment'] = workfile['comment']
-            avaible_tokens['version'] = "v{}".format("{}".format(workfile['version_number']).zfill(3))
+            avaible_tokens["work_file_name"] = workfile["name"]
+            avaible_tokens["work_file_path"] = workfile["path"]
+            avaible_tokens["work_file_comment"] = workfile["comment"]
+            avaible_tokens["version"] = "v{}".format(
+                "{}".format(workfile["version_number"]).zfill(3)
+            )
 
         if self.user:
-            user = kt.find_one('user', self.user['id'])
-            avaible_tokens['user_name'] = user['name']
+            user = kt.find_one("user", self.user["id"])
+            avaible_tokens["user_name"] = user["name"]
 
-        avaible_tokens['project_root'] = template_manager.get_route_template('project_root')
+        avaible_tokens["project_root"] = template_manager.get_route_template(
+            "project_root"
+        )
 
         return avaible_tokens
 
@@ -252,29 +268,32 @@ class Context(object):
         return Context(_project, _entity, _step, _task, _workfile, _user)
 
     def populate_context(self):
-        return PopulatedContext(project=self.project,
-                                entity=self.entity,
-                                step=self.step,
-                                task=self.task,
-                                workfile=self.workfile,
-                                user=self.user)
+        return PopulatedContext(
+            project=self.project,
+            entity=self.entity,
+            step=self.step,
+            task=self.task,
+            workfile=self.workfile,
+            user=self.user,
+        )
 
 
 class PopulatedContext(Context):
-
-    def __init__(self, project=None, entity=None, step=None, task=None, workfile=None, user=None):
+    def __init__(
+        self, project=None, entity=None, step=None, task=None, workfile=None, user=None
+    ):
         kt = ktrack_api.get_ktrack()
         # project
         self._validate_entity_dict(project)
         if project:
-            self._project = kt.find_one('project', project['id'])
+            self._project = kt.find_one("project", project["id"])
         else:
             self._project = None
 
         # entity
         self._validate_entity_dict(entity)
         if entity:
-            self._entity = kt.find_one(entity['type'], entity['id'])
+            self._entity = kt.find_one(entity["type"], entity["id"])
         else:
             self._entity = None
 
@@ -285,20 +304,20 @@ class PopulatedContext(Context):
         # task
         self._validate_entity_dict(task)
         if task:
-            self._task = kt.find_one('task', task['id'])
+            self._task = kt.find_one("task", task["id"])
         else:
             self._task = None
 
         # workfile
         self._validate_entity_dict(workfile)
         if workfile:
-            self._workfile = kt.find_one('workfile', workfile['id'])
+            self._workfile = kt.find_one("workfile", workfile["id"])
         else:
             self._workfile = None
 
         # user
         self._validate_entity_dict(user)
         if user:
-            self._user = kt.find_one('user', user['id'])
+            self._user = kt.find_one("user", user["id"])
         else:
             self._user = None

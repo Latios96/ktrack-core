@@ -1,7 +1,14 @@
 import datetime
 import getpass
 
-from mongoengine import signals, Document, DateTimeField, StringField, DictField, IntField
+from mongoengine import (
+    signals,
+    Document,
+    DateTimeField,
+    StringField,
+    DictField,
+    IntField,
+)
 from typing import Dict
 
 
@@ -28,69 +35,69 @@ class NonProjectEntity(Document):
     created_at = DateTimeField(default=datetime.datetime.now())
     created_by = StringField(default=getpass.getuser())
     updated_at = DateTimeField()
-    type = 'NonProjectEntity'
+    type = "NonProjectEntity"
     thumbnail = DictField()  # dict like {'path': thumbnail_path}
 
-    meta = {'abstract': True}
+    meta = {"abstract": True}
 
 
 class ProjectEntity(NonProjectEntity):
     project = DictField(required=True)
 
-    meta = {'abstract': True}
+    meta = {"abstract": True}
 
 
 class Project(NonProjectEntity):
-    type = 'project'
+    type = "project"
     # name = StringField(unique=True) todo make domain_entity name unique and fix mocked version, tests will fail otherwise
     name = StringField()
 
 
-register_entity('project', Project)
+register_entity("project", Project)
 
 
 class Asset(ProjectEntity):
-    type = 'asset'
+    type = "asset"
     code = StringField()
     asset_type = StringField()  # todo make asset_type required
 
 
-register_entity('asset', Asset)
+register_entity("asset", Asset)
 
 
 class Shot(ProjectEntity):
-    type = 'shot'
+    type = "shot"
     code = StringField()
     cut_in = IntField()
     cut_out = IntField()
     cut_duration = IntField()
 
 
-register_entity('shot', Shot)
+register_entity("shot", Shot)
 
 
 class PathEntry(NonProjectEntity):
-    type = 'path_entry'
+    type = "path_entry"
     path = StringField()
     context = DictField()
 
 
-register_entity('path_entry', PathEntry)
+register_entity("path_entry", PathEntry)
 
 
 class Task(ProjectEntity):
-    type = 'task'
+    type = "task"
     step = StringField()
     name = StringField()
     entity = DictField(required=True)
     assigned = DictField()  # todo assign mulitple people to one task
 
 
-register_entity('task', Task)
+register_entity("task", Task)
 
 
 class WorkFile(ProjectEntity):
-    type = 'workfile'
+    type = "workfile"
     name = StringField()
     entity = DictField()
     path = StringField(required=True)
@@ -99,7 +106,7 @@ class WorkFile(ProjectEntity):
     created_from = DictField(default=None)
 
 
-register_entity('workfile', WorkFile)
+register_entity("workfile", WorkFile)
 
 
 class User(NonProjectEntity):
@@ -108,4 +115,4 @@ class User(NonProjectEntity):
     second_name = StringField()
 
 
-register_entity('user', User)
+register_entity("user", User)

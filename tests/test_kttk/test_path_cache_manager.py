@@ -8,7 +8,7 @@ from kttk.context import Context
 
 @pytest.fixture
 def context_for_testing(ktrack_instance):
-    project = ktrack_instance.create("project", {'name': 'my_lovely_project'})
+    project = ktrack_instance.create("project", {"name": "my_lovely_project"})
     return Context(project=project)
 
 
@@ -39,10 +39,10 @@ def test_register_invalid_path():
 
 
 def test_register_path(ktrack_instance, context_for_testing):
-    PATH = 'nilascg'
+    PATH = "nilascg"
     path_cache_manager.register_path(PATH, context_for_testing)
 
-    entries = ktrack_instance.find('path_entry', [['path', 'is', PATH]])
+    entries = ktrack_instance.find("path_entry", [["path", "is", PATH]])
 
     path_entry_exists = len(entries) == 1
     assert path_entry_exists
@@ -51,7 +51,7 @@ def test_register_path(ktrack_instance, context_for_testing):
 
     context = path_cache_manager.context_from_path(PATH)
 
-    assert context.project['id'] == context_for_testing.project['id']
+    assert context.project["id"] == context_for_testing.project["id"]
 
 
 def test_restore_context_no_path_registered():
@@ -66,7 +66,7 @@ def test_unregister_path(context_for_testing, ktrack_instance):
 
     path_cache_manager.unregister_path(PATH)
 
-    entries = ktrack_instance.find('path_entry', [['path', 'is', PATH]])
+    entries = ktrack_instance.find("path_entry", [["path", "is", PATH]])
 
     path_entry_removed = len(entries) == 0
     assert path_entry_removed

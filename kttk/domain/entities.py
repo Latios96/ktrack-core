@@ -93,9 +93,13 @@ class VersionNumber(object):
     @number.validator
     def check(self, attribute, value):
         if not value:
-            raise ValueError("version number has to be > 0 and <= 999, was {}".format(value))
+            raise ValueError(
+                "version number has to be > 0 and <= 999, was {}".format(value)
+            )
         if value <= 0 or value > 999:
-            raise ValueError("version number has to be > 0 and <= 999, was {}".format(value))
+            raise ValueError(
+                "version number has to be > 0 and <= 999, was {}".format(value)
+            )
 
     @property
     def version_str(self):

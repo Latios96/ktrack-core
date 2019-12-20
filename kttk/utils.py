@@ -5,20 +5,19 @@ from typing import Optional, Dict
 def entity_id_dict(entity):
     # type: (dict) -> Optional[Dict]
     if entity:
-        return {'type': entity['type'], 'id': entity['id']}
+        return {"type": entity["type"], "id": entity["id"]}
     return None
 
 
 def frozen_entity_id_dict(entity):
     # type: (dict) -> frozendict
     if entity != None:
-        return FrozenDict({'type': entity['type'], 'id': entity['id']})
+        return FrozenDict({"type": entity["type"], "id": entity["id"]})
     return None
 
 
 # todo WTF is this?
 class FrozenDict(dict):
-
     def __init__(self, data):
         # type: (dict) -> None
         super(FrozenDict, self).__init__()

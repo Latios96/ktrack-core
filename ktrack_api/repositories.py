@@ -2,12 +2,11 @@ from typing import TypeVar, Generic, Iterable, Optional, Union, List
 
 from kttk.domain.entities import Project, Asset
 
-T = TypeVar('T')
-ID = TypeVar('ID')
+T = TypeVar("T")
+ID = TypeVar("ID")
 
 
 class AbstractRepository(Generic[T, ID]):
-
     def find_one(self, the_id):
         # type: (ID) -> Optional[T]
         raise NotImplementedError()
@@ -30,7 +29,6 @@ class ProjectRepository(AbstractRepository[Project, ID]):
 
 
 class AssetRepository(AbstractRepository[Asset, ID]):
-
     def find_by_project(self, project):
         # type: (ID) -> List[Asset]
         raise NotImplementedError()
