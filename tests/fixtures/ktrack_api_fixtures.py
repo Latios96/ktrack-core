@@ -11,22 +11,18 @@ ktrack._connection_url = "mongomock://localhost"
 
 @pytest.fixture
 def ktrack_instance():
-    print("setting up ktrack instance dropping")
     impl = KtrackMongoImpl("mongomock://localhost")
     yield impl
-    print("tear down up ktrack instance dropping")
     for entity_name, entity_cls in entities.entities.items():
         entity_cls.objects().all().delete()
 
 
 @pytest.fixture
 def ktrack_instance_patched():
-    print("setting up ktrack instance dropping")
     impl = KtrackMongoImpl("mongomock://localhost")
     with mock.patch("ktrack_api.get_ktrack") as mock_get_ktrack:
         mock_get_ktrack.return_value = impl
         yield impl
-    print("tear down up ktrack instance dropping")
     for entity_name, entity_cls in entities.entities.items():
         entity_cls.objects().all().delete()
 
