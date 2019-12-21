@@ -21,8 +21,9 @@ class AdvanceManager(object):
         if user_option == True:
             # do advance
             # create new workfile based on old
-            new_workfile = self._helper._create_workfile_from(self._engine.context, self._engine.current_workfile,
-                                                              comment=comment)
+            new_workfile = self._helper._create_workfile_from(
+                self._engine.context, self._engine.current_workfile, comment=comment
+            )
 
             # save current workfile as new_workfile
             self._engine.save_as(new_workfile)

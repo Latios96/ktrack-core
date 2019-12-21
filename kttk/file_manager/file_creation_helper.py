@@ -29,16 +29,16 @@ class FileCreationHelper(object):
             missing = []
 
             if not has_project:
-                missing.append('project')
+                missing.append("project")
 
             if not has_entity:
-                missing.append('entity')
+                missing.append("entity")
 
             if not has_task:
-                missing.append('task')
+                missing.append("task")
 
             if not has_step:
-                missing.append('step')
+                missing.append("step")
 
             raise ValueError("Invalid context: Missing {}".format(", ".join(missing)))
 
@@ -51,14 +51,14 @@ class FileCreationHelper(object):
         """
         kt = ktrack_api.get_ktrack()
         # get all workfiles for task
-        workfiles = kt.find("workfile", [['entity', 'is', context.task]])
+        workfiles = kt.find("workfile", [["entity", "is", context.task]])
 
         # no tasks exist, so return None
         if len(workfiles) == 0:
             return None
 
         # else search for highest version number, return this one
-        return max(workfiles, key=lambda workfile: workfile['version_number'])
+        return max(workfiles, key=lambda workfile: workfile["version_number"])
 
     def _create_new_workfile(self, context):
         """
@@ -66,7 +66,7 @@ class FileCreationHelper(object):
         :param workfile:
         :return:
         """
-        return self._create_workfile_from(context, {'version_number': 0})
+        return self._create_workfile_from(context, {"version_number": 0})
 
     def _create_workfile_from(self, context, workfile, comment=""):
         """
@@ -75,41 +75,54 @@ class FileCreationHelper(object):
         :return: the new workfile
         """
         # initial version number is 1
-        version_number = workfile['version_number'] + 1 if workfile['version_number'] else 1
+        version_number = (
+            workfile["version_number"] + 1 if workfile["version_number"] else 1
+        )
 
         # get template for file name
-        workfile_file_name_template = template_manager.get_route_template('workfile_file_name')
+        workfile_file_name_template = template_manager.get_route_template(
+            "workfile_file_name"
+        )
         tokens = context.get_avaible_tokens()
-        tokens['dcc_extension'] = self._engine.file_extension
-        tokens['dcc_name'] = self._engine.name
-        tokens['version'] = version_number
+        tokens["dcc_extension"] = self._engine.file_extension
+        tokens["dcc_name"] = self._engine.name
+        tokens["version"] = version_number
 
         # format template for file name
-        workfile_file_name = template_manager.format_template(workfile_file_name_template, tokens)
+        workfile_file_name = template_manager.format_template(
+            workfile_file_name_template, tokens
+        )
 
         # get and format template for workfile folder
         workfile_location_template = template_manager.get_route_template(
-            'dcc_scenes_location_{}_{}'.format(context.entity['type'], self._engine.name.lower()))
-        workfile_location = template_manager.format_template(workfile_location_template, tokens)
+            "dcc_scenes_location_{}_{}".format(
+                context.entity["type"], self._engine.name.lower()
+            )
+        )
+        workfile_location = template_manager.format_template(
+            workfile_location_template, tokens
+        )
 
         # combine location and name to workfile path
         path = os.path.join(workfile_location, workfile_file_name)
 
         workfile_data = {}
-        workfile_data['project'] = context.project
-        workfile_data['entity'] = context.task
-        workfile_data['version_number'] = version_number
-        workfile_data['comment'] = comment
+        workfile_data["project"] = context.project
+        workfile_data["entity"] = context.task
+        workfile_data["version_number"] = version_number
+        workfile_data["comment"] = comment
 
         if len(workfile.keys()) > 1:
-            workfile_data['created_from'] = workfile
+            workfile_data["created_from"] = workfile
 
-        workfile_data['name'] = workfile_file_name
-        workfile_data['path'] = path
+        workfile_data["name"] = workfile_file_name
+        workfile_data["path"] = path
 
         # create new workfile
         kt = ktrack_api.get_ktrack()
-        new_workfile = kt.create('workfile', workfile_data)  # todo register path for workfile
+        new_workfile = kt.create(
+            "workfile", workfile_data
+        )  # todo register path for workfile
 
         # return newly created workfile
         return new_workfile
@@ -119,8 +132,10 @@ class FileCreationHelper(object):
         Returns formatted template file based on context
         :return:
         """
-        template_file_template = template_manager.get_route_template("template_file_dcc")
+        template_file_template = template_manager.get_route_template(
+            "template_file_dcc"
+        )
 
-        tokens = {'dcc_extension': self._engine.file_extension}
+        tokens = {"dcc_extension": self._engine.file_extension}
 
         return template_manager.format_template(template_file_template, tokens)

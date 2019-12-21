@@ -11,6 +11,7 @@ def has_maya():
     """
     try:
         import maya.cmds as cmds
+
         return True
     except:
         pass

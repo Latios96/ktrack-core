@@ -32,29 +32,32 @@ import valideer
 
 from kttk.config import config_manager
 
-ROUTES_YML = 'routes.yml'
+ROUTES_YML = "routes.yml"
 route_schema = schema = valideer.Mapping(
-    key_schema=valideer.String,
-    value_schema=valideer.String)
+    key_schema=valideer.String, value_schema=valideer.String
+)
 
-FOLDER_TEMPLATES_YML = 'folder_templates.yml'
+FOLDER_TEMPLATES_YML = "folder_templates.yml"
 
 
 class RouteNotExists(KeyError):
-
     def __init__(self, route_name):
         super(RouteNotExists, self).__init__(
-            "Route with name {} does not exist! Please head over to {} and create your route!".format(route_name,
-                                                                                                      os.path.join(
-                                                                                                          config_manager.get_config_folder(),
-                                                                                                          ROUTES_YML)))
+            "Route with name {} does not exist! Please head over to {} and create your route!".format(
+                route_name, os.path.join(config_manager.get_config_folder(), ROUTES_YML)
+            )
+        )
 
 
 # load data for folders
-_data_folders = config_manager.load_file(FOLDER_TEMPLATES_YML, None)  # todo add validator
+_data_folders = config_manager.load_file(
+    FOLDER_TEMPLATES_YML, None
+)  # todo add validator
 
 # load data for routes
-_data_routes = config_manager.load_file(ROUTES_YML, lambda data: config_manager.validate_schema(data, route_schema))
+_data_routes = config_manager.load_file(
+    ROUTES_YML, lambda data: config_manager.validate_schema(data, route_schema)
+)
 
 
 def get_file_templates(entity_type):
@@ -88,10 +91,13 @@ def get_file_and_folder_templates(entity_type):
     entity_type = entity_type.lower()
 
     if entity_type in _data_folders.keys():
-        folder_data = _data_folders[entity_type.lower()]['folders']
+        folder_data = _data_folders[entity_type.lower()]["folders"]
     else:
         raise KeyError(
-            "No templates found for entity type {}, please add them in folder_templates.yml".format(entity_type))
+            "No templates found for entity type {}, please add them in folder_templates.yml".format(
+                entity_type
+            )
+        )
 
     all_folders = []
     all_files = []
@@ -107,13 +113,11 @@ def get_file_and_folder_templates(entity_type):
                 # file dict
                 elif isinstance(folder, dict) and "__file__" in folder.keys():
                     # read values from config
-                    file_path = "/".join([parent_folder, folder["__file__"]['name']])
-                    file_content = folder["__file__"]['content']
+                    file_path = "/".join([parent_folder, folder["__file__"]["name"]])
+                    file_content = folder["__file__"]["content"]
 
                     # construct file template
-                    file_template = {
-                        'path': file_path,
-                        'content': file_content}
+                    file_template = {"path": file_path, "content": file_content}
 
                     all_files.append(file_template)
 
@@ -169,19 +173,19 @@ def format_template(template, context_dict={}):
     current_time = datetime.datetime.now()
 
     default_context = {
-        'year': current_time.year,
-        'platform': platform.system(),
-        'hour': current_time.hour,
-        'minute': current_time.minute,
-        'second': current_time.second,
-        'user': getpass.getuser(),
-        'config_root': os.path.join(os.path.dirname(__file__), 'config')
+        "year": current_time.year,
+        "platform": platform.system(),
+        "hour": current_time.hour,
+        "minute": current_time.minute,
+        "second": current_time.second,
+        "user": getpass.getuser(),
+        "config_root": os.path.join(os.path.dirname(__file__), "config")
         # todo add test coverage for config_root default context
     }
-    version_number = context_dict.get('version')
+    version_number = context_dict.get("version")
     if version_number:
         if isinstance(version_number, int):
-            context_dict['version'] = "v{}".format("{}".format(version_number).zfill(3))
+            context_dict["version"] = "v{}".format("{}".format(version_number).zfill(3))
 
     # todo check if version is a token key and check if its in "v001" format
     default_context.update(context_dict)

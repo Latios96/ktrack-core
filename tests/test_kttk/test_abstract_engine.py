@@ -46,10 +46,15 @@ def test_change_file(abstract_engine, populated_context, ktrack_instance):
 def test_current_workfile(abstract_engine, workfile_dict):
     abstract_engine.context = Context(workfile=workfile_dict)
 
-    assert abstract_engine.current_workfile == {'type': 'workfile', 'id': workfile_dict['id']}
+    assert abstract_engine.current_workfile == {
+        "type": "workfile",
+        "id": workfile_dict["id"],
+    }
 
 
 def test_update_file_for_context(abstract_engine):
-    with mock.patch('kttk.engines.abstract_engine.AbstractEngine.serialize_context_to_file') as mock_serialize:
+    with mock.patch(
+        "kttk.engines.abstract_engine.AbstractEngine.serialize_context_to_file"
+    ) as mock_serialize:
         abstract_engine.update_file_for_context()
         assert mock_serialize.called

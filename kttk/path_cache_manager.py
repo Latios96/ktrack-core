@@ -26,8 +26,8 @@ def register_path(path, context):
     kt = ktrack_api.get_ktrack()
 
     path_entry_data = {}
-    path_entry_data['path'] = path
-    path_entry_data['context'] = context.as_dict()  # todo remove user information
+    path_entry_data["path"] = path
+    path_entry_data["context"] = context.as_dict()  # todo remove user information
 
     return kt.create("path_entry", path_entry_data)
 
@@ -44,13 +44,13 @@ def unregister_path(path):
 
     kt = ktrack_api.get_ktrack()
 
-    path_entries = kt.find("path_entry", [['path', 'is', path]])
+    path_entries = kt.find("path_entry", [["path", "is", path]])
 
     entry_found = len(path_entries) > 0
 
     if entry_found:
         for path_entry in path_entries:
-            kt.delete('path_entry', path_entry['id'])
+            kt.delete("path_entry", path_entry["id"])
         return True
     else:
         return False
@@ -68,11 +68,11 @@ def context_from_path(path):
 
     kt = ktrack_api.get_ktrack()
 
-    context_dicts = kt.find("path_entry", [['path', 'is', path]])
+    context_dicts = kt.find("path_entry", [["path", "is", path]])
     context_found = len(context_dicts) > 0
 
     if context_found:
-        context = Context.from_dict(context_dicts[0]['context'])
+        context = Context.from_dict(context_dicts[0]["context"])
         return context
     else:
         return None

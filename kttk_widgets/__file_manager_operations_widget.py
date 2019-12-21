@@ -3,7 +3,6 @@ from mock import MagicMock
 
 
 class FileManagerOperationsWidget(QtWidgets.QWidget):
-
     def __init__(self, file_manager, parent=None):
         super(FileManagerOperationsWidget, self).__init__(parent)
         self._file_manager = file_manager
@@ -25,14 +24,15 @@ class FileManagerOperationsWidget(QtWidgets.QWidget):
 
         # open
         self._btn_open = QtWidgets.QPushButton("open")
-        self._btn_open.clicked.connect(lambda: self._file_manager.open(self._published_file_view.selected_file()))
+        self._btn_open.clicked.connect(
+            lambda: self._file_manager.open(self._published_file_view.selected_file())
+        )
         self._layout.addWidget(self._btn_open)
 
         self.setLayout(self._layout)
 
 
 class _OperationsMock(object):
-
     def __init__(self, view_callback_mixin):
         pass
 
@@ -50,7 +50,7 @@ class _OperationsMock(object):
         print("create")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
     widget = FileManagerOperationsWidget(_OperationsMock(None))

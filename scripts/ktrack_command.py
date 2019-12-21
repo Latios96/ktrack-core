@@ -22,6 +22,7 @@ def print_result(result):
 
 # todo write tests
 
+
 def get_name_or_code(entity):
     # type: (dict) -> str
     """
@@ -35,9 +36,9 @@ def get_name_or_code(entity):
     has_code = entity.get("code")
 
     if has_name:
-        return entity['name']
+        return entity["name"]
     elif has_code:
-        return entity['code']
+        return entity["code"]
 
 
 def create(entity_type, entity_name, project_id=None, asset_type=None, task_step=None):
@@ -57,30 +58,39 @@ def create(entity_type, entity_name, project_id=None, asset_type=None, task_step
     #   checken ob aktueller ordner einen context hat, wenn ja, dann context holen, wenn nicht, abbruch
     #   neuen entity erstellen und mit context richtig verlinken, dann initialisieren
     # todo add some more documentation
-    logger.info("creation entity of type {} with name {} for project {}".format(entity_type, entity_name, project_id))
+    logger.info(
+        "creation entity of type {} with name {} for project {}".format(
+            entity_type, entity_name, project_id
+        )
+    )
     logger.info("init cmd")
     logger.info("Connecting to database..")
     kt = ktrack_api.get_ktrack()
 
-    if entity_type == 'project':
+    if entity_type == "project":
         logger.info("initialise project")
         logger.info("create project in database..")
 
         project_data = {}
-        project_data['name'] = entity_name
+        project_data["name"] = entity_name
 
         project = kt.create("project", project_data)
 
-        logger.info("Created project {} with id {}".format(project['name'], project['id']))
+        logger.info(
+            "Created project {} with id {}".format(project["name"], project["id"])
+        )
 
         logger.info("initialise project on disk..")
-        kttk.init_entity('project', project['id'])
+        kttk.init_entity("project", project["id"])
 
-        logger.info("{entity_type} with id {entity_id} initialised. Done.".format(entity_type='project',
-                                                                                  entity_id=project['id']))
+        logger.info(
+            "{entity_type} with id {entity_id} initialised. Done.".format(
+                entity_type="project", entity_id=project["id"]
+            )
+        )
     else:
-        is_asset = entity_type == 'asset'
-        is_task = entity_type == 'task'
+        is_asset = entity_type == "asset"
+        is_task = entity_type == "task"
 
         if is_asset:
             if not asset_type:
@@ -110,39 +120,47 @@ def create(entity_type, entity_name, project_id=None, asset_type=None, task_step
         logger.info("create {} in database..".format(entity_type))
 
         entity_data = {}
-        entity_data['code'] = entity_name
-        entity_data['project'] = context.project
+        entity_data["code"] = entity_name
+        entity_data["project"] = context.project
 
         if is_asset:
-            entity_data['asset_type'] = asset_type
+            entity_data["asset_type"] = asset_type
 
         if is_task:
-            entity_data['name'] = entity_name
-            entity_data['step'] = task_step
+            entity_data["name"] = entity_name
+            entity_data["step"] = task_step
             if not context.entity:
                 print_result("No entity provided for task")
                 return
 
-            entity_data['entity'] = context.entity
+            entity_data["entity"] = context.entity
 
-            entity_data['assigned'] = {'type': 'user',
-                                       'id': '5af33abd6e87ff056014967a'}  # todo dont hardcode user id, use kttk.restore_user()
+            entity_data["assigned"] = {
+                "type": "user",
+                "id": "5af33abd6e87ff056014967a",
+            }  # todo dont hardcode user id, use kttk.restore_user()
 
         entity = kt.create(entity_type, entity_data)
 
-        logger.info("created {entity_type} {entity_name} with id {entity_id}.".format(entity_type=entity['type'],
-                                                                                      entity_name=entity.get(
-                                                                                          'code') if entity.get(
-                                                                                          'code') else entity[
-                                                                                          'name'],
-                                                                                      entity_id=entity['id']))
+        logger.info(
+            "created {entity_type} {entity_name} with id {entity_id}.".format(
+                entity_type=entity["type"],
+                entity_name=entity.get("code")
+                if entity.get("code")
+                else entity["name"],
+                entity_id=entity["id"],
+            )
+        )
 
         logger.info("initialise entity on disk..")
 
-        kttk.init_entity(entity_type, entity['id'])
+        kttk.init_entity(entity_type, entity["id"])
 
-        logger.info("{entity_type} with id {entity_id} initialised. Done.".format(entity_type=entity['type'],
-                                                                                  entity_id=entity['id']))
+        logger.info(
+            "{entity_type} with id {entity_id} initialised. Done.".format(
+                entity_type=entity["type"], entity_id=entity["id"]
+            )
+        )
 
 
 def find_one(entity_type, entity_id):
@@ -166,7 +184,9 @@ def find_one(entity_type, entity_id):
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(entity)
     else:
-        print_result('Entity of type "{}" and id "{}" not found..'.format(entity_type, entity_id))
+        print_result(
+            'Entity of type "{}" and id "{}" not found..'.format(entity_type, entity_id)
+        )
 
 
 # todo add sort by option
@@ -187,7 +207,10 @@ def show(entity_type, link_entity_type=None, link_entity_id=None):
         if link_entity_type and link_entity_id:
             # make sure link_entity_type is also lowercase
             link_entity_type = link_entity_type.lower()
-            entities = kt.find(entity_type, [['link', 'is', {'type': link_entity_type, 'id': link_entity_id}]])
+            entities = kt.find(
+                entity_type,
+                [["link", "is", {"type": link_entity_type, "id": link_entity_id}]],
+            )
 
         # otherwise we get all entities of this type
         else:
@@ -207,14 +230,17 @@ def show(entity_type, link_entity_type=None, link_entity_id=None):
 
         # get all dict keys from first entity and sort them
         first_entity = entities[0]
-        headers = ['id', get_name_or_code(first_entity), 'created_at',
-                   'created_by']
+        headers = ["id", get_name_or_code(first_entity), "created_at", "created_by"]
 
         table = []
 
         for entity in entities:
-            entry = (entity['id'], get_name_or_code(entity), entity['created_at'],
-                     entity['created_by'])
+            entry = (
+                entity["id"],
+                get_name_or_code(entity),
+                entity["created_at"],
+                entity["created_by"],
+            )
 
             table.append(entry)
 
@@ -241,7 +267,11 @@ def print_context(path=os.getcwd()):
 def update(entity_type, entity_id, data):
     # type: (str, KtrackIdType, dict) -> None
     # FIXME not working yet
-    print("updating entity of type {} with id {} with data {}".format(entity_type, entity_id, data))
+    print(
+        "updating entity of type {} with id {} with data {}".format(
+            entity_type, entity_id, data
+        )
+    )
 
 
 def task_preset():
@@ -259,31 +289,42 @@ def task_preset():
     assert context.project and context.entity
 
     # get task presets for entity
-    presets = kttk.get_task_presets(context.entity['type'])
+    presets = kttk.get_task_presets(context.entity["type"])
 
     # now create presets
     kt = ktrack_api.get_ktrack()
 
     for preset in presets:
-        logger.info("Creating task {} of step {}".format(preset['name'], preset['step']))
-        task = kt.create('task', {'project': context.project, 'entity': context.entity, 'name': preset['name'],
-                                  'step': preset['step']})
-        kttk.init_entity(task['type'], task['id'])
+        logger.info(
+            "Creating task {} of step {}".format(preset["name"], preset["step"])
+        )
+        task = kt.create(
+            "task",
+            {
+                "project": context.project,
+                "entity": context.entity,
+                "name": preset["name"],
+                "step": preset["step"],
+            },
+        )
+        kttk.init_entity(task["type"], task["id"])
 
 
 def main():
     # restore user, will create a new one if there is nothing to restore. This way we ensure thing like create have a valid user
     user = kttk.restore_user()
 
-    fire.Fire({
-        'create': create,
-        'find_one': find_one,
-        'show': show,
-        'context': print_context,
-        'task_preset': task_preset
-        # TODO add update
-    })
+    fire.Fire(
+        {
+            "create": create,
+            "find_one": find_one,
+            "show": show,
+            "context": print_context,
+            "task_preset": task_preset
+            # TODO add update
+        }
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

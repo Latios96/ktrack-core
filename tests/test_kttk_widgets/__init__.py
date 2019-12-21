@@ -9,31 +9,42 @@ def has_pyside_no_dcc():
     Checks if PySioe or PySide2 is avaible
     :return: True if avaible, False otherwise
     """
+    if os.environ.get("TRAVIS"):
+        print("running on travis")
+        return False
+    else:
+        print("not running on travis")
     try:
         import maya.cmds as cmds
+
         return False
     except:
         pass
     try:
         import nuke
+
         return False
     except:
         pass
     try:
         import hou
+
         return False
     except:
         pass
     try:
         import PySide
+
         return True
     except:
         pass
     try:
         import PySide2
+
         return True
     except:
         pass
+
     return False
 
 

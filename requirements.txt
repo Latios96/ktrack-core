@@ -8,3 +8,4 @@ typing
 frozendict
 valideer
 attrs
+enum34;python_version <= '2.7'

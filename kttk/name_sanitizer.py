@@ -14,15 +14,15 @@ def sanitize_name(entity_name):
     :return: name of the entity, conform to rules above
     """
     umlaute_mapping = {
-        'ä': 'ae',
-        'A': 'AE',
-        'ö': 'oe',
-        'Ö': 'OE',
-        'ü': 'ue',
-        'Ü': 'UE',
-        'ß': 'ss'
+        "ä": "ae",
+        "A": "AE",
+        "ö": "oe",
+        "Ö": "OE",
+        "ü": "ue",
+        "Ü": "UE",
+        "ß": "ss",
     }
-    not_allowed = '<>:.?/\\|* "\''
+    not_allowed = "<>:.?/\\|* \"'"
 
     project_name = entity_name.strip()
 

@@ -95,7 +95,9 @@ class CreateNewManager(object):
 
         # create new workfile based on context, use existing workfile with highest version number as base
         if highest_workfile:
-            self.workfile = self._helper._create_workfile_from(self._context, highest_workfile)
+            self.workfile = self._helper._create_workfile_from(
+                self._context, highest_workfile
+            )
         else:
             self.workfile = self._helper._create_new_workfile(self._context)
 

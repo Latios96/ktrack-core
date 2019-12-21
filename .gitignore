@@ -199,3 +199,5 @@ junit_xml_test_nuke\.xml
 junit_xml_test_standalone_python\.xml
 
 coverage_houdini\.cov
+
+.dmypy.json

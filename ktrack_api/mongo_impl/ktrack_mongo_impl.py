@@ -1,10 +1,12 @@
-from bson import ObjectId
-from mongoengine import connect, DictField, StringField
-from mongoengine.base import BaseDict
+from typing import List, Optional, Dict
 
-from ktrack_api.ktrack import KtrackIdType
-from ktrack_api.mongo_impl import entities
+from bson import ObjectId
+from mongoengine import connect
+
 from ktrack_api.exceptions import EntityMissing, EntityNotFoundException
+from ktrack_api.ktrack import KtrackIdType
+from ktrack_api.ktrack_impl import AbtractKtrackImpl
+from ktrack_api.mongo_impl import entities
 from ktrack_api.mongo_impl.entities import NonProjectEntity
 
 
@@ -12,7 +14,7 @@ def _convert_to_dict(entity):
     # type: (NonProjectEntity) -> dict
     obj_dict = {}
 
-    obj_dict['type'] = entity.type
+    obj_dict["type"] = entity.type
 
     for field in entity._fields_ordered:
         field_value = getattr(entity, field)
@@ -26,24 +28,15 @@ def _convert_to_dict(entity):
     return obj_dict
 
 
-class KtrackMongoImpl(object):
-    """
-    Mongo DB Implementation of the ktrack api interface. Uses mongoengine as a database mapper
-    """
-
+class KtrackMongoImpl(AbtractKtrackImpl):
     def __init__(self, connection_uri):
-        connect("mongoeengine_test",
-                host=connection_uri)
+        # type: (str) -> None
+        super(KtrackMongoImpl, self).__init__(connection_uri)
+        connect("mongoeengine_test", host=connection_uri)
 
     def create(self, entity_type, data={}):
         # type: (str, dict) -> dict
-        """
-        Creates a new entity instance of given type and applies given data.
-        Returns new created entity
-        :param entity_type: type of the new entity
-        :param data: data for entity
-        :return: newly created entity
-        """
+
         try:
             entity_cls = entities.entities[entity_type.lower()]
         except KeyError:
@@ -77,7 +70,7 @@ class KtrackMongoImpl(object):
         entity.save()
 
     def find(self, entity_type, filters):
-        # type: (str, list) -> list[dict]
+        # type: (str, list) -> List[dict]
 
         try:
             entity_cls = entities.entities[entity_type]
@@ -89,7 +82,7 @@ class KtrackMongoImpl(object):
         if len(filters) > 0:
             for f in filters:
                 if isinstance(f[2], dict):
-                    filter_dict["{}__id".format(f[0])] = f[2]['id']
+                    filter_dict["{}__id".format(f[0])] = f[2]["id"]
                 else:
                     field_name = f[0]
                     field_value = f[2]
@@ -100,7 +93,7 @@ class KtrackMongoImpl(object):
         return [_convert_to_dict(x) for x in entity_candidates]
 
     def find_one(self, entity_type, entity_id):
-        # type: (str, KtrackIdType) -> dict
+        # type: (str, KtrackIdType) -> Optional[Dict]
         try:
             entity_cls = entities.entities[entity_type]
         except KeyError:
