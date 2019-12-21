@@ -36,7 +36,7 @@ def pytest_collection_modifyitems(config, items):
     if config.getoption("--integration-tests"):
         return
     skip_integration_tests_not_activated = pytest.mark.skip(
-        reason="need --integration-tests option to run"
+        reason="needs --integration-tests option to run"
     )
     for item in items:
         if "integration_test_only" in item.keywords:
