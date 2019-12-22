@@ -6,6 +6,7 @@ os.system("pip install -r requirements.txt")
 
 def read_version_number():
     import re
+
     VERSIONFILE = "kttk/__init__.py"
     verstrline = open(VERSIONFILE, "rt").read()
     VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
@@ -18,21 +19,19 @@ def read_version_number():
 
 
 setup(
-    name='ktrack-core',
+    name="ktrack-core",
     version=read_version_number(),
     packages=find_packages(),
-    package_data={
-        '': ['*.yml']
-    },
-    url='',
-    license='',
-    author='Jan Honsbrok',
-    author_email='',
-    description='',
+    package_data={"": ["*.yml"]},
+    url="",
+    license="",
+    author="Jan Honsbrok",
+    author_email="",
+    description="",
     entry_points={
-        'console_scripts': [
-            'interactive_api = scripts.interactive_api:main',
-            'ktrack = scripts.ktrack_command:main',
+        "console_scripts": [
+            "interactive_api = scripts.interactive_api:main",
+            "ktrack = scripts.ktrack_command:main",
         ]
-    }
+    },
 )

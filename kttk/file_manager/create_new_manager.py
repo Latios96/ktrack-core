@@ -82,7 +82,7 @@ class CreateNewManager(object):
         """
         Will open a template file in DCC, so we can save current scene as new file
         """
-        template_file = self._helper._get_template_file_path()
+        template_file = self._helper.get_template_file_path()
         self._engine.open_file_by_path(template_file)
         self._save_current_as_new()
 
@@ -91,15 +91,15 @@ class CreateNewManager(object):
         Will save currently opened file to new proper location. Can be some scene or template scene
         :return:
         """
-        highest_workfile = self._helper._get_highest_workfile(self._context)
+        highest_workfile = self._helper.get_highest_workfile(self._context)
 
         # create new workfile based on context, use existing workfile with highest version number as base
         if highest_workfile:
-            self.workfile = self._helper._create_workfile_from(
+            self.workfile = self._helper.create_workfile_from(
                 self._context, highest_workfile
             )
         else:
-            self.workfile = self._helper._create_new_workfile(self._context)
+            self.workfile = self._helper.create_new_workfile(self._context)
 
         # save as new created workfile
         # save as will also change engine context

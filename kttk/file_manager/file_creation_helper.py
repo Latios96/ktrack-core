@@ -12,37 +12,7 @@ class FileCreationHelper(object):
     def __init__(self, engine):
         self._engine = engine
 
-    def _context_is_valid_for_file_creation(self, context):
-        """
-        Validates given context for file creation. Is valid if contains project, entity, task and step
-        :param context:
-        :return: True if context is valid else false
-        """
-        has_project = context.project != None
-        has_entity = context.entity != None
-        has_task = context.task != None
-        has_step = context.step != None
-
-        if has_project and has_entity and has_task and has_step:
-            return True
-        else:
-            missing = []
-
-            if not has_project:
-                missing.append("project")
-
-            if not has_entity:
-                missing.append("entity")
-
-            if not has_task:
-                missing.append("task")
-
-            if not has_step:
-                missing.append("step")
-
-            raise ValueError("Invalid context: Missing {}".format(", ".join(missing)))
-
-    def _get_highest_workfile(self, context):
+    def get_highest_workfile(self, context):
         """
         Checks for exisitng workfiles for context.task. If there is one, will return the one with highest version_number.
         If not, will return None
@@ -60,15 +30,15 @@ class FileCreationHelper(object):
         # else search for highest version number, return this one
         return max(workfiles, key=lambda workfile: workfile["version_number"])
 
-    def _create_new_workfile(self, context):
+    def create_new_workfile(self, context):
         """
         Creates a new worfile, used when no workfile to create from exists
         :param workfile:
         :return:
         """
-        return self._create_workfile_from(context, {"version_number": 0})
+        return self.create_workfile_from(context, {"version_number": 0})
 
-    def _create_workfile_from(self, context, workfile, comment=""):
+    def create_workfile_from(self, context, workfile, comment=""):
         """
         Creates a new workfile based on given workfile. Will increase version number. Workfile and context have to match for project etc.
         :param context:
@@ -127,7 +97,7 @@ class FileCreationHelper(object):
         # return newly created workfile
         return new_workfile
 
-    def _get_template_file_path(self):
+    def get_template_file_path(self):
         """
         Returns formatted template file based on context
         :return:
@@ -139,3 +109,33 @@ class FileCreationHelper(object):
         tokens = {"dcc_extension": self._engine.file_extension}
 
         return template_manager.format_template(template_file_template, tokens)
+
+    def _context_is_valid_for_file_creation(self, context):
+        """
+        Validates given context for file creation. Is valid if contains project, entity, task and step
+        :param context:
+        :return: True if context is valid else false
+        """
+        has_project = context.project != None
+        has_entity = context.entity != None
+        has_task = context.task != None
+        has_step = context.step != None
+
+        if has_project and has_entity and has_task and has_step:
+            return True
+        else:
+            missing = []
+
+            if not has_project:
+                missing.append("project")
+
+            if not has_entity:
+                missing.append("entity")
+
+            if not has_task:
+                missing.append("task")
+
+            if not has_step:
+                missing.append("step")
+
+            raise ValueError("Invalid context: Missing {}".format(", ".join(missing)))

@@ -22,7 +22,7 @@ class AdvanceManager(object):
         user_option, comment = self._view_callback_provider.ask_for_comment()
 
         if user_option:
-            new_workfile = self._helper._create_workfile_from(
+            new_workfile = self._helper.create_workfile_from(
                 self._engine.context, self._engine.current_workfile, comment=comment
             )
 

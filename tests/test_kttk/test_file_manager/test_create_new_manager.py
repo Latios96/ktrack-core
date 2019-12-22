@@ -146,7 +146,7 @@ def test_create_from_template(create_new_manager):
     create_new_manager._save_current_as_new = MagicMock()
 
     create_new_manager._create_from_template()
-    assert create_new_manager._helper._get_template_file_path.called
+    assert create_new_manager._helper.get_template_file_path.called
     assert create_new_manager._engine.open_file_by_path.called
     assert create_new_manager._save_current_as_new.called
 
@@ -157,14 +157,14 @@ def test_save_current_as_new_no_workfile(create_new_manager):
     tests save current as new with no preexisting workfile
     """
     # mock highest workfile
-    create_new_manager._helper._get_highest_workfile.return_value = None
+    create_new_manager._helper.get_highest_workfile.return_value = None
 
     create_new_manager._update_context = MagicMock()
 
     create_new_manager._save_current_as_new()
 
-    assert create_new_manager._helper._create_new_workfile.called
-    assert not create_new_manager._helper._create_workfile_from.called
+    assert create_new_manager._helper.create_new_workfile.called
+    assert not create_new_manager._helper.create_workfile_from.called
     assert create_new_manager._engine.save_as.called
     assert create_new_manager._update_context.called
 
@@ -175,7 +175,7 @@ def test_save_current_as_new_preexisting_workfile(create_new_manager):
     tests save current as new with no preexisting workfile
     """
     # mock highest workfile
-    create_new_manager._helper._get_highest_workfile.return_value = {
+    create_new_manager._helper.get_highest_workfile.return_value = {
         "version_number": 1,
         "type": "workfile",
     }
@@ -184,8 +184,8 @@ def test_save_current_as_new_preexisting_workfile(create_new_manager):
 
     create_new_manager._save_current_as_new()
 
-    assert not create_new_manager._helper._create_new_workfile.called
-    assert create_new_manager._helper._create_workfile_from.called
+    assert not create_new_manager._helper.create_new_workfile.called
+    assert create_new_manager._helper.create_workfile_from.called
     assert create_new_manager._engine.save_as.called
     assert create_new_manager._update_context.called
 

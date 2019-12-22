@@ -61,7 +61,7 @@ def test_get_template_file(file_creation_helper):
     engine_mock.file_extension = ".mb"
     file_creation_helper._engine = engine_mock
 
-    template_file_path = file_creation_helper._get_template_file_path()
+    template_file_path = file_creation_helper.get_template_file_path()
     assert "templates/template.mb" in template_file_path
 
 
@@ -69,11 +69,11 @@ def test_create_new_workfile(file_creation_helper):
     # mock create from exisitng
     mock_create_from_existing = MagicMock()
 
-    file_creation_helper._create_workfile_from = mock_create_from_existing
+    file_creation_helper.create_workfile_from = mock_create_from_existing
 
-    file_creation_helper._create_new_workfile(Context())
+    file_creation_helper.create_new_workfile(Context())
 
-    assert file_creation_helper._create_workfile_from.called
+    assert file_creation_helper.create_workfile_from.called
 
 
 def test_create_workfile_from_non_existing(
@@ -83,7 +83,7 @@ def test_create_workfile_from_non_existing(
     with patch("ktrack_api.get_ktrack") as mock_get_ktrack:
         mock_get_ktrack.return_value = ktrack_instance
 
-        new_workfile = file_creation_helper._create_workfile_from(
+        new_workfile = file_creation_helper.create_workfile_from(
             populated_context, {"version_number": 0}
         )
 
@@ -103,7 +103,7 @@ def test_create_workfile_from_existing(
         mock_get_ktrack.return_value = ktrack_instance
 
         previos_workfile = {"version_number": 0, "id": "some_id"}
-        new_workfile = file_creation_helper._create_workfile_from(
+        new_workfile = file_creation_helper.create_workfile_from(
             populated_context, previos_workfile
         )
 
@@ -118,7 +118,7 @@ def test_create_workfile_from_existing_with_comment(
         mock_get_ktrack.return_value = ktrack_instance
 
         previos_workfile = {"version_number": 0, "id": "some_id"}
-        new_workfile = file_creation_helper._create_workfile_from(
+        new_workfile = file_creation_helper.create_workfile_from(
             populated_context, previos_workfile, comment="MY COMMENT"
         )
 
@@ -151,9 +151,7 @@ def test_get_highest_workfile_existing_workfiles(file_creation_helper, ktrack_in
                 },
             )
 
-        highest_workfile = file_creation_helper._get_highest_workfile(
-            Context(task=task)
-        )
+        highest_workfile = file_creation_helper.get_highest_workfile(Context(task=task))
 
         assert highest_workfile["version_number"] == 4
 
@@ -172,8 +170,6 @@ def test_get_highest_workfile_no_workfiles(file_creation_helper, ktrack_instance
             },
         )
 
-        highest_workfile = file_creation_helper._get_highest_workfile(
-            Context(task=task)
-        )
+        highest_workfile = file_creation_helper.get_highest_workfile(Context(task=task))
 
         assert highest_workfile is None
