@@ -10,10 +10,10 @@ from ktrack_api.ktrack_impl import AbtractKtrackImpl
 KtrackIdType = str
 from ktrack_api.mongo_impl.ktrack_mongo_impl import KtrackMongoImpl
 
-ini_path = os.path.join(os.path.dirname(__file__), 'connection.ini')
+ini_path = os.path.join(os.path.dirname(__file__), "connection.ini")
 config = configparser.ConfigParser()
 config.read(ini_path)
-_connection_url = config.get('connection', 'url')
+_connection_url = config.get("connection", "url")
 
 
 def get_ktrack():
