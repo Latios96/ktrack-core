@@ -1,11 +1,15 @@
-from kttk import logger
+from kttk.context import Context
+from kttk.engines import AbstractEngine
 from kttk.file_manager.file_creation_helper import FileCreationHelper
+from kttk.file_manager.view_callback_mixin import ViewCallbackMixin
 
 
 class AdvanceManager(object):
-    """
-    Class responsible for the Control Flow for creation of advancing a workfile
-    """
+
+    _helper = None  # type: FileCreationHelper
+    _context = None  # type: Context
+    _view_callback_provider = None  # type: ViewCallbackMixin
+    _engine = None  # type: AbstractEngine
 
     def __init__(self, engine, view_callback_provider, context):
         self._engine = engine
@@ -14,22 +18,14 @@ class AdvanceManager(object):
         self._helper = FileCreationHelper(self._engine)
         self.workfile = None
 
-    def do_it(self):  # todo add tests
-        # ask for comment
+    def do_it(self):
         user_option, comment = self._view_callback_provider.ask_for_comment()
 
-        if user_option == True:
-            # do advance
-            # create new workfile based on old
+        if user_option:
             new_workfile = self._helper._create_workfile_from(
                 self._engine.context, self._engine.current_workfile, comment=comment
             )
 
-            # save current workfile as new_workfile
             self._engine.save_as(new_workfile)
 
-            # update for new context
             self._engine.update_file_for_context()
-        else:
-            # user has canceled
-            pass
