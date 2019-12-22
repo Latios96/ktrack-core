@@ -17,7 +17,6 @@ class AdvanceManager(object):
         self._view_callback_provider = view_callback_provider
         self._context = context
         self._helper = FileCreationHelper(self._engine)
-        self.workfile = None
 
     def do_it(self):
         user_option, comment = self._view_callback_provider.ask_for_comment()
