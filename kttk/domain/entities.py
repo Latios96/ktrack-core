@@ -86,9 +86,9 @@ def _parse_version_number(version_identifier):
     return int(version_identifier)
 
 
-@attr.s
+@attr.s(frozen=True)
 class VersionNumber(object):
-    number = attr.ib(type=int, converter=_parse_version_number)
+    number = attr.ib(type=int, converter=_parse_version_number, default=1)
 
     @number.validator
     def check(self, attribute, value):
@@ -104,6 +104,9 @@ class VersionNumber(object):
     @property
     def version_str(self):
         return "v" + "{}".format(self.number).zfill(3)
+
+    def increase(self):
+        return VersionNumber(self.number + 1)
 
 
 @attr.s

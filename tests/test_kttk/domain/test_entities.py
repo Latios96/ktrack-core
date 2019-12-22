@@ -42,3 +42,15 @@ class TestVersionNumber(object):
             assert VersionNumber(-1)
         with pytest.raises(ValueError):
             assert VersionNumber(1000)
+
+    def test_increase_success(self):
+        version = VersionNumber()
+        assert version.increase().number == version.number + 1
+
+        version = VersionNumber(100)
+        increased_version = version.increase()
+        assert increased_version.number == 101
+
+    def test_increase_reach_limit(self):
+        with pytest.raises(ValueError):
+            VersionNumber(999).increase()

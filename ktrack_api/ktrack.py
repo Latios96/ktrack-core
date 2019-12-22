@@ -6,11 +6,11 @@ import configparser
 from typing import Optional, Dict
 
 from ktrack_api.ktrack_impl import AbtractKtrackImpl
+
 KtrackIdType = str
 from ktrack_api.mongo_impl.ktrack_mongo_impl import KtrackMongoImpl
 
 logger = logging.getLogger(__name__)
-
 
 
 def read_connection_url():
