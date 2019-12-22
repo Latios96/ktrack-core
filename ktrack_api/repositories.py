@@ -1,6 +1,6 @@
 from typing import TypeVar, Generic, Iterable, Optional, List
 
-from kttk.domain.entities import Project, Asset, KtrackId
+from kttk.domain.entities import Project, Asset, KtrackId, Shot, Task, Workfile, User
 
 T = TypeVar("T")
 
@@ -27,7 +27,27 @@ class ProjectRepository(AbstractRepository[Project]):
     pass
 
 
-class AssetRepository(AbstractRepository[Asset]):
+class AbstractProjectEntityRepository(AbstractRepository[T]):
     def find_by_project(self, project):
-        # type: (KtrackId) -> List[Asset]
+        # type: (KtrackId) -> List[T]
         raise NotImplementedError()
+
+
+class AssetRepository(AbstractProjectEntityRepository[Asset]):
+    pass
+
+
+class ShotRepository(AbstractProjectEntityRepository[Shot]):
+    pass
+
+
+class TaskRepository(AbstractProjectEntityRepository[Task]):
+    pass
+
+
+class WorkfileRepository(AbstractProjectEntityRepository[Workfile]):
+    pass
+
+
+class UserRepository(AbstractRepository[User]):
+    pass
