@@ -4,7 +4,6 @@ import mock
 import pytest
 from mock import MagicMock
 
-from ktrack_api.ktrack import Ktrack
 from kttk.context import Context
 from kttk.file_manager.advance_manager import AdvanceManager
 
