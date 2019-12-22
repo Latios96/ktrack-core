@@ -1,3 +1,4 @@
+import ktrack_api
 from kttk.context import Context
 from kttk.engines import AbstractEngine
 from kttk.file_manager.file_creation_helper import FileCreationHelper
@@ -23,9 +24,13 @@ class AdvanceManager(object):
 
         if user_option:
             new_workfile = self._helper.create_workfile_from(
-                self._engine.context, self._engine.current_workfile, comment=comment
+                self._engine.context, self.fetch_full_workfile(), comment=comment
             )
 
             self._engine.save_as(new_workfile)
 
             self._engine.update_file_for_context()
+
+    def fetch_full_workfile(self):
+        kt = ktrack_api.get_ktrack()
+        return kt.find_one("workfile", self._engine.current_workfile["id"])
