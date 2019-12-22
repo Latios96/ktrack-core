@@ -4,10 +4,10 @@ from typing import Optional, List
 
 from ktrack_api.mongo_impl.entities import Project as MongoProject, Asset as MongoAsset
 from ktrack_api.repositories import ProjectRepository, AssetRepository
-from kttk.domain.entities import Project, Thumbnail, Asset
+from kttk.domain.entities import Project, Thumbnail, Asset, KtrackId
 
 
-class MongoProjectRepository(ProjectRepository[str]):
+class MongoProjectRepository(ProjectRepository):
     @classmethod
     def to_mongo_project(cls, project):
         # type: (Project) -> MongoProject
@@ -33,7 +33,7 @@ class MongoProjectRepository(ProjectRepository[str]):
             )
 
     def find_one(self, the_id):
-        # type: (str) -> Optional[Project]
+        # type: (KtrackId) -> Optional[Project]
         mongo_project = MongoProject.objects(id=the_id).first()
         return MongoProjectRepository.to_project(mongo_project)
 
@@ -86,7 +86,7 @@ class MongoAssetRepository(AssetRepository):
             )
 
     def find_one(self, the_id):
-        # type: (str) -> Optional[Asset]
+        # type: (KtrackId) -> Optional[Asset]
         mongo_entity = MongoAsset.objects(id=the_id).first()
         return MongoAssetRepository.to_domain_entity(mongo_entity)
 
@@ -105,6 +105,6 @@ class MongoAssetRepository(AssetRepository):
         return list(map(self.save, entities))
 
     def find_by_project(self, project):
-        # type: (str) -> List[Asset]
+        # type: (KtrackId) -> List[Asset]
         mongo_entity = MongoAsset.objects(project__id=project).all()
         return list(map(self.to_domain_entity, mongo_entity))

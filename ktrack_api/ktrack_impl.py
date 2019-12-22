@@ -1,3 +1,8 @@
+from typing import List, Optional, Dict
+
+from kttk.domain.entities import KtrackId
+
+
 class AbtractKtrackImpl(object):
     def __init__(self, connection_uri):
         # type: (str) -> None
@@ -8,7 +13,7 @@ class AbtractKtrackImpl(object):
         raise NotImplementedError()
 
     def update(self, entity_type, entity_id, data):
-        # type: (str, KtrackIdType, dict) -> None
+        # type: (str, KtrackId, dict) -> None
         raise NotImplementedError()
 
     def find(self, entity_type, filters):
@@ -16,9 +21,9 @@ class AbtractKtrackImpl(object):
         raise NotImplementedError()
 
     def find_one(self, entity_type, entity_id):
-        # type: (str, KtrackIdType) -> Optional[Dict]
+        # type: (str, KtrackId) -> Optional[Dict]
         raise NotImplementedError()
 
     def delete(self, entity_type, entity_id):
-        # type: (str, KtrackIdType) -> None
+        # type: (str, KtrackId) -> None
         raise NotImplementedError()
