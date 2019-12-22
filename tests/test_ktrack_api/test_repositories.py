@@ -6,6 +6,7 @@ from ktrack_api.mongo_impl.mongo_repositories import (
     MongoProjectRepository,
     MongoAssetRepository,
 )
+from ktrack_api.repositories import ProjectRepository
 from kttk.domain.entities import Project, Thumbnail, Asset
 
 
