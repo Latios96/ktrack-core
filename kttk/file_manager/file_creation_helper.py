@@ -98,6 +98,7 @@ class FileCreationHelper(object):
         return new_workfile
 
     def get_template_file_path(self):
+        # type: () -> str
         """
         Returns formatted template file based on context
         :return:
@@ -116,10 +117,10 @@ class FileCreationHelper(object):
         :param context:
         :return: True if context is valid else false
         """
-        has_project = context.project != None
-        has_entity = context.entity != None
-        has_task = context.task != None
-        has_step = context.step != None
+        has_project = context.project is not None
+        has_entity = context.entity is not None
+        has_task = context.task is not None
+        has_step = context.step is not None
 
         if has_project and has_entity and has_task and has_step:
             return True

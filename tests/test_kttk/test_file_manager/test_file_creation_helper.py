@@ -21,38 +21,26 @@ def file_creation_helper(mock_engine):
     return FileCreationHelper(mock_engine)
 
 
-def test_context_is_valid(file_creation_helper, project_dict, shot_dict, task_dict):
-    # valid context
-    context = Context(
-        project=project_dict, entity=shot_dict, task=task_dict, step="anim"
-    )
+class TestContextIsValid(object):
 
-    assert file_creation_helper._context_is_valid_for_file_creation(context)
-
-    # invalid contexts
-    with pytest.raises(ValueError):
-        context = Context(project=project_dict, entity=shot_dict, task=task_dict)
-        assert (
-            file_creation_helper._context_is_valid_for_file_creation(context) == False
+    def test_valid_context(self, file_creation_helper, project_dict, shot_dict, task_dict):
+        context = Context(
+            project=project_dict, entity=shot_dict, task=task_dict, step="anim"
         )
 
-    with pytest.raises(ValueError):
-        context = Context(project=project_dict, entity=shot_dict)
-        assert (
-            file_creation_helper._context_is_valid_for_file_creation(context) == False
-        )
+        assert file_creation_helper._context_is_valid_for_file_creation(context)
 
-    with pytest.raises(ValueError):
-        context = Context(project=project_dict)
-        assert (
-            file_creation_helper._context_is_valid_for_file_creation(context) == False
-        )
+    def test_invalid_context(self, file_creation_helper, project_dict, shot_dict, task_dict):
+        contexts = [
+            Context(project=project_dict, entity=shot_dict, task=task_dict),
+            Context(project=project_dict, entity=shot_dict),
+            Context(project=project_dict),
+            Context()
+        ]
 
-    with pytest.raises(ValueError):
-        context = Context()
-        assert (
-            file_creation_helper._context_is_valid_for_file_creation(context) == False
-        )
+        for context in contexts:
+            with pytest.raises(ValueError):
+                assert not file_creation_helper._context_is_valid_for_file_creation(context)
 
 
 def test_get_template_file(file_creation_helper):
@@ -77,7 +65,7 @@ def test_create_new_workfile(file_creation_helper):
 
 
 def test_create_workfile_from_non_existing(
-    file_creation_helper, populated_context, ktrack_instance
+        file_creation_helper, populated_context, ktrack_instance
 ):
     # mock database
     with patch("ktrack_api.get_ktrack") as mock_get_ktrack:
@@ -96,7 +84,7 @@ def test_create_workfile_from_non_existing(
 
 
 def test_create_workfile_from_existing(
-    file_creation_helper, populated_context, ktrack_instance
+        file_creation_helper, populated_context, ktrack_instance
 ):
     # mock database
     with patch("ktrack_api.get_ktrack") as mock_get_ktrack:
@@ -111,7 +99,7 @@ def test_create_workfile_from_existing(
 
 
 def test_create_workfile_from_existing_with_comment(
-    file_creation_helper, populated_context, ktrack_instance
+        file_creation_helper, populated_context, ktrack_instance
 ):
     # mock database
     with patch("ktrack_api.get_ktrack") as mock_get_ktrack:
