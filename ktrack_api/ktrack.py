@@ -1,6 +1,7 @@
 import os
 import shutil
 import uuid
+import configparser
 
 from typing import Optional, Dict
 
@@ -9,8 +10,10 @@ from ktrack_api.ktrack_impl import AbtractKtrackImpl
 KtrackIdType = str
 from ktrack_api.mongo_impl.ktrack_mongo_impl import KtrackMongoImpl
 
-# todo make easy to config
-_connection_url = "mongodb://localhost:27090/ktrack"
+ini_path = os.path.join(os.path.dirname(__file__), 'connection.ini')
+config = configparser.ConfigParser()
+config.read(ini_path)
+_connection_url = config.get('connection', 'url')
 
 
 def get_ktrack():
