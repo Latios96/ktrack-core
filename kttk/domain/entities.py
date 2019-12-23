@@ -2,6 +2,8 @@ import datetime
 
 import attr
 
+from kttk.context import Context
+
 KtrackId = str
 
 
@@ -123,3 +125,9 @@ class User(NonProjectEntity):
     name = attr.ib(type=str)
     first_name = attr.ib(type=str)
     second_name = attr.ib(type=str)
+
+
+@attr.s
+class PathEntry(BasicEntity):
+    path = attr.ib(type=str, default=None)
+    context = attr.ib(type=Context, default=None)

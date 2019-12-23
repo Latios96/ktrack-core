@@ -78,8 +78,8 @@ register_entity("shot", Shot)
 
 class PathEntry(NonProjectEntity):
     type = "path_entry"
-    path = StringField()
-    context = DictField()
+    path = StringField(required=True)
+    context = DictField(required=True)
 
 
 register_entity("path_entry", PathEntry)

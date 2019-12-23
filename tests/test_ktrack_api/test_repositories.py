@@ -1,13 +1,17 @@
 import pytest
 from mongoengine import connect, ValidationError
 
-from ktrack_api.mongo_impl.entities import Project as MongoProject, Asset as MongoAsset
+from ktrack_api.mongo_impl.entities import (
+    Project as MongoProject,
+    Asset as MongoAsset,
+    PathEntry as MongoPathEntry,
+)
 from ktrack_api.mongo_impl.mongo_repositories import (
     MongoProjectRepository,
     MongoAssetRepository,
+    MongoPathEntryRepository,
 )
-from ktrack_api.repositories import ProjectRepository
-from kttk.domain.entities import Project, Thumbnail, Asset
+from kttk.domain.entities import Project, Thumbnail, Asset, PathEntry
 
 
 @pytest.fixture
@@ -24,7 +28,57 @@ def mongo_asset_repository():
     return MongoAssetRepository()
 
 
-class TestProjectRepository(object):
+@pytest.fixture
+def mongo_path_entry_repository():
+    connect("mongoeengine_test", host="mongomock://localhost")
+    MongoPathEntry.objects().all().delete()
+    return MongoPathEntryRepository()
+
+
+class BaseRepositoryTest(object):
+    def _do_test_save(self, mongo_repository, domain_entity):
+        old_entity = domain_entity
+        assert not domain_entity.id
+
+        domain_entity = mongo_repository.save(domain_entity)
+        assert domain_entity.id
+
+        old_entity.id = domain_entity.id
+        assert old_entity == domain_entity
+        assert mongo_repository.find_one(domain_entity.id) == domain_entity
+
+    def _do_test_save_project_entity(
+        self, mongo_repository, domain_entity, mongo_project_repository
+    ):
+        project = mongo_project_repository.save(Project(name="test_project"))
+        domain_entity.project = project.id
+
+        self._do_test_save(mongo_repository, domain_entity)
+
+    def _do_test_save_all(self, mongo_repository, entities):
+        old_projects = entities
+        for p in entities:
+            assert not p.id
+
+        projects = mongo_repository.save_all(entities)
+        assert len(projects) == len(old_projects)
+
+        for project in projects:
+            assert project.id
+        assert mongo_repository.find_all() == projects
+
+    def _do_test_save_all_project_entity(
+        self, mongo_repository, entities, mongo_project_repository
+    ):
+        project = mongo_project_repository.save(Project(name="test_project"))
+        for entity in entities:
+            assert not entity.id
+            entity.project = project.id
+
+        self._do_test_save_all(mongo_repository, entities)
+
+
+class TestProjectRepository(BaseRepositoryTest):
     @pytest.mark.parametrize(
         "project",
         [
@@ -33,36 +87,17 @@ class TestProjectRepository(object):
         ],
     )
     def test_save(self, project, mongo_project_repository):
-        old_project = project
-        assert not project.id
-
-        project = mongo_project_repository.save(project)
-        assert project.id
-        old_project.id = project.id
-        assert old_project == project
-
-        assert mongo_project_repository.find_one(project.id) == project
+        self._do_test_save(mongo_project_repository, project)
 
     def test_save_all(self, mongo_project_repository):
         projects = [
             Project(name="test_project"),
             Project(name="test_project", thumbnail=Thumbnail(path="test")),
         ]
-        old_projects = projects
-
-        for p in projects:
-            assert not p.id
-
-        projects = mongo_project_repository.save_all(projects)
-        assert len(projects) == len(old_projects)
-
-        for project in projects:
-            assert project.id
-
-        assert mongo_project_repository.find_all() == projects
+        self._do_test_save_all(mongo_project_repository, projects)
 
 
-class TestAssetRepository(object):
+class TestAssetRepository(BaseRepositoryTest):
     @pytest.mark.parametrize(
         "asset",
         [
@@ -74,40 +109,20 @@ class TestAssetRepository(object):
     )
     def test_save(self, asset, mongo_asset_repository, mongo_project_repository):
         # type: (Asset, MongoAssetRepository, MongoProjectRepository) -> None
-        project = mongo_project_repository.save(Project(name="test_project"))
-        asset.project = project.id
-
-        old_asset = asset
-        assert not asset.id
-
-        asset = mongo_asset_repository.save(asset)
-        assert asset.id
-        old_asset.id = asset.id
-        assert old_asset == asset
-
-        assert mongo_asset_repository.find_one(asset.id) == asset
+        self._do_test_save_project_entity(
+            mongo_asset_repository, asset, mongo_project_repository
+        )
 
     def test_save_all(self, mongo_asset_repository, mongo_project_repository):
-        project = mongo_project_repository.save(Project(name="test_project"))
         assets = [
             Asset(name="test_asset", asset_type="prop"),
             Asset(
                 name="test_asset", asset_type="prop", thumbnail=Thumbnail(path="test")
             ),
         ]
-        old_assets = assets
-
-        for p in assets:
-            assert not p.id
-            p.project = project.id
-
-        assets = mongo_asset_repository.save_all(assets)
-        assert len(assets) == len(old_assets)
-
-        for asset in assets:
-            assert asset.id
-
-        assert mongo_asset_repository.find_all() == assets
+        self._do_test_save_all_project_entity(
+            mongo_asset_repository, assets, mongo_project_repository
+        )
 
     def test_save_asset_without_project(self, mongo_asset_repository):
         asset = Asset(name="test_asset", asset_type="prop")
@@ -139,3 +154,16 @@ class TestAssetRepository(object):
 
         assert mongo_asset_repository.find_by_project(project1.id)[0] == assets[0]
         assert mongo_asset_repository.find_by_project(project2.id)[0] == assets[1]
+
+
+class TestPathEntryRepository(BaseRepositoryTest):
+    def test_save(self, mongo_path_entry_repository, populated_context):
+        path_entry = PathEntry(path="some_path", context=populated_context)
+        self._do_test_save(mongo_path_entry_repository, path_entry)
+
+    def test_save_all(self, mongo_path_entry_repository, populated_context):
+        path_entries = [
+            PathEntry(path="some_path", context=populated_context),
+            PathEntry(path="some_path", context=populated_context),
+        ]
+        self._do_test_save_all(mongo_path_entry_repository, path_entries)

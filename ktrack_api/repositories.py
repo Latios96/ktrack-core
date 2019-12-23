@@ -1,6 +1,15 @@
 from typing import TypeVar, Generic, Iterable, Optional, List
 
-from kttk.domain.entities import Project, Asset, KtrackId, Shot, Task, Workfile, User
+from kttk.domain.entities import (
+    Project,
+    Asset,
+    KtrackId,
+    Shot,
+    Task,
+    Workfile,
+    User,
+    PathEntry,
+)
 
 T = TypeVar("T")
 
@@ -50,4 +59,8 @@ class WorkfileRepository(AbstractProjectEntityRepository[Workfile]):
 
 
 class UserRepository(AbstractRepository[User]):
+    pass
+
+
+class PathEntryRepository(AbstractRepository[PathEntry]):
     pass
