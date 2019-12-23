@@ -1,6 +1,7 @@
 pytest
 pytest-cov
 pytest-qt
+pytest-repeat
 mock
 mongomock
 junitparser

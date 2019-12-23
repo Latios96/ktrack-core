@@ -22,7 +22,7 @@ class ProjectNames(BaseProvider):
         return self.random_element(self._data)["project_name"]
 
     def full_project_name(self):
-        return "{} {}".format(self.client_name(), self.project_name())
+        return u"{} {}".format(self.client_name(), self.project_name())
 
 
 class Movies(BaseProvider):
