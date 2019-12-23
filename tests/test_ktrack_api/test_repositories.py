@@ -105,7 +105,7 @@ class TestAssetRepository(object):
         assert len(assets) == len(old_assets)
 
         for asset in assets:
-            assert project.id
+            assert asset.id
 
         assert mongo_asset_repository.find_all() == assets
 
