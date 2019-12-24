@@ -72,3 +72,25 @@ def __good_path(path):
     path = path.replace("\\", "/")
     path = path.replace("//", "/")
     return path
+
+
+class PathCacheManager(object):
+    def __init__(self, path_entry_repository):
+        # type: (PathEntryRepository) -> None
+        self._path_entry_repository = path_entry_repository
+
+    def register_path(self, path, context):
+        # type: (str, Context) -> dict
+        return register_path(path, context, self._path_entry_repository)
+
+    def unregister_path(self, path):
+        # type: (str) -> bool
+        return unregister_path(path, self._path_entry_repository)
+
+    def context_from_path(self, path):
+        # type: (str) -> Optional[Context]
+        return context_from_path(path, self._path_entry_repository)
+
+    def is_valid_path(self, path):
+        # type: (str) -> bool
+        return is_valid_path(path)
