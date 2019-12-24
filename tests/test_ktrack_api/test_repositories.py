@@ -77,6 +77,24 @@ class BaseRepositoryTest(object):
 
         self._do_test_save_all(mongo_repository, entities)
 
+    def _do_test_delete(self, mongo_repository, entity):
+        entity = mongo_repository.save(entity)
+        assert entity.id
+
+        mongo_repository.delete(entity.id)
+        assert mongo_repository.find_one(entity.id) is None
+
+    def _do_test_delete_project_entity(
+        self, mongo_repository, entity, mongo_project_repository
+    ):
+        project = mongo_project_repository.save(Project(name="test_project"))
+        entity.project = project.id
+        entity = mongo_repository.save(entity)
+        assert entity.id
+
+        mongo_repository.delete(entity.id)
+        assert mongo_repository.find_one(entity.id) is None
+
 
 class TestProjectRepository(BaseRepositoryTest):
     @pytest.mark.parametrize(
@@ -95,6 +113,9 @@ class TestProjectRepository(BaseRepositoryTest):
             Project(name="test_project", thumbnail=Thumbnail(path="test")),
         ]
         self._do_test_save_all(mongo_project_repository, projects)
+
+    def test_delete(self, mongo_project_repository):
+        self._do_test_delete(mongo_project_repository, Project(name="test_project"))
 
 
 class TestAssetRepository(BaseRepositoryTest):
@@ -141,7 +162,7 @@ class TestAssetRepository(BaseRepositoryTest):
         with pytest.raises(ValidationError):
             mongo_asset_repository.save(asset)
 
-    def test_find_by_project(self, mongo_project_repository, mongo_asset_repository):
+    def test_find_by_project(self, mongo_asset_repository, mongo_project_repository):
         project1 = mongo_project_repository.save(Project(name="test_project"))
         project2 = mongo_project_repository.save(Project(name="test_project"))
 
@@ -155,6 +176,12 @@ class TestAssetRepository(BaseRepositoryTest):
         assert mongo_asset_repository.find_by_project(project1.id)[0] == assets[0]
         assert mongo_asset_repository.find_by_project(project2.id)[0] == assets[1]
 
+    def test_delete(self, mongo_asset_repository, mongo_project_repository):
+        asset = Asset(name="test_asset")
+        self._do_test_delete_project_entity(
+            mongo_asset_repository, asset, mongo_project_repository
+        )
+
 
 class TestPathEntryRepository(BaseRepositoryTest):
     def test_save(self, mongo_path_entry_repository, populated_context):
@@ -167,3 +194,9 @@ class TestPathEntryRepository(BaseRepositoryTest):
             PathEntry(path="some_path", context=populated_context),
         ]
         self._do_test_save_all(mongo_path_entry_repository, path_entries)
+
+    def test_delete(self, mongo_path_entry_repository, populated_context):
+        self._do_test_delete(
+            mongo_path_entry_repository,
+            PathEntry(path="some_path", context=populated_context),
+        )

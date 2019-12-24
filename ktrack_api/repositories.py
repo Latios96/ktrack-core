@@ -31,6 +31,10 @@ class AbstractRepository(Generic[T]):
         # type: (Iterable[T]) -> Iterable[T]
         raise NotImplementedError()
 
+    def delete(self, entity_id):
+        # type: (KtrackId) -> None
+        raise NotImplementedError()
+
 
 class ProjectRepository(AbstractRepository[Project]):
     pass

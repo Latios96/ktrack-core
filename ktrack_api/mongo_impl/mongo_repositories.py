@@ -2,6 +2,7 @@ from collections import Iterable
 
 from typing import Optional, List, TypeVar, Generic, Type
 
+from ktrack_api.exceptions import EntityNotFoundException
 from ktrack_api.mongo_impl.entities import (
     Project as MongoProject,
     Asset as MongoAsset,
@@ -46,6 +47,11 @@ class AbstractMongoRepository(Generic[T, MONGO_T]):
     def save_all(self, entities):
         # type: (Iterable[T]) -> Iterable[T]
         return list(map(self.save, entities))
+
+    def delete(self, entity_id):
+        # type: (KtrackId) -> None
+        entity_candidates = self.mongo_entity().objects(id=entity_id).all()
+        entity_candidates.delete()
 
 
 class AbstractMongoProjectEntityRepository(AbstractMongoRepository[T, MONGO_T]):
