@@ -4,23 +4,18 @@ Sometimes we need to get the context from a path, for example the project from t
 For this, every folder created and deleted needs to be registered/unregistered in the database.
 We store the path in the database together with the given context and can get the original context back with context_from_path
 """
+from typing import Optional
+
 import ktrack_api
 from kttk.context import Context
 
 
 def register_path(path, context):
     # type: (str, Context) -> dict
-    """
-    registeres given context for given path in database, so we can later get the context back from the path
-    :param path: path to register, None or "" not allowed!!!
-    :param context: context to register
-    :return: newly created path entry from database
-    """
     # check if path is valid
     if not is_valid_path(path):
         raise ValueError(path)
 
-    # make path beautifull
     path = __good_path(path)
 
     kt = ktrack_api.get_ktrack()
@@ -33,13 +28,7 @@ def register_path(path, context):
 
 
 def unregister_path(path):
-    # type: (str) -> None
-    """
-    Unregisters a path from database
-    :param path:
-    :return: True if path was registered in database and deleted, False otherwise
-    """
-    # make path beautifull
+    # type: (str) -> bool
     path = __good_path(path)
 
     kt = ktrack_api.get_ktrack()
@@ -57,13 +46,7 @@ def unregister_path(path):
 
 
 def context_from_path(path):
-    # type: (str) -> kttk.context.Context
-    """
-    Extracts context by path from database
-    :param path: path for context
-    :return: stored context if exists, else None
-    """
-    # make path beautifull
+    # type: (str) -> Optional[Context]
     path = __good_path(path)
 
     kt = ktrack_api.get_ktrack()
@@ -79,12 +62,7 @@ def context_from_path(path):
 
 
 def is_valid_path(path):
-    """
-    Checks if the path can be registered in the database.
-    Path is not allowed to be None or empty Strng
-    :param path: path to check
-    :return: True if path is valid, False otherwise
-    """
+    # type: (str) -> bool
     valid = False
 
     if path:
@@ -96,11 +74,6 @@ def is_valid_path(path):
 
 def __good_path(path):
     # type: (str) -> str
-    """
-    Makes os paths good, replace \\ with /
-    :param path:
-    :return:
-    """
     path = path.replace("\\", "/")
     path = path.replace("//", "/")
     return path
