@@ -67,4 +67,7 @@ class UserRepository(AbstractRepository[User]):
 
 
 class PathEntryRepository(AbstractRepository[PathEntry]):
-    pass
+
+    def find_by_path(self, path):
+        # type: (str) -> Optional[PathEntry]
+        raise NotImplementedError()

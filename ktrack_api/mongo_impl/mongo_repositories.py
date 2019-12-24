@@ -8,7 +8,7 @@ from ktrack_api.mongo_impl.entities import (
     Asset as MongoAsset,
     PathEntry as MongoPathEntry,
 )
-from ktrack_api.repositories import ProjectRepository, AssetRepository
+from ktrack_api.repositories import ProjectRepository, AssetRepository, PathEntryRepository
 from kttk.context import Context
 from kttk.domain.entities import Project, Thumbnail, Asset, KtrackId, PathEntry
 
@@ -131,7 +131,7 @@ class MongoAssetRepository(
             )
 
 
-class MongoPathEntryRepository(AbstractMongoRepository[PathEntry, MongoPathEntry]):
+class MongoPathEntryRepository(AbstractMongoRepository[PathEntry, MongoPathEntry], PathEntryRepository):
     def mongo_entity(self):
         # type: () -> Type[MongoPathEntry]
         return MongoPathEntry
@@ -157,3 +157,8 @@ class MongoPathEntryRepository(AbstractMongoRepository[PathEntry, MongoPathEntry
                 path=mongo_entity.path,
                 context=Context.from_dict(mongo_entity.context),
             )
+
+    def find_by_path(self, path):
+        # type: (str) -> Optional[PathEntry]
+        mongo_entity = self.mongo_entity().objects(path=path).first()
+        return self.to_domain_entity(mongo_entity)

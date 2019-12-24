@@ -200,3 +200,16 @@ class TestPathEntryRepository(BaseRepositoryTest):
             mongo_path_entry_repository,
             PathEntry(path="some_path", context=populated_context),
         )
+
+    def test_find_by_path(self, mongo_path_entry_repository, populated_context):
+        path = "some_path"
+        path_entry = PathEntry(path=path, context=populated_context)
+
+        path_entry = mongo_path_entry_repository.save(path_entry)
+
+        assert mongo_path_entry_repository.find_by_path(path) == path_entry
+
+    def test_find_by_path_returns_none(self, mongo_path_entry_repository, populated_context):
+        path = "some_path"
+
+        assert mongo_path_entry_repository.find_by_path(path) is None
