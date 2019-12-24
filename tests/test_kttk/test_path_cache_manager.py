@@ -38,35 +38,37 @@ def test_register_invalid_path():
         path_cache_manager.register_path("", None)
 
 
-def test_register_path(ktrack_instance, context_for_testing):
-    PATH = "nilascg"
-    path_cache_manager.register_path(PATH, context_for_testing)
+def test_register_path(mongo_path_entry_repository, context_for_testing):
+    path = "nilascg"
+    path_cache_manager.register_path(
+        path, context_for_testing, mongo_path_entry_repository
+    )
 
-    entries = ktrack_instance.find("path_entry", [["path", "is", PATH]])
+    assert mongo_path_entry_repository.find_by_path(path)
 
-    path_entry_exists = len(entries) == 1
-    assert path_entry_exists
-
-    # test restoring context from path
-
-    context = path_cache_manager.context_from_path(PATH)
-
+    context = path_cache_manager.context_from_path(path, mongo_path_entry_repository)
     assert context.project["id"] == context_for_testing.project["id"]
 
 
-def test_restore_context_no_path_registered():
-    assert path_cache_manager.context_from_path(str(uuid.uuid4())) is None
+def test_restore_context_no_path_registered(mongo_path_entry_repository):
+    assert (
+        path_cache_manager.context_from_path(
+            str(uuid.uuid4()), mongo_path_entry_repository
+        )
+        is None
+    )
 
 
-def test_unregister_path(context_for_testing, ktrack_instance):
-    assert path_cache_manager.unregister_path("sommovtrnitrui") == False
+def test_unregister_path(context_for_testing, mongo_path_entry_repository):
+    assert not path_cache_manager.unregister_path(
+        "sommovtrnitrui", mongo_path_entry_repository
+    )
 
     PATH = "s<eihsdhisdi"
-    path_cache_manager.register_path(PATH, context_for_testing)
+    path_cache_manager.register_path(
+        PATH, context_for_testing, mongo_path_entry_repository
+    )
 
-    path_cache_manager.unregister_path(PATH)
+    path_cache_manager.unregister_path(PATH, mongo_path_entry_repository)
 
-    entries = ktrack_instance.find("path_entry", [["path", "is", PATH]])
-
-    path_entry_removed = len(entries) == 0
-    assert path_entry_removed
+    assert not mongo_path_entry_repository.find_by_path(PATH)

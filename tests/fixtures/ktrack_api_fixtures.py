@@ -12,9 +12,13 @@ ktrack._connection_url = "mongomock://localhost"
 @pytest.fixture
 def ktrack_instance():
     impl = KtrackMongoImpl("mongomock://localhost")
-    yield impl
-    for entity_name, entity_cls in entities.entities.items():
-        entity_cls.objects().all().delete()
+    with mock.patch(
+        "ktrack_api.config.read_connection_url"
+    ) as mock_read_connection_url:
+        mock_read_connection_url.return_value = "mongomock://localhost"
+        yield impl
+        for entity_name, entity_cls in entities.entities.items():
+            entity_cls.objects().all().delete()
 
 
 @pytest.fixture

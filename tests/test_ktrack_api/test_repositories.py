@@ -1,38 +1,11 @@
 import pytest
-from mongoengine import connect, ValidationError
+from mongoengine import ValidationError
 
-from ktrack_api.mongo_impl.entities import (
-    Project as MongoProject,
-    Asset as MongoAsset,
-    PathEntry as MongoPathEntry,
-)
 from ktrack_api.mongo_impl.mongo_repositories import (
     MongoProjectRepository,
     MongoAssetRepository,
-    MongoPathEntryRepository,
 )
 from kttk.domain.entities import Project, Thumbnail, Asset, PathEntry
-
-
-@pytest.fixture
-def mongo_project_repository():
-    connect("mongoeengine_test", host="mongomock://localhost")
-    MongoProject.objects().all().delete()
-    return MongoProjectRepository()
-
-
-@pytest.fixture
-def mongo_asset_repository():
-    connect("mongoeengine_test", host="mongomock://localhost")
-    MongoAsset.objects().all().delete()
-    return MongoAssetRepository()
-
-
-@pytest.fixture
-def mongo_path_entry_repository():
-    connect("mongoeengine_test", host="mongomock://localhost")
-    MongoPathEntry.objects().all().delete()
-    return MongoPathEntryRepository()
 
 
 class BaseRepositoryTest(object):
@@ -209,7 +182,9 @@ class TestPathEntryRepository(BaseRepositoryTest):
 
         assert mongo_path_entry_repository.find_by_path(path) == path_entry
 
-    def test_find_by_path_returns_none(self, mongo_path_entry_repository, populated_context):
+    def test_find_by_path_returns_none(
+        self, mongo_path_entry_repository, populated_context
+    ):
         path = "some_path"
 
         assert mongo_path_entry_repository.find_by_path(path) is None

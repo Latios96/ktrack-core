@@ -18,6 +18,12 @@ from tests.fixtures.integration_fixtures import (
     bootstrapped_project_with_data,
 )
 
+from tests.fixtures.repository_fixtures import (
+    mongo_project_repository,
+    mongo_asset_repository,
+    mongo_path_entry_repository,
+)
+
 
 def pytest_addoption(parser):
     parser.addoption(

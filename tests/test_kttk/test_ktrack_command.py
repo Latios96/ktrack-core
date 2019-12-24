@@ -117,7 +117,7 @@ def test_name_or_code():
     assert ktrack_command.get_name_or_code({"namee": "my_name"}) is None
 
 
-def test_print_context_invalid_path(mock_print_result):
+def test_print_context_invalid_path(ktrack_instance, mock_print_result):
     # test the context method of ktrack command
 
     # test not registered path

@@ -2,26 +2,15 @@ import logging
 import os
 import shutil
 import uuid
-import configparser
 from typing import Optional, Dict
 
+from ktrack_api.config import read_connection_url
 from ktrack_api.ktrack_impl import AbtractKtrackImpl
 
 KtrackIdType = str
 from ktrack_api.mongo_impl.ktrack_mongo_impl import KtrackMongoImpl
 
 logger = logging.getLogger(__name__)
-
-
-def read_connection_url():
-    ini_path = os.path.join(os.path.dirname(__file__), "connection.ini")
-    if os.path.exists(ini_path):
-        config = configparser.ConfigParser()
-        config.read(ini_path)
-        return config.get("connection", "url")
-    logger.warning("no connection.ini found, using mongomock for database connection!")
-    return "mongomock://localhost"
-
 
 read_connection_url()
 _connection_url = read_connection_url()

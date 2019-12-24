@@ -4,61 +4,56 @@ Sometimes we need to get the context from a path, for example the project from t
 For this, every folder created and deleted needs to be registered/unregistered in the database.
 We store the path in the database together with the given context and can get the original context back with context_from_path
 """
+import attr
 from typing import Optional
 
-import ktrack_api
+from ktrack_api.factory import get_path_entry_repository
+from ktrack_api.repositories import PathEntryRepository
 from kttk.context import Context
+from kttk.domain.entities import PathEntry
 
 
-def register_path(path, context):
-    # type: (str, Context) -> dict
-    # check if path is valid
+def _get_repo(path_entry_repository):
+    return (
+        get_path_entry_repository()
+        if not path_entry_repository
+        else path_entry_repository
+    )
+
+
+def register_path(path, context, path_entry_repository=None):
+    # type: (str, Context, PathEntryRepository) -> dict
     if not is_valid_path(path):
         raise ValueError(path)
 
     path = __good_path(path)
+    path_entry = PathEntry(path=path, context=context)  # todo remove user information
 
-    kt = ktrack_api.get_ktrack()
-
-    path_entry_data = {}
-    path_entry_data["path"] = path
-    path_entry_data["context"] = context.as_dict()  # todo remove user information
-
-    return kt.create("path_entry", path_entry_data)
+    path_entry_repository = _get_repo(path_entry_repository)
+    return attr.asdict(path_entry_repository.save(path_entry))
 
 
-def unregister_path(path):
-    # type: (str) -> bool
+def unregister_path(path, path_entry_repository=None):
+    # type: (str,PathEntryRepository) -> bool
+    path_entry_repository = _get_repo(path_entry_repository)
     path = __good_path(path)
 
-    kt = ktrack_api.get_ktrack()
-
-    path_entries = kt.find("path_entry", [["path", "is", path]])
-
-    entry_found = len(path_entries) > 0
-
-    if entry_found:
-        for path_entry in path_entries:
-            kt.delete("path_entry", path_entry["id"])
+    path_entry = path_entry_repository.find_by_path(path)
+    if path_entry:
+        path_entry_repository.delete(path_entry.id)
         return True
     else:
         return False
 
 
-def context_from_path(path):
-    # type: (str) -> Optional[Context]
+def context_from_path(path, path_entry_repository=None):
+    # type: (str,PathEntryRepository) -> Optional[Context]
+    path_entry_repository = _get_repo(path_entry_repository)
     path = __good_path(path)
 
-    kt = ktrack_api.get_ktrack()
-
-    context_dicts = kt.find("path_entry", [["path", "is", path]])
-    context_found = len(context_dicts) > 0
-
-    if context_found:
-        context = Context.from_dict(context_dicts[0]["context"])
-        return context
-    else:
-        return None
+    path_entry = path_entry_repository.find_by_path(path)
+    if path_entry:
+        return path_entry.context
 
 
 def is_valid_path(path):
