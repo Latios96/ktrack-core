@@ -54,8 +54,11 @@ def get_user_information_path():
     :return: the expanded path to ~/.ktrack_user.json
     """
     is_windows = sys.platform.startswith("win")
-    username = os.environ["username"] if is_windows else os.path.expanduser("~")
-    user_folder = "C:/Users/{username}".format(username=username)
+    if is_windows:
+        username = os.environ["username"]
+        user_folder = "C:/Users/{username}".format(username=username)
+    else:
+        user_folder = os.path.expanduser("~")
 
     user_information = os.path.join(user_folder, KTRACK_USER_JSON)
     return user_information

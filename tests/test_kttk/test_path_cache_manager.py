@@ -24,7 +24,6 @@ def test_good_path():
 
 
 class TestPathCacheManager(object):
-
     @pytest.fixture(autouse=True)
     def setup_path_cache_manager(self, mongo_path_entry_repository):
         self._mongo_path_entry_repository = mongo_path_entry_repository
