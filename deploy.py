@@ -40,7 +40,7 @@ def build_wheel():
 
 def deploy_wheel(wheel):
     target_path = os.path.join(r'M:\Projekte\z_pipeline\ktrack', wheel.version_str, 'python2')
-    cmd = "pip install {} --target {}".format(wheel.path, target_path)
+    cmd = "C:\\Python27\\Scripts\pip.exe install {} --target {}".format(wheel.path, target_path)
     print(cmd)
     subprocess.call(cmd)
 
