@@ -6,15 +6,10 @@ pipeline {
         bat 'C:\\Python27\\Scripts\\tox'
       }
     }
-    /*stage('Unit Tests') {
+    stage('deploy') {
       steps {
-        bat '%WORKSPACE%/venv/Scripts/pytest'
+        bat 'C:\\Python27\\Scripts\\python deploy.py'
       }
     }
-    stage('Build Wheel') {
-      steps {
-        bat '%WORKSPACE%/venv/Scripts/python setup.py bdist_wheel'
-      }
-    }*/
   }
 }
