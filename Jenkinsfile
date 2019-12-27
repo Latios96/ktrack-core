@@ -8,7 +8,7 @@ pipeline {
     }
     stage('deploy') {
       steps {
-        bat 'C:\\Python27\\Scripts\\python deploy.py'
+        bat 'C:\\Python27\\python.exe deploy.py'
       }
     }
   }
