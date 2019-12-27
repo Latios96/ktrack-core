@@ -1,7 +1,9 @@
 import logging
 import os
-
-import configparser
+try:
+    import configparser as configparser
+except ImportError:
+    import ConfigParser as configparser
 
 logger = logging.getLogger(__name__)
 

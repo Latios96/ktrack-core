@@ -3,8 +3,6 @@ import datetime
 from setuptools import setup, find_packages
 import os
 
-os.system("pip install -r requirements.txt")
-
 
 def read_version_number():
     import re
@@ -22,12 +20,14 @@ def read_version_number():
 
 def get_version_number():
     date_format = "%m/%d/%Y"
-    a = datetime.datetime.strptime('12/27/2019', date_format)
-    b = datetime.datetime.strptime('12/27/2019', date_format)
+    a = datetime.datetime.strptime("12/27/2019", date_format)
+    b = datetime.datetime.strptime("12/27/2019", date_format)
     delta = b - a
 
     now = datetime.datetime.now()
-    seconds_since_midnight = int((now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds())
+    seconds_since_midnight = int(
+        (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
+    )
     return "{}.{}.{}".format(0, delta.days, seconds_since_midnight)
 
 
@@ -35,7 +35,7 @@ setup(
     name="ktrack-core",
     version=get_version_number(),
     packages=find_packages(),
-    package_data={"": ["*.yml"]},
+    package_data={"": ["*.yml", "*.txt"]},
     url="",
     license="",
     author="Jan Honsbrok",
@@ -47,4 +47,18 @@ setup(
             "ktrack = scripts.ktrack_command:main",
         ]
     },
+    install_requires=[
+        "mongoengine",
+        "blinker",
+        "pyyaml",
+        "Qt.py",
+        "fire",
+        "tabulate",
+        "typing",
+        "frozendict",
+        "valideer",
+        "attrs",
+        "faker",
+        "enum34;python_version <= '2.7'",
+    ],
 )
