@@ -9,5 +9,15 @@ pipeline {
         bat '%WORKSPACE%/venv/Scripts/pip install -r requirements_ci.txt'
       }
     }
+    stage('Unit Tests') {
+      steps {
+        bat 'pytest'
+      }
+    }
+    stage('Build Wheel') {
+      steps {
+        bat 'python setup.py bdist_wheel'
+      }
+    }
   }
 }
