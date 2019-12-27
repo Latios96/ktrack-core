@@ -1,16 +1,12 @@
 pipeline {
   agent any
   stages {
-    stage('Virtualenv') {
+    stage('Tox') {
       steps {
-        bat 'C:\\Python27\\Scripts\\virtualenv venv'
-        bat 'set PATH=%WORKSPACE%/venv/Scripts/;%PATH%'
-        bat '%WORKSPACE%/venv/Scripts/python setup.py install'
-        bat '%WORKSPACE%/venv/Scripts/pip install -r requirements.txt'
-        bat '%WORKSPACE%/venv/Scripts/pip install -r requirements_ci.txt'
+        bat 'C:\\Python27\\Scripts\\tox'
       }
     }
-    stage('Unit Tests') {
+    /*stage('Unit Tests') {
       steps {
         bat '%WORKSPACE%/venv/Scripts/pytest'
       }
@@ -19,6 +15,6 @@ pipeline {
       steps {
         bat '%WORKSPACE%/venv/Scripts/python setup.py bdist_wheel'
       }
-    }
+    }*/
   }
 }
