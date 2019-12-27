@@ -11,12 +11,12 @@ pipeline {
     }
     stage('Unit Tests') {
       steps {
-        bat 'pytest'
+        bat '%WORKSPACE%/venv/Scripts/pytest'
       }
     }
     stage('Build Wheel') {
       steps {
-        bat 'python setup.py bdist_wheel'
+        bat '%WORKSPACE%/venv/Scripts/python setup.py bdist_wheel'
       }
     }
   }
