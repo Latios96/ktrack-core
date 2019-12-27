@@ -1,3 +1,5 @@
+import datetime
+
 from setuptools import setup, find_packages
 import os
 
@@ -18,9 +20,20 @@ def read_version_number():
         raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
 
 
+def get_version_number():
+    date_format = "%m/%d/%Y"
+    a = datetime.datetime.strptime('12/27/2019', date_format)
+    b = datetime.datetime.strptime('12/27/2019', date_format)
+    delta = b - a
+
+    now = datetime.datetime.now()
+    seconds_since_midnight = int((now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds())
+    return "{}.{}.{}".format(0, delta.days, seconds_since_midnight)
+
+
 setup(
     name="ktrack-core",
-    version=read_version_number(),
+    version=get_version_number(),
     packages=find_packages(),
     package_data={"": ["*.yml"]},
     url="",
