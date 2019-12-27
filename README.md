@@ -1,39 +1,27 @@
-# Ktrack-core
-My VFX Pipeline foundation. Contains:
-- a Shotgun like Database
-- folder creation tools
-- path <-> context functionality (extract project, entity, task.. from file path)
-- Shotgun Toolkit-like engine api
+# ktrack-core
+Tool to track assets, shots, tasks and workfiles for a CGI movie production.
+Offers automatic folder and file creation and an API to query the database.
 
-## Design decisions
-- no per-project configuration: this can be done by batch files or package managers like rez
-- no config file fiddling all the time
-- no fancy package management like Shotgun Toolkit does, we rely on the standard python setup.py
-- no db session / fancy ORM handling / running DB migrations, simple Shotgun like API
-- unit tests coverage
-
-## Install
+## Getting started
 ```shell
+virtualenv venv
+./venv/bin/activate
 python setup.py install
 ```
 
-## Tests
-run tests:
+## Run the tests
+### Standart python tests
+```shell
+python run_tests.py
+```
+### Run the test inside of the DCCs
+```shell
+run_tests_maya.bat
+run_tests_nuke.bat
+run_tests_houdini.bat
+```
+or everything:
 ```shell
 run_all_tests.bat
 ```
-## run in maya:
-start engine
-```python
-import kttk
-from kttk.engines import maya_engine
-kttk.engines.start_engine(maya_engine.MayaEngine)
-```
-run file manager
-```python
-from kttk_widgets import file_manager_view
-w = file_manager_view.FileManagerWidget()
-w.show()
-```
-
 
