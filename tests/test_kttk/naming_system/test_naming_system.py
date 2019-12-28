@@ -41,7 +41,7 @@ class TestFormatPathTemplate(object):
                 "my_template", {"teste": "my_str"}
             )
 
-        assert e.value.message == "Some tokens are missing: test"
+        assert str(e.value) == "Some tokens are missing: test"
 
     def test_missing_multiple_tokens(self):
         with pytest.raises(ValueError) as e:
@@ -49,4 +49,4 @@ class TestFormatPathTemplate(object):
                 "my_template2", {"teste": "my_str"}
             )
 
-        assert e.value.message == "Some tokens are missing: test1, test2"
+        assert str(e.value) == "Some tokens are missing: test1, test2"

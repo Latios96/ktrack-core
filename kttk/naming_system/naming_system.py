@@ -39,7 +39,7 @@ class NamingSystem(object):
         missing_tokens = self._get_missing_tokens(path_template, token_dict)
         if missing_tokens:
             raise ValueError(
-                "Some tokens are missing: {}".format(", ".join(missing_tokens))
+                "Some tokens are missing: {}".format(", ".join(sorted(missing_tokens)))
             )
         return path_template.expanded_template.format(**token_dict)
 
