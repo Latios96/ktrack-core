@@ -1,6 +1,6 @@
 import os
+import mongomock
 import pytest
-import coverage
 
 MAYA = False
 NUKE = False
@@ -9,23 +9,21 @@ try:
     import pymel.core as pm
 
     MAYA = True
-
-except:
+except ImportError:
     pass
 
 try:
     import nuke
 
     NUKE = True
-
-except:
+except ImportError:
     pass
 
 try:
     import hou
 
     HOUDINI = True
-except:
+except ImportError:
     pass
 
 
@@ -46,11 +44,6 @@ if __name__ == "__main__":
     interpreter = get_current_interpreter()
     print("running tests in {}...".format(interpreter))
 
-    cov = coverage.Coverage(
-        include=["kttk*", "ktrack_api*", "kttk_widgets*", "scripts*"]
-    )
-    cov.start()
-
     args = [
         "-x",
         os.path.join(os.getcwd(), "tests"),
@@ -65,7 +58,3 @@ if __name__ == "__main__":
         args.extend(["-p", "no:pytest-qt", "-p", "no:pytest_cov"])
 
     pytest.main(args)
-
-    cov.stop()
-    cov.save()
-    cov.xml_report(outfile="coverage_tests_{}.xml".format(interpreter))
