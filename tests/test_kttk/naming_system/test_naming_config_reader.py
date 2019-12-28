@@ -1,4 +1,7 @@
+import os
+
 import pytest
+import six
 
 from kttk.naming_system.naming_config import NamingConfig
 from kttk.naming_system.naming_config_reader import (
@@ -230,20 +233,30 @@ class TestConfigExpander(object):
 
 
 class TestReadConfig(object):
-    def test_read(self):
+    expected_config = NamingConfig(
+        {PathTemplate(name="test", template_str="{testr}", expanded_template="{testr}")}
+    )
+
+    def test_read_str(self):
         config_str = """
 routes: 
     test: "{testr}"
 """
-        config_reader = NamingConfigReader(config_str)
-        naming_config = config_reader.read()
+        naming_config = NamingConfigReader.read_from_string(config_str)
 
-        expected_config = NamingConfig(
-            {
-                PathTemplate(
-                    name="test", template_str="{testr}", expanded_template="{testr}"
-                )
-            }
-        )
+        assert naming_config == self.expected_config
 
-        assert naming_config == expected_config
+    def test_read_file(self):
+        config_str = """
+routes: 
+    test: "{testr}"
+"""
+        naming_config = NamingConfigReader.read_from_file(six.StringIO(config_str))
+
+        assert naming_config == self.expected_config
+
+    def test_read_file_path(self):
+        file_path = os.path.join(os.path.dirname(__file__), "simple_test_config.yml")
+        naming_config = NamingConfigReader.read_from_file_path(file_path)
+
+        assert naming_config == self.expected_config

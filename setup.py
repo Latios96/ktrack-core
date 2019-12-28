@@ -60,6 +60,7 @@ setup(
         "valideer",
         "attrs",
         "faker",
+        "six",
         "enum34;python_version <= '2.7'",
     ],
 )

@@ -1,6 +1,6 @@
 import six
 import yaml
-from typing import Dict
+from typing import Dict, IO
 
 from kttk.naming_system import token_utils
 from kttk.naming_system.naming_config import NamingConfig
@@ -99,15 +99,18 @@ class NamingConfigValidator(object):
 class NamingConfigReader(object):
     @staticmethod
     def read_from_file_path(file_path):
+        # type: (str) -> NamingConfig
         with open(file_path, "rb") as f:
-            return NamingConfigReader.read_from_file(file_path)
+            return NamingConfigReader.read_from_file(f)
 
     @staticmethod
     def read_from_file(file):
-        return NamingConfigReader.read_from_string(file.readall())
+        # type: (IO) -> NamingConfig
+        return NamingConfigReader.read_from_string(file.read())
 
     @staticmethod
     def read_from_string(config_str):
+        # type: (str) -> NamingConfig
         config_reader = NamingConfigReader(config_str)
         return config_reader.read()
 
