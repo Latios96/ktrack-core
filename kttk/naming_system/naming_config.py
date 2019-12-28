@@ -2,6 +2,7 @@ from typing import Set, Optional, Dict
 
 from kttk.naming_system.templates import PathTemplate
 
+
 class NamingConfig(object):
     def __init__(self, path_templates):
         # type: (Set[PathTemplate]) -> None
@@ -24,3 +25,9 @@ class NamingConfig(object):
 
     def __ne__(self, other):
         return not self == other
+
+    def __repr__(self):
+        return str(self)
+
+    def __str__(self):
+        return "<NamingConfig path_templates={}".format(", ".join(map(str, sorted(self._path_templates, key=lambda x: x.name))))
