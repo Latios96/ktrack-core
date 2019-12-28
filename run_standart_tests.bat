@@ -1,3 +1,0 @@
-echo running regular tests...
-set COVERAGE_FILE=coverage_standart.cov
-python run_tests.py
