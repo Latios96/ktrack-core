@@ -1,6 +1,7 @@
 import pytest
 
-from kttk.naming_system.naming_system import NamingSystem, NamingConfig
+from kttk.naming_system.naming_system import NamingSystem
+from kttk.naming_system.naming_config import NamingConfig
 from kttk.naming_system.templates import PathTemplate
 
 
