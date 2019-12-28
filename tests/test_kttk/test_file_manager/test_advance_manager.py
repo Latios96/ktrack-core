@@ -18,10 +18,7 @@ def advance_manager(populated_context):
 @pytest.fixture
 def advance_manager_user_canceled_comment(populated_context):
     view_callback_provider = MagicMock()
-    canceled_comment = (
-        False,
-        None,
-    )
+    canceled_comment = (False, None)
     view_callback_provider.ask_for_comment.return_value = canceled_comment
     manager = AdvanceManager(MagicMock(), view_callback_provider, populated_context)
     manager._helper = MagicMock()

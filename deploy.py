@@ -7,7 +7,6 @@ import sys
 
 
 class Wheel(object):
-
     def __init__(self, path):
         self.path = os.path.abspath(path)
         self.version = self._parse_version(path)
@@ -39,13 +38,17 @@ def build_wheel():
 
 
 def deploy_wheel(wheel):
-    target_path = os.path.join(r'M:\Projekte\z_pipeline\ktrack', wheel.version_str, 'python2')
-    cmd = "C:\\Python27\\Scripts\pip.exe install {} --target {}".format(wheel.path, target_path)
+    target_path = os.path.join(
+        r"M:\Projekte\z_pipeline\ktrack", wheel.version_str, "python2"
+    )
+    cmd = "C:\\Python27\\Scripts\pip.exe install {} --target {}".format(
+        wheel.path, target_path
+    )
     print(cmd)
     subprocess.call(cmd)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     wheel = build_wheel()
     print(wheel)
     deploy_wheel(wheel)

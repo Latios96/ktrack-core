@@ -20,15 +20,16 @@ def read_version_number():
 
 def get_version_number():
     date_format = "%m/%d/%Y"
-    a = datetime.datetime.strptime("12/27/2019", date_format)
-    b = datetime.datetime.strptime("12/27/2019", date_format)
-    delta = b - a
-
     now = datetime.datetime.now()
+    day_of_changed_versioning = datetime.datetime.strptime("12/27/2019", date_format)
+    days_since_versioning_changed = now - day_of_changed_versioning
+
     seconds_since_midnight = int(
         (now - now.replace(hour=0, minute=0, second=0, microsecond=0)).total_seconds()
     )
-    return "{}.{}.{}".format(0, delta.days, seconds_since_midnight)
+    return "{}.{}.{}".format(
+        0, days_since_versioning_changed.days, seconds_since_midnight
+    )
 
 
 setup(

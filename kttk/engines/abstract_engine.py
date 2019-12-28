@@ -5,7 +5,9 @@ from kttk.context import Context
 
 
 class AbstractEngine(object):
-    context = None  # todo check if somewhere context reference is changed, make read only from outside -> property
+    context = (
+        None
+    )  # todo check if somewhere context reference is changed, make read only from outside -> property
 
     name = "Abstract"  # has to start with upper letter todo read only
     file_extension = ".dat"  # has to start with .
