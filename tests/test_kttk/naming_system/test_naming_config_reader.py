@@ -10,24 +10,26 @@ from kttk.naming_system.naming_config_reader import (
     RawConfig,
     RawConfigExpander,
 )
-from kttk.naming_system.templates import PathTemplate
-
-
-# todo check for cyclic expansion
-# todo check for impossible expansion
-# todo check for invalid path templates (some which can not be properly parsed afterwards)
+from kttk.naming_system.templates import PathTemplate, PathToken
 
 
 class TestRawConfigReader(object):
     def test_read_simple(self):
         config_str = """
-        routes: 
-            test: "{test}"
+tokens:
+    - name: drive
+      type: KNOWN_STRING
+      regex: "M:"
+routes: 
+    test: "{test}"
         """
         raw_config_reader = RawConfigReader(config_str)
         raw_config = raw_config_reader.read()
 
-        assert raw_config == RawConfig(routes={"test": "{test}"})
+        assert raw_config == RawConfig(
+            routes={"test": "{test}"},
+            tokens={PathToken(name="drive", type="KNOWN_STRING", regex="M:")},
+        )
 
     @pytest.mark.parametrize(
         "config_str,message",
@@ -41,34 +43,79 @@ class TestRawConfigReader(object):
                 """
 test: test
 """,
+                '"tokens" key missing in config!',
+            ),
+            (
+                """
+routes:
+    test: test
+""",
+                '"tokens" key missing in config!',
+            ),
+            (
+                """
+tokens:
+  name: drive
+  type: KNOWN_STRING
+  regex: "M:"
+""",
+                "tokens section is not a list!",
+            ),
+            (
+                """
+tokens:
+  - name: drive
+    type: KNOWN_STRING
+    regex: "M:"
+""",
                 '"routes" key missing in config!',
             ),
             (
                 """
+tokens:
+  - name: drive
+    type: KNOWN_STRING
+    regex: "M:"
 routes: []
 """,
                 "routes section is not a dictionary!",
             ),
             (
                 """
+tokens:
+  - name: drive
+    type: KNOWN_STRING
+    regex: "M:"
 routes: test
 """,
                 "routes section is not a dictionary!",
             ),
             (
                 """
+tokens:
+  - name: drive
+    type: KNOWN_STRING
+    regex: "M:"
 routes: 1
 """,
                 "routes section is not a dictionary!",
             ),
             (
                 """
+tokens:
+  - name: drive
+    type: KNOWN_STRING
+    regex: "M:"
 routes: 2.0
 """,
                 "routes section is not a dictionary!",
             ),
             (
                 """
+tokens:
+  - name: drive
+    type: KNOWN_STRING
+    regex: "M:"
 routes:
     test: [test]
 """,
@@ -76,11 +123,48 @@ routes:
             ),
             (
                 """
+tokens:
+  - name: drive
+    type: KNOWN_STRING
+    regex: "M:"
 routes:
     test:
         test: test
 """,
                 "route is not a string-string mapping!",
+            ),
+            (
+                """
+tokens:
+  - name: []
+    type: KNOWN_STRING
+    regex: "M:"
+routes:
+    test: test
+""",
+                "token name has to be string, was []",
+            ),
+            (
+                """
+tokens:
+  - name: drive
+    type: []
+    regex: "M:"
+routes:
+    test: test
+""",
+                "token type has to be string, was []",
+            ),
+            (
+                """
+tokens:
+  - name: drive
+    type: KNOWN_STRING
+    regex: []
+routes:
+    test: test
+""",
+                "token regex has to be string, was []",
             ),
         ],
     )
@@ -95,11 +179,23 @@ routes:
         "config_str",
         [
             """
+tokens:
+  - name: drive
+    type: KNOWN_STRING
+    regex: "M:"
 routes:
     test: test
     """,
             """
-{
+            
+{   
+    "tokens": [
+        {
+            "name": "drive",
+            "type": "KNOWN_STRING",
+            "regex": "M:"
+        }
+    ],
     "routes": {
         "test": "test"
         }
@@ -111,7 +207,76 @@ routes:
         raw_config_reader = RawConfigReader(config_str)
         raw_config = raw_config_reader.read()
 
-        assert raw_config == RawConfig(routes={"test": "test"})
+        assert raw_config == RawConfig(
+            routes={"test": "test"},
+            tokens={PathToken(name="drive", type="KNOWN_STRING", regex="M:")},
+        )
+
+    @pytest.mark.parametrize(
+        "config_str,expected_config",
+        [
+            (
+                """
+tokens:
+  - name: drive
+    type: KNOWN_STRING
+    regex: "M:"
+routes:
+    test: test
+    """,
+                RawConfig(
+                    routes={"test": "test"},
+                    tokens={PathToken(name="drive", type="KNOWN_STRING", regex="M:")},
+                ),
+            ),
+            (
+                """
+tokens:
+  - name: _out
+routes:
+    test: test
+    """,
+                RawConfig(
+                    routes={"test": "test"},
+                    tokens={PathToken(name="_out", type="KNOWN_STRING", regex="_out")},
+                ),
+            ),
+            (
+                """
+tokens:
+  - name: year
+    regex: \d\d\d\d
+routes:
+    test: test
+    """,
+                RawConfig(
+                    routes={"test": "test"},
+                    tokens={PathToken(name="year", type="STRING", regex="\d\d\d\d")},
+                ),
+            ),
+        ],
+    )
+    def test_token_optional_regex_token_type_rules(self, config_str, expected_config):
+        raw_config_reader = RawConfigReader(config_str)
+        raw_config = raw_config_reader.read()
+
+        assert raw_config == expected_config
+
+    def test_token_optional_regex_token_type_rules_debug(self):
+        raw_config_reader = RawConfigReader(
+            """
+tokens:
+  - name: _out
+routes:
+    test: test
+    """
+        )
+        raw_config = raw_config_reader.read()
+
+        assert raw_config == RawConfig(
+            routes={"test": "test"},
+            tokens={PathToken(name="_out", type="KNOWN_STRING", regex="_out")},
+        )
 
 
 class TestConfigExpander(object):
@@ -239,6 +404,10 @@ class TestReadConfig(object):
 
     def test_read_str(self):
         config_str = """
+tokens:
+  - name: drive
+    type: KNOWN_STRING
+    regex: "M:"
 routes: 
     test: "{testr}"
 """
@@ -248,6 +417,10 @@ routes:
 
     def test_read_file(self):
         config_str = """
+tokens:
+  - name: drive
+    type: KNOWN_STRING
+    regex: "M:"
 routes: 
     test: "{testr}"
 """

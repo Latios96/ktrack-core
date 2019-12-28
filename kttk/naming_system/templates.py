@@ -1,10 +1,11 @@
 import attr
+from enum import Enum
 
 
 @attr.s(frozen=True)
 class PathToken(object):
     name = attr.ib()  # type: str
-    type = attr.ib()  # type: str
+    type = attr.ib()  # type: str # todo use enum
     regex = attr.ib()  # type: str
 
 

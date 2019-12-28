@@ -1,2 +1,6 @@
+tokens:
+  - name: drive
+    type: KNOWN_STRING
+    regex: "M:"
 routes:
     test: "{testr}"
