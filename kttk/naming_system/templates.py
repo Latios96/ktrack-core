@@ -1,11 +1,21 @@
 import attr
 from enum import Enum
+from typing import Union
+
+
+class TokenType(Enum):
+    FOLDER_SEPERATOR = "FOLDER_SEPERATOR"
+    KNOWN_STRING = "KNOWN_STRING"
+    STRING = "STRING"
+
+
+PathTokenType = Union["FOLDER_SEPERATOR", "KNOWN_STRING", "STRING", TokenType]
 
 
 @attr.s(frozen=True)
 class PathToken(object):
     name = attr.ib()  # type: str
-    type = attr.ib()  # type: str # todo use enum
+    type = attr.ib()  # type: PathTokenType
     regex = attr.ib()  # type: str
 
 
@@ -14,13 +24,3 @@ class PathTemplate(object):
     name = attr.ib()  # type:str
     template_str = attr.ib()  # type:str
     expanded_template = attr.ib()  # type: str
-
-
-FOLDER_SEPERATOR = PathToken("folder_seperator", "FOLDER_SEPERATOR", r"\/")
-YEAR = PathToken("year", "STRING", r"\d{4}")
-PROJECT_LOCATION = PathToken("project_location", "KNOWN_STRING", "M:/Projekte")
-ASSET_TYPE = PathToken("project_drive", "STRING", ".*")
-
-p = PathTemplate(
-    "vrscene_location_asset", "{project_location}/{asset_type}", "M:/{asset_type}"
-)

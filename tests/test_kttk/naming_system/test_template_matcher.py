@@ -1,20 +1,20 @@
 import pytest
 
 from kttk.naming_system.path_token_matcher import PathTokenSequenceMatcher
-from kttk.naming_system.templates import PathToken
+from kttk.naming_system.templates import PathToken, TokenType
 
-FOLDER_SEPERATOR = PathToken("folder_seperator", "FOLDER_SEPERATOR", r"\/")
+FOLDER_SEPERATOR = PathToken("folder_seperator", TokenType.FOLDER_SEPERATOR, r"\/")
 UNDERSCORE = PathToken("underscore", "UNDERSCORE", r"_")
-YEAR = PathToken("year", "STRING", r"\d{4}")
-PROJECT_DRIVE = PathToken("project_drive", "KNOWN_STRING", "M:")
-PROJECTS_FOLDER = PathToken("projects_folder", "KNOWN_STRING", "Projekte")
-PROJECT_NAME = PathToken("project_name", "STRING", ".*")
-ARCHIVE = PathToken("archive", "KNOWN_STRING", "_archive")
-ASSETS = PathToken("assets_folder", "STRING", "Assets")
-ASSET_TYPE = PathToken("asset_type", "STRING", "Prop|Char|Environment")
-EXTENSION = PathToken("extension", "STRING", ".*")
+YEAR = PathToken("year", TokenType.STRING, r"\d{4}")
+PROJECT_DRIVE = PathToken("project_drive", TokenType.KNOWN_STRING, "M:")
+PROJECTS_FOLDER = PathToken("projects_folder", TokenType.KNOWN_STRING, "Projekte")
+PROJECT_NAME = PathToken("project_name", TokenType.STRING, ".*")
+ARCHIVE = PathToken("archive", TokenType.KNOWN_STRING, "_archive")
+ASSETS = PathToken("assets_folder", TokenType.STRING, "Assets")
+ASSET_TYPE = PathToken("asset_type", TokenType.STRING, "Prop|Char|Environment")
+EXTENSION = PathToken("extension", TokenType.STRING, ".*")
 
-VERSION = PathToken("version_number", "STRING", "v\d{3}")
+VERSION = PathToken("version_number", TokenType.STRING, "v\d{3}")
 
 
 class TestTemplateMatcher(object):

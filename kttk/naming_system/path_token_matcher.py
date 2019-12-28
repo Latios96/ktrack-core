@@ -3,7 +3,7 @@ import re
 import attr
 from typing import List, Optional, Dict
 
-from kttk.naming_system.templates import PathToken
+from kttk.naming_system.templates import PathToken, TokenType
 
 
 @attr.s
@@ -75,7 +75,7 @@ class PathTokenSequenceMatcher(object):
         is_last_element = index == len(self._tokens) - 1
         next_element_is_folder_seperator = (
             index <= len(self._tokens) - 2
-            and self._tokens[index + 1].token.type == "FOLDER_SEPERATOR"
+            and self._tokens[index + 1].token.type == TokenType.FOLDER_SEPERATOR
         )
 
         if is_last_element or next_element_is_folder_seperator:
