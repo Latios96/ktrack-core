@@ -241,7 +241,7 @@ routes:
         expected_config = NamingConfig(
             {
                 PathTemplate(
-                    name="test", template_str="{test}", expanded_template="{test}"
+                    name="test", template_str="{testr}", expanded_template="{testr}"
                 )
             }
         )
