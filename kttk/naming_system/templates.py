@@ -8,6 +8,15 @@ class TokenType(Enum):
     KNOWN_STRING = "KNOWN_STRING"
     STRING = "STRING"
 
+    @staticmethod
+    def from_str(string):
+        if string ==  "FOLDER_SEPERATOR":
+            return TokenType.FOLDER_SEPERATOR
+        if string == "KNOWN_STRING":
+            return TokenType.KNOWN_STRING
+        if string == "STRING":
+            return TokenType.STRING
+
 
 PathTokenType = Union["FOLDER_SEPERATOR", "KNOWN_STRING", "STRING", TokenType]
 
