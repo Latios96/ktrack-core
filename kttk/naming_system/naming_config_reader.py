@@ -6,6 +6,7 @@ from kttk.naming_system import token_utils
 from kttk.naming_system.naming_config import NamingConfig
 import attr
 
+from kttk.naming_system.path_template_string_parser import PathTemplateStringParser
 from kttk.naming_system.templates import PathTemplate, PathToken
 
 
@@ -144,15 +145,55 @@ class RawConfigExpander(object):
 
 
 class NamingConfigValidator(object):
+    _naming_config = None  # type: NamingConfig
+
     def __init__(self, naming_config):
+        # type: (NamingConfig) -> None
         self._naming_config = naming_config
 
     def validate(self):
-        # every token
-        # todo every token has to exist
-        # no expanded duplicates are allowed
-        # todo every path has to be parsable -> every string token (gets replaced) has to be unique identifiable
-        raise NotImplementedError()
+        self._check_for_duplicated_path_template_names()
+        self._check_for_expanded_duplicates()
+
+        for path_template in self._naming_config.path_templates:
+            self._validate_path_template(path_template)
+
+    def _check_for_duplicated_path_template_names(self):
+        path_template_names = set()
+
+        for path_template in self._naming_config.path_templates:
+            if not path_template.name in path_template_names:
+                path_template_names.add(path_template.name)
+            else:
+                raise ValueError("Duplicated path template name: {}".format(path_template.name))
+
+    def _check_for_expanded_duplicates(self):
+        expanded_strings = {}
+
+        for path_template in self._naming_config.path_templates:
+            possible_duplicate = expanded_strings.get(path_template.expanded_template)
+            if not possible_duplicate:
+                expanded_strings[path_template.expanded_template] = path_template
+            else:
+                duplicate = possible_duplicate
+                raise ValueError(
+                    "PathTemplate with name {} expands to the same template string as PathTemplate with name {}".format(
+                        path_template.name, duplicate.name
+                    )
+                )
+
+    def _validate_path_template(self, path_template):
+        parser = PathTemplateStringParser(path_template.expanded_template)
+        token_sequence = parser.parse()
+
+        self._ensure_every_string_token_exists(token_sequence)
+        self._ensure_path_template_is_parsable(token_sequence)
+
+    def _ensure_every_string_token_exists(self, token_sequence):
+        pass
+
+    def _ensure_path_template_is_parsable(self, token_sequence):
+        pass
 
 
 class NamingConfigReader(object):

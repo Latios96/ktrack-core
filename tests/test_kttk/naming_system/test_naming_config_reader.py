@@ -9,6 +9,7 @@ from kttk.naming_system.naming_config_reader import (
     RawConfigReader,
     RawConfig,
     RawConfigExpander,
+    NamingConfigValidator,
 )
 from kttk.naming_system.templates import PathTemplate, PathToken
 
@@ -415,6 +416,47 @@ class TestConfigExpander(object):
         raw_config_expander = RawConfigExpander(raw_config)
         with pytest.raises(RuntimeError) as e:
             raw_config_expander.expand()
+
+
+class TestNamingConfigValidator(object):
+    @pytest.mark.parametrize(
+        "naming_config,error_message",
+        [
+            (
+                NamingConfig(
+                    path_templates={
+                        PathTemplate(
+                            name="test", template_str="test", expanded_template="test"
+                        ),
+                        PathTemplate(
+                            name="test", template_str="test", expanded_template="testokpl+"
+                        ),
+                    }
+                ),
+                "Duplicated path template name: test"
+            ),
+            (
+                NamingConfig(
+                    path_templates={
+                        PathTemplate(
+                            name="test1", template_str="test", expanded_template="test"
+                        ),
+                        PathTemplate(
+                            name="test2", template_str="test", expanded_template="test"
+                        ),
+                    }
+                ),
+                "PathTemplate with name test1 expands to the same template string as PathTemplate with name test2",
+            ),
+        ],
+    )
+    def test_invalid_configs(self, naming_config, error_message):
+        validator = NamingConfigValidator(naming_config)
+
+        with pytest.raises(ValueError) as e:
+            validator.validate()
+
+        assert str(e.value) == error_message
 
 
 class TestReadConfig(object):

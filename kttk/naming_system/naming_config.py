@@ -9,6 +9,10 @@ class NamingConfig(object):
         self._path_templates = path_templates
         self._path_template_dict = self._create_path_template_dict()
 
+    @property
+    def path_templates(self):
+        return self._path_templates
+
     def path_template_by_name(self, template_name):
         # type: (str) -> Optional[PathTemplate]
         return self._path_template_dict.get(template_name)
