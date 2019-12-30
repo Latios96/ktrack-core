@@ -166,6 +166,26 @@ routes:
 """,
                 "token regex has to be string, was []",
             ),
+            (
+                """
+tokens:
+  - type: KNOWN_STRING
+    regex: []
+routes:
+    test: test
+    """,
+                "token name is missing!",
+            ),
+            (
+                """
+tokens:
+  - name: drive
+    type: KNOWN_STRING  
+routes:
+    test: test
+    """,
+                "token regex is missing!",
+            ),
         ],
     )
     def test_read_invalid(self, config_str, message):

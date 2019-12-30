@@ -70,10 +70,14 @@ class RawConfigReader(object):
             raise ValueError("token regex has to be string, was {}".format(regex))
 
     def _apply_optional_regex_token_type_rules(self, name, regex, token_type):
+        if name is None:
+            raise ValueError("token name is missing!")
+        if name is not None and token_type is not None and regex is None:
+            raise ValueError("token regex is missing!")
         if name is not None and token_type is None and regex is None:
             token_type = "KNOWN_STRING"
             regex = name
-        if name  is not None and regex is not None and token_type is None:
+        if name is not None and regex is not None and token_type is None:
             token_type = "STRING"
         return regex, token_type
 
@@ -144,6 +148,10 @@ class NamingConfigValidator(object):
         self._naming_config = naming_config
 
     def validate(self):
+        # every token
+        # todo every token has to exist
+        # no expanded duplicates are allowed
+        # todo every path has to be parsable -> every string token (gets replaced) has to be unique identifiable
         raise NotImplementedError()
 
 
