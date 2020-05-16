@@ -17,12 +17,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - name: install Python 27
-        run: setup\install-python-27.bat
+      - name: install Python 37
+        run: setup\install-python-37.bat
       - name: install Python deps
-        run: setup\install-python-27-deps.bat
+        run: setup\install-python-37-deps.bat
       - name: verify Python and deps installation with pytest
-        run: wrappers\python27.bat -m pytest -h
+        run: wrappers\python37.bat -m pytest -h
       - name: verify Python and deps installation with black
-        run: wrappers\python27.bat -m black -h
+        run: wrappers\python37.bat -m black -h
 
