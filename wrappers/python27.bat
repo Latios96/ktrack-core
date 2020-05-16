@@ -7,6 +7,6 @@ cd ..
 SET ROOT_FOLDER=%CD%
 cd %OLD_DIRECTORY%
 
-set PYTHONPATH=%ROOT_FOLDER%\python-envs\py27\deps
+set PYTHONPATH=%ROOT_FOLDER%\python-envs\py27\deps;%ROOT_FOLDER%
 
 "%ROOT_FOLDER%\python-envs\py27\interpreter\python.exe" %*
