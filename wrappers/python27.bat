@@ -1,3 +1,4 @@
+@echo off
 setlocal
 
 SET OLD_DIRECTORY=%CD%
