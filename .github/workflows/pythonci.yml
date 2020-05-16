@@ -24,5 +24,5 @@ jobs:
       - name: verify Python and deps installation with pytest
         run: wrappers\python27.bat -m pytest -h
       - name: verify Python and deps installation with black
-          run: wrappers\python27.bat -m black -h
+        run: wrappers\python27.bat -m black -h
 
