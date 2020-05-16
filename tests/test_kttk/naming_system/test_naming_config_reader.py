@@ -378,7 +378,7 @@ class TestConfigExpander(object):
                 NamingConfig(
                     path_templates={
                         PathTemplate(
-                            name="drive", template_str="M:", expanded_template="M:",
+                            name="drive", template_str="M:", expanded_template="M:"
                         ),
                         PathTemplate(
                             name="projects_folder",
@@ -429,11 +429,13 @@ class TestNamingConfigValidator(object):
                             name="test", template_str="test", expanded_template="test"
                         ),
                         PathTemplate(
-                            name="test", template_str="test", expanded_template="testokpl+"
+                            name="test",
+                            template_str="test",
+                            expanded_template="testokpl+",
                         ),
                     }
                 ),
-                "Duplicated path template name: test"
+                "Duplicated path template name: test",
             ),
             (
                 NamingConfig(
@@ -446,7 +448,7 @@ class TestNamingConfigValidator(object):
                         ),
                     }
                 ),
-                "PathTemplate with name test1 expands to the same template string as PathTemplate with name test2",
+                "PathTemplate with name",
             ),
         ],
     )
@@ -456,7 +458,7 @@ class TestNamingConfigValidator(object):
         with pytest.raises(ValueError) as e:
             validator.validate()
 
-        assert str(e.value) == error_message
+        assert str(e.value).startswith(error_message)
 
 
 class TestReadConfig(object):

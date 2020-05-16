@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 import six
 import yaml
 from typing import Dict, IO, Set
@@ -168,7 +170,7 @@ class NamingConfigValidator(object):
                 raise ValueError("Duplicated path template name: {}".format(path_template.name))
 
     def _check_for_expanded_duplicates(self):
-        expanded_strings = {}
+        expanded_strings = OrderedDict()
 
         for path_template in self._naming_config.path_templates:
             possible_duplicate = expanded_strings.get(path_template.expanded_template)
