@@ -8,7 +8,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
-      setup\install-python-27.bat
-      setup\install-python-27-deps.bat
-      wrappers\python27.bat -m pytest -h
-
+        setup\install-python-27.bat
+        setup\install-python-27-deps.bat
+        wrappers\python27.bat -m pytest -h
