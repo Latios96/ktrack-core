@@ -1,3 +1,4 @@
+@echo off
 setlocal
 SET OLD_DIRECTORY=%CD%
 cd %~dp0
@@ -41,8 +42,7 @@ if exist "%ROOT_FOLDER%\python-envs\py37\interpreter\Scripts\pip.exe" (
 ) else (
     echo Install pip
     %PYTHON_37_INTERPRETER_EXECUTABLE% %GET_PIP_PATH%
-    echo %ROOT_FOLDER%\python-envs\py37\interpreter\Lib\site-packages>> "%ROOT_FOLDER%\python-envs\py37\interpreter\python37._pth
-    echo %ROOT_FOLDER%\python-envs\py37\deps>> "%ROOT_FOLDER%\python-envs\py37\interpreter\python37._pth
+    del "%ROOT_FOLDER%\python-envs\py37\interpreter\python37._pth
 )
 
 

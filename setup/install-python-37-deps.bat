@@ -1,3 +1,4 @@
+@echo off
 setlocal
 SET OLD_DIRECTORY=%CD%
 cd %~dp0
@@ -12,7 +13,10 @@ type "%ROOT_FOLDER%\requirements.txt" > "%COMBINED_REQUIREMENTS%"
 echo. >> "%COMBINED_REQUIREMENTS%"
 type "%ROOT_FOLDER%\requirements-dev.txt" >> "%COMBINED_REQUIREMENTS%"
 
-set PY_PIP="%ROOT_FOLDER%\python-envs\py37\interpreter\Scripts"
-set PY_LIBS="%ROOT_FOLDER%\python-envs\py37\interpreter\Lib;%ROOT_FOLDER%\python-envs\py37\interpreter\Lib\site-packages"
-
 %PYTHON_37_PYTHON_EXECUTABLE% -m pip install -r "%COMBINED_REQUIREMENTS%" --target "%ROOT_FOLDER%\python-envs\py37\deps"
+
+echo python37.zip>> "%ROOT_FOLDER%\python-envs\py37\interpreter\python37._pth
+echo .>> "%ROOT_FOLDER%\python-envs\py37\interpreter\python37._pth
+echo %ROOT_FOLDER%\python-envs\py37\interpreter\Lib\site-packages>> "%ROOT_FOLDER%\python-envs\py37\interpreter\python37._pth
+echo %ROOT_FOLDER%\python-envs\py37\deps>> "%ROOT_FOLDER%\python-envs\py37\interpreter\python37._pth
+echo %ROOT_FOLDER%>> "%ROOT_FOLDER%\python-envs\py37\interpreter\python37._pth
