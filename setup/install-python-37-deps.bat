@@ -7,5 +7,9 @@ cd %OLD_DIRECTORY%
 
 SET PYTHON_37_PIP_EXECUTABLE="%ROOT_FOLDER%\python-envs\py37\interpreter\Scripts\pip.exe"
 
-%PYTHON_37_PIP_EXECUTABLE% install -r "%ROOT_FOLDER%\requirements.txt" --target "%ROOT_FOLDER%\python-envs\py37\deps"
-%PYTHON_37_PIP_EXECUTABLE% install -r "%ROOT_FOLDER%\requirements-dev.txt" --target "%ROOT_FOLDER%\python-envs\py37\deps"
+SET COMBINED_REQUIREMENTS="%~dp0temp\requirements-combined.txt"
+type "%ROOT_FOLDER%\requirements.txt" > "%COMBINED_REQUIREMENTS%"
+echo. >> "%COMBINED_REQUIREMENTS%"
+type "%ROOT_FOLDER%\requirements-dev.txt" >> "%COMBINED_REQUIREMENTS%"
+
+%PYTHON_37_PIP_EXECUTABLE% install -r "%COMBINED_REQUIREMENTS%" --target "%ROOT_FOLDER%\python-envs\py37\deps"
