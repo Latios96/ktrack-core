@@ -20,6 +20,8 @@ SET PYTHON_37_INTERPRETER_EXECUTABLE="%ROOT_FOLDER%\python-envs\py37\interpreter
 if exist %PYTHON_37_INTERPRETER_EXECUTABLE% (
     echo Skipping Python 37 Install
 ) else (
+    mkdir "%ROOT_FOLDER%\python-envs\py37\interpreter"
+    mkdir "%ROOT_FOLDER%\python-envs\py37\deps"
     echo Unzip Python 37..
     tar -C "%ROOT_FOLDER%\python-envs\py37\interpreter" -xf %PYTHON_37_ZIP%
     echo Unzipped Python 37
