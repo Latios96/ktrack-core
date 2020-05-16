@@ -66,7 +66,7 @@ def create(entity_type, entity_name, project_id=None, asset_type=None, task_step
     logger.info("init cmd")
     logger.info("Connecting to database..")
     kt = ktrack_api.get_ktrack()
-
+    # todo check if entity type is valid
     if entity_type == "project":
         logger.info("initialise project")
         logger.info("create project in database..")
