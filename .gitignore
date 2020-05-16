@@ -203,3 +203,6 @@ coverage_houdini\.cov
 .dmypy.json
 
 connection.ini
+
+python-envs
+setup/temp
