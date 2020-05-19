@@ -34,4 +34,6 @@ class NamingConfig(object):
         return str(self)
 
     def __str__(self):
-        return "<NamingConfig path_templates={}".format(", ".join(map(str, sorted(self._path_templates, key=lambda x: x.name))))
+        return "<NamingConfig path_templates={}".format(
+            ", ".join(map(str, sorted(self._path_templates, key=lambda x: x.name)))
+        )

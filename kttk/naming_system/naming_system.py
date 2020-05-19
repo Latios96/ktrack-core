@@ -15,7 +15,9 @@ class NamingSystem(object):
                 "No template with name {} found in config!".format(template_name)
             )
 
-        missing_tokens = token_utils.get_missing_tokens(path_template.expanded_template, token_dict)
+        missing_tokens = token_utils.get_missing_tokens(
+            path_template.expanded_template, token_dict
+        )
         if missing_tokens:
             raise ValueError(
                 "Some tokens are missing: {}".format(", ".join(sorted(missing_tokens)))

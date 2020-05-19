@@ -167,7 +167,9 @@ class NamingConfigValidator(object):
             if not path_template.name in path_template_names:
                 path_template_names.add(path_template.name)
             else:
-                raise ValueError("Duplicated path template name: {}".format(path_template.name))
+                raise ValueError(
+                    "Duplicated path template name: {}".format(path_template.name)
+                )
 
     def _check_for_expanded_duplicates(self):
         expanded_strings = OrderedDict()

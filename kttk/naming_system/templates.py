@@ -10,7 +10,7 @@ class TokenType(Enum):
 
     @staticmethod
     def from_str(string):
-        if string ==  "FOLDER_SEPERATOR":
+        if string == "FOLDER_SEPERATOR":
             return TokenType.FOLDER_SEPERATOR
         if string == "KNOWN_STRING":
             return TokenType.KNOWN_STRING
