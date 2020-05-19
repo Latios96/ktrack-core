@@ -9,4 +9,4 @@ cd %OLD_DIRECTORY%
 
 set PYTHONPATH=%ROOT_FOLDER%\python-envs\py27\deps;%ROOT_FOLDER%
 
-"C:\Program Files\Autodesk\Maya2020\bin\mayapy.exe"
+"C:\Program Files\Autodesk\Maya2020\bin\mayapy.exe" %*
