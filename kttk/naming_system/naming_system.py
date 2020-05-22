@@ -8,7 +8,7 @@ class NamingSystem(object):
         self._naming_config = naming_config
 
     def format_path_template(self, template_name, token_dict):
-        path_template = self._naming_config.path_template_by_name(template_name)
+        path_template = self._naming_config.route_template_by_name(template_name)
 
         if not path_template:
             raise KeyError(

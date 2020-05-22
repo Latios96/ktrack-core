@@ -157,13 +157,13 @@ class NamingConfigValidator(object):
         self._check_for_duplicated_path_template_names()
         self._check_for_expanded_duplicates()
 
-        for path_template in self._naming_config.path_templates:
+        for path_template in self._naming_config.route_templates:
             self._validate_path_template(path_template)
 
     def _check_for_duplicated_path_template_names(self):
         path_template_names = set()
 
-        for path_template in self._naming_config.path_templates:
+        for path_template in self._naming_config.route_templates:
             if not path_template.name in path_template_names:
                 path_template_names.add(path_template.name)
             else:
@@ -174,7 +174,7 @@ class NamingConfigValidator(object):
     def _check_for_expanded_duplicates(self):
         expanded_strings = OrderedDict()
 
-        for path_template in self._naming_config.path_templates:
+        for path_template in self._naming_config.route_templates:
             possible_duplicate = expanded_strings.get(path_template.expanded_template)
             if not possible_duplicate:
                 expanded_strings[path_template.expanded_template] = path_template
