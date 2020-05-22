@@ -1,0 +1,90 @@
+routes:
+  project:
+    root: "M:/Projekte/{project.year}"
+    location: "{@project.root}/{project.name}"
+
+  template:
+    file:
+      dcc: "{config_root}/templates/template{dcc_extension}"
+
+  asset:
+    location: "{@project.root}/{project.name}/Assets/{asset.asset_type}/{asset.name}"
+    alembic:
+      location: "{@shot.location}/{asset.name}_Alembic"
+    renderoutput:
+      3D: "{@shot.location}/{asset.name}_Input_3D"
+    maya:
+      workspace:
+        location: "{@shot.location}/{asset.name}_Maya"
+      scenes:
+        location: "{@shot.location}/{asset.name}_Maya"
+      image_file_name:
+        vray: "{version}/<RenderLayer>/<Scene>"
+    playblast:
+      location: "{@shot.location}/{asset.name}_out/playblast"
+
+  shot:
+    location: "{@project.root}/{project_name}/Shots/{code}"
+    alembic:
+      location: "{@shot.location}/{code}_Alembic"
+    renderoutput:
+      3D: "{@shot.location}/{code}_Input_3D"
+    maya:
+      workspace:
+        location: "{@shot.location}/{code}_Maya"
+      scenes:
+        location: "{@shot.location}/{code}_Maya"
+    playblast:
+      location: "{@shot.location}/{code}_out/playblast"
+
+  workfile:
+    base_name: "{code}_{task.name}_{task.step}_{version}{dcc_extension}"
+
+folders:
+  project:
+    folders:
+      "{@project.location}":
+        - Assets
+        - Shots
+
+  asset:
+    folders:
+      "{@asset.location}":
+        - "{asset.name}_Alembic"
+        - "{asset.name}_Textures"
+        - "{asset.name}_Input_2D"
+        - "{asset.name}_Input_3D"
+        - "{asset.name}_Maya":
+            - __file__:
+                name: workspace.mel
+                content: '
+                                        workspace -ot "scene" "{@asset.scenes.location}";
+                                        workspace -ot "mayaAscii" "{@asset.scenes.location}";
+                                        workspace -ot "mayaBinary" "{@asset.scenes.location}";
+                                        workspace -rt "images" "{@asset.renderoutput.3D}";
+                                        workspace -fr "alembicCache" "{@asset.alembic.location}";
+                                        workspace -fr "movie" "{@asset.playblast.location}";
+                                        '
+        - "{asset.name}_out":
+            - playblast
+            -
+  shot:
+    folders:
+      "{@shot.location}":
+        - "{shot.code}_Alembic"
+        - "{shot.code}_Textures"
+        - "{shot.code}_Input_2D"
+        - "{shot.code}_Input_3D"
+        - "{shot.code}_Maya":
+            - __file__:
+                name: workspace.mel
+                content: '
+                                        workspace -ot "scene" "{@shot.scenes.location}";
+                                        workspace -ot "mayaAscii" "{@shot.scenes.location}";
+                                        workspace -ot "mayaBinary" "{@shot.scenes.location}";
+                                        workspace -rt "images" "{shot.renderoutput.3D}";
+                                        workspace -fr "alembicCache" "{shot.alembic.location}";
+                                        workspace -fr "movie" "{@shot.playblast.location}";
+                                        '
+        - "{shot.code}_out":
+            - playblast
