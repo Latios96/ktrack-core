@@ -15,7 +15,6 @@ from kttk.naming_system.templates import PathTemplate, PathToken
 @attr.s(frozen=True)
 class RawConfig(object):
     routes = attr.ib()  # type: Dict[str,str]
-    tokens = attr.ib(default=set())  # type: Set[PathToken]
 
 
 class RawConfigReader(object):
@@ -29,86 +28,54 @@ class RawConfigReader(object):
 
         self._check_empty_yml_data(yml_data)
 
-        tokens = self._process_tokens(yml_data)
         routes = self._process_routes(yml_data)
 
-        return RawConfig(routes=routes, tokens=tokens)
+        return RawConfig(routes=routes)
 
-    def _process_tokens(self, yml_data):
-        tokens = yml_data.get("tokens")
-
-        self._check_missing_tokens_section(tokens)
-        self._check_tokens_is_dict(tokens)
-        return self._convert_to_path_tokens(tokens)
-
-    def _check_tokens_is_dict(self, tokens):
-        if not isinstance(tokens, list):
-            raise ValueError("tokens section is not a list!")
-
-    def _check_missing_tokens_section(self, tokens):
-        if tokens is None:
-            raise ValueError('"tokens" key missing in config!')
-
-    def _convert_to_path_tokens(self, tokens):
-        return set(map(self._to_path_token, tokens))
-
-    def _to_path_token(self, path_token_dict):
-        name = path_token_dict.get("name")
-        token_type = path_token_dict.get("type")
-        regex = path_token_dict.get("regex")
-
-        regex, token_type = self._apply_optional_regex_token_type_rules(
-            name, regex, token_type
-        )
-        self._check_token_attributes_are_strings(name, regex, token_type)
-
-        return PathToken(name=name, type=token_type, regex=regex)
-
-    def _check_token_attributes_are_strings(self, name, regex, token_type):
-        if not isinstance(name, six.string_types):
-            raise ValueError("token name has to be string, was {}".format(name))
-        if not isinstance(token_type, six.string_types):
-            raise ValueError("token type has to be string, was {}".format(token_type))
-        if not isinstance(regex, six.string_types):
-            raise ValueError("token regex has to be string, was {}".format(regex))
-
-    def _apply_optional_regex_token_type_rules(self, name, regex, token_type):
-        if name is None:
-            raise ValueError("token name is missing!")
-        if name is not None and token_type is not None and regex is None:
-            raise ValueError("token regex is missing!")
-        if name is not None and token_type is None and regex is None:
-            token_type = "KNOWN_STRING"
-            regex = name
-        if name is not None and regex is not None and token_type is None:
-            token_type = "STRING"
-        return regex, token_type
+    def _check_empty_yml_data(self, yml_data):
+        if not yml_data:
+            raise ValueError("could not load data from given string!")
 
     def _process_routes(self, yml_data):
         routes = yml_data.get("routes")
         self._check_missing_routes_section(routes)
         self._check_routes_is_dict(routes)
         self._check_routes_are_str_str_mappings(routes)
-        return routes
-
-    def _check_routes_are_str_str_mappings(self, routes):
-        for key, value in routes.items():
-            if not isinstance(key, six.string_types) or not isinstance(
-                value, six.string_types
-            ):
-                raise ValueError("route is not a string-string mapping!")
-
-    def _check_routes_is_dict(self, routes):
-        if not isinstance(routes, dict):
-            raise ValueError("routes section is not a dictionary!")
+        return self._join_routes(routes)
 
     def _check_missing_routes_section(self, routes):
         if routes is None:
             raise ValueError('"routes" key missing in config!')
 
-    def _check_empty_yml_data(self, yml_data):
-        if not yml_data:
-            raise ValueError("could not load data from given string!")
+    def _check_routes_is_dict(self, routes):
+        if not isinstance(routes, dict):
+            raise ValueError("routes section is not a dictionary!")
+
+    def _check_routes_are_str_str_mappings(self, routes):
+        for key, value in routes.items():
+            if not isinstance(key, six.string_types):
+                raise ValueError("route is not a string-string mapping!")
+
+            if isinstance(value, dict):
+                self._check_routes_are_str_str_mappings(value)
+            elif not isinstance(value, six.string_types):
+                raise ValueError("route is not a string-string mapping!")
+
+    def _join_routes(self, routes, prefix=""):
+        joined_routes = {}
+        for key, value in routes.items():
+            if isinstance(value, dict):
+                joined_routes.update(
+                    self._join_routes(value, prefix=self._add_prefix(prefix, key))
+                )
+            else:
+                joined_routes[self._add_prefix(prefix, key)] = value
+        return joined_routes
+
+    def _add_prefix(self, prefix, key):
+        if prefix:
+            return "{}.{}".format(prefix, key)
+        return key
 
 
 class RawConfigExpander(object):
