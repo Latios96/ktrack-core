@@ -33,14 +33,16 @@ class NamingSystem(object):
         return path_template.format(data=tokens)
 
     def _create_default_tokens(self):
-        return self._stringify_dict({
-            "current_date": self._current_date(),
-            "config_root": os.path.join(
-                os.path.dirname(os.path.dirname(__file__)), "config"
-            ),
-            "platform": self._current_platform(),
-            "current_user": self._current_user(),
-        })
+        return self._stringify_dict(
+            {
+                "current_date": self._current_date(),
+                "config_root": os.path.join(
+                    os.path.dirname(os.path.dirname(__file__)), "config"
+                ),
+                "platform": self._current_platform(),
+                "current_user": self._current_user(),
+            }
+        )
 
     def _stringify_dict(self, dict_to_stringify):
         for key, value in dict_to_stringify.items():
