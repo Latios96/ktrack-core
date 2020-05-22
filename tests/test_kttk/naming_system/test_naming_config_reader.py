@@ -5,9 +5,7 @@ import six
 
 from kttk.naming_system.internal.naming_config import NamingConfig
 from kttk.naming_system.internal.route_template_expander import RouteTemplateExpander
-from kttk.naming_system.naming_config_reader import (
-    NamingConfigReader,
-)
+from kttk.naming_system.naming_config_reader import NamingConfigReader
 from kttk.naming_system.internal.raw_config_reader import RawConfigReader, RawConfig
 from kttk.naming_system.internal.templates import PathTemplate
 
