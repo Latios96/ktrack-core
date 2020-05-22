@@ -121,6 +121,7 @@ def test_update(ktrack_instance):
     assert entity.thumbnail["type"] == "thumbnail"
     assert entity.thumbnail["id"] == SOME_OBJECT_ID
     import time
+
     time.sleep(1)
     assert entity.updated_at != old_update_time
 
