@@ -11,8 +11,8 @@ jobs:
       run: setup\install-python-27.bat
     - name: install Python deps
       run: setup\install-python-27-deps.bat
-    - name: verify Python and deps installation
-      run: wrappers\python27.bat -m pytest -h
+    - name: run tests
+      run: wrappers\python27.bat -m pytest
   Python-37:
     runs-on: windows-latest
     steps:
@@ -21,8 +21,6 @@ jobs:
         run: setup\install-python-37.bat
       - name: install Python deps
         run: setup\install-python-37-deps.bat
-      - name: verify Python and deps installation with pytest
-        run: wrappers\python37.bat -m pytest -h
-      - name: verify Python and deps installation with black
-        run: wrappers\python37.bat -m black -h
+      - name: run tests
+        run: wrappers\python37.bat -m pytest
 
