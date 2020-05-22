@@ -10,8 +10,10 @@ class TestFormatPathTemplate(object):
     def setup_naming_system(self):
         config = NamingConfig(
             {
-                PathTemplate(name="my_template", template_str="{test}",),
-                PathTemplate(name="my_template2", template_str="{test1}{test2}",),
+                PathTemplate(name="my_template", template_str="{test}"),
+                PathTemplate(name="my_template2", template_str="{test1}{test2}"),
+                PathTemplate(name="my_template3", template_str="{@my_template}"),
+                PathTemplate(name="my_template4", template_str="{@my_template3}"),
             }
         )
         self._naming_system = NamingSystem(config)
@@ -36,10 +38,26 @@ class TestFormatPathTemplate(object):
 
         assert str(e.value) == "Some tokens are missing: test"
 
+    def test_missing_token_referenced(self):
+        with pytest.raises(ValueError) as e:
+            formatted_path_template = self._naming_system.format_path_template(
+                "my_template3", {"teste": "my_str"}
+            )
+
+        assert str(e.value) == "Some tokens are missing: test"
+
     def test_missing_multiple_tokens(self):
         with pytest.raises(ValueError) as e:
             formatted_path_template = self._naming_system.format_path_template(
                 "my_template2", {"teste": "my_str"}
+            )
+
+        assert str(e.value) == "Some tokens are missing: test1, test2"
+
+    def test_missing_multiple_tokens_referenced(self):
+        with pytest.raises(ValueError) as e:
+            formatted_path_template = self._naming_system.format_path_template(
+                "my_template4", {"teste": "my_str"}
             )
 
         assert str(e.value) == "Some tokens are missing: test1, test2"

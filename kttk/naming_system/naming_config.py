@@ -1,6 +1,7 @@
 from typing import Set, Optional, Dict
 
 from kttk.naming_system.templates import PathTemplate
+from vendor import lucidity
 
 
 class NamingConfig(object):
@@ -9,19 +10,17 @@ class NamingConfig(object):
         self._route_templates = path_templates
         self._route_template_dict = self._create_path_template_dict()
 
-    @property
-    def route_templates(self):
-        return self._route_templates
-
     def route_template_by_name(self, template_name):
-        # type: (str) -> Optional[PathTemplate]
+        # type: (str) -> Optional[lucidity.Template]
         return self._route_template_dict.get(template_name)
 
     def _create_path_template_dict(self):
-        # type: () -> Dict[str, PathTemplate]
+        # type: () -> Dict[str, lucidity.Template]
         path_template_dict = {}
         for template in self._route_templates:
-            path_template_dict[template.name] = template
+            path_template_dict[template.name] = self._create_lucidity_template(
+                template, path_template_dict
+            )
         return path_template_dict
 
     def __eq__(self, other):
@@ -37,3 +36,10 @@ class NamingConfig(object):
         return "<NamingConfig route_templates={}".format(
             ", ".join(map(str, sorted(self._route_templates, key=lambda x: x.name)))
         )
+
+    def _create_lucidity_template(self, template, path_template_dict):
+        # type: (PathTemplate,Dict[str, lucidity.Template]) -> lucidity.Template
+        lucidity_template = lucidity.Template(template.name, template.template_str)
+        lucidity_template.template_resolver = path_template_dict
+        lucidity_template.duplicate_placeholder_mode = lucidity_template.STRICT
+        return lucidity_template
