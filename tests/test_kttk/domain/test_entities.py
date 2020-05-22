@@ -54,3 +54,7 @@ class TestVersionNumber(object):
     def test_increase_reach_limit(self):
         with pytest.raises(ValueError):
             VersionNumber(999).increase()
+
+    def test_str(self):
+        version = VersionNumber(12)
+        assert str(version) == "v012"

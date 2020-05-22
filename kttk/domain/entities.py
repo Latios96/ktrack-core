@@ -110,6 +110,9 @@ class VersionNumber(object):
     def increase(self):
         return VersionNumber(self.number + 1)
 
+    def __str__(self):
+        return self.version_str
+
 
 @attr.s
 class Workfile(ProjectEntity):
