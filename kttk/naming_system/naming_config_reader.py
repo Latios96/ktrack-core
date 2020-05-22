@@ -1,15 +1,11 @@
-from collections import OrderedDict
+from typing import Dict, IO
 
+import attr
 import six
 import yaml
-from typing import Dict, IO, Set
 
-from kttk.naming_system import token_utils
 from kttk.naming_system.naming_config import NamingConfig
-import attr
-
-from kttk.naming_system.path_template_string_parser import PathTemplateStringParser
-from kttk.naming_system.templates import PathTemplate, PathToken
+from kttk.naming_system.templates import PathTemplate
 
 
 @attr.s(frozen=True)

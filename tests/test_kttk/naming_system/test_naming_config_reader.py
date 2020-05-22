@@ -10,7 +10,7 @@ from kttk.naming_system.naming_config_reader import (
     RawConfig,
     RouteTemplateExpander,
 )
-from kttk.naming_system.templates import PathTemplate, PathToken
+from kttk.naming_system.templates import PathTemplate
 
 
 class TestRawConfigReader(object):

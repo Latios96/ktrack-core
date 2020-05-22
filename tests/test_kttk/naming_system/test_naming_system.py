@@ -13,7 +13,7 @@ class TestFormatPathTemplate(object):
                 PathTemplate(name="my_template", template_str="{test}"),
                 PathTemplate(name="my_template2", template_str="{test1}{test2}"),
                 PathTemplate(name="my_template3", template_str="{@my_template}"),
-                PathTemplate(name="my_template4", template_str="{@my_template3}"),
+                PathTemplate(name="my_template4", template_str="{@my_template2}"),
             }
         )
         self._naming_system = NamingSystem(config)
