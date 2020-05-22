@@ -9,7 +9,6 @@ from kttk.naming_system.naming_config_reader import (
     RawConfigReader,
     RawConfig,
     RouteTemplateExpander,
-    NamingConfigValidator,
 )
 from kttk.naming_system.templates import PathTemplate, PathToken
 
@@ -128,22 +127,14 @@ class TestConfigExpander(object):
             (
                 RawConfig(routes={"test": "test"}),
                 NamingConfig(
-                    path_templates={
-                        PathTemplate(
-                            name="test", template_str="test", expanded_template="test"
-                        )
-                    }
+                    path_templates={PathTemplate(name="test", template_str="test")}
                 ),
             ),
             (
                 RawConfig(routes={"test": "{testing}"}),
                 NamingConfig(
                     path_templates={
-                        PathTemplate(
-                            name="test",
-                            template_str="{testing}",
-                            expanded_template="{testing}",
-                        )
+                        PathTemplate(name="test", template_str="{testing}",)
                     }
                 ),
             ),
@@ -151,16 +142,8 @@ class TestConfigExpander(object):
                 RawConfig(routes={"test": "{testing}", "testing": "{wurst}"}),
                 NamingConfig(
                     path_templates={
-                        PathTemplate(
-                            name="test",
-                            template_str="{testing}",
-                            expanded_template="{wurst}",
-                        ),
-                        PathTemplate(
-                            name="testing",
-                            template_str="{wurst}",
-                            expanded_template="{wurst}",
-                        ),
+                        PathTemplate(name="test", template_str="{testing}",),
+                        PathTemplate(name="testing", template_str="{wurst}",),
                     }
                 ),
             ),
@@ -174,14 +157,10 @@ class TestConfigExpander(object):
                 NamingConfig(
                     path_templates={
                         PathTemplate(
-                            name="project_root",
-                            template_str="M:/test/{project_name}",
-                            expanded_template="M:/test/{project_name}",
+                            name="project_root", template_str="M:/test/{project_name}",
                         ),
                         PathTemplate(
-                            name="asset_root",
-                            template_str="{project_root}/Assets",
-                            expanded_template="M:/test/{project_name}/Assets",
+                            name="asset_root", template_str="{project_root}/Assets",
                         ),
                     }
                 ),
@@ -198,28 +177,21 @@ class TestConfigExpander(object):
                 ),
                 NamingConfig(
                     path_templates={
-                        PathTemplate(
-                            name="drive", template_str="M:", expanded_template="M:"
-                        ),
+                        PathTemplate(name="drive", template_str="M:"),
                         PathTemplate(
                             name="projects_folder",
                             template_str="{drive}/Projekte/{project_year}",
-                            expanded_template="M:/Projekte/{project_year}",
                         ),
                         PathTemplate(
                             name="project_root",
                             template_str="{projects_folder}/{project_name}",
-                            expanded_template="M:/Projekte/{project_year}/{project_name}",
                         ),
                         PathTemplate(
-                            name="asset_root",
-                            template_str="{project_root}/Assets",
-                            expanded_template="M:/Projekte/{project_year}/{project_name}/Assets",
+                            name="asset_root", template_str="{project_root}/Assets",
                         ),
                         PathTemplate(
                             name="asset_folder",
                             template_str="{asset_root}/{asset_type}/{asset_name}",
-                            expanded_template="M:/Projekte/{project_year}/{project_name}/Assets/{asset_type}/{asset_name}",
                         ),
                     }
                 ),
@@ -232,60 +204,9 @@ class TestConfigExpander(object):
 
         assert naming_config == expected_naming_config
 
-    def test_expand_cyclic_recursion(self):
-        raw_config = RawConfig(routes={"test": "{test}"})
-        raw_config_expander = RouteTemplateExpander(raw_config)
-        with pytest.raises(RuntimeError) as e:
-            raw_config_expander.expand()
-
-
-class TestNamingConfigValidator(object):
-    @pytest.mark.parametrize(
-        "naming_config,error_message",
-        [
-            (
-                NamingConfig(
-                    path_templates={
-                        PathTemplate(
-                            name="test", template_str="test", expanded_template="test"
-                        ),
-                        PathTemplate(
-                            name="test",
-                            template_str="test",
-                            expanded_template="testokpl+",
-                        ),
-                    }
-                ),
-                "Duplicated path template name: test",
-            ),
-            (
-                NamingConfig(
-                    path_templates={
-                        PathTemplate(
-                            name="test1", template_str="test", expanded_template="test"
-                        ),
-                        PathTemplate(
-                            name="test2", template_str="test", expanded_template="test"
-                        ),
-                    }
-                ),
-                "PathTemplate with name",
-            ),
-        ],
-    )
-    def test_invalid_configs(self, naming_config, error_message):
-        validator = NamingConfigValidator(naming_config)
-
-        with pytest.raises(ValueError) as e:
-            validator.validate()
-
-        assert str(e.value).startswith(error_message)
-
 
 class TestReadConfig(object):
-    expected_config = NamingConfig(
-        {PathTemplate(name="test", template_str="{testr}", expanded_template="{testr}")}
-    )
+    expected_config = NamingConfig({PathTemplate(name="test", template_str="{testr}")})
 
     def test_read_str(self):
         config_str = """

@@ -32,4 +32,3 @@ class PathToken(object):
 class PathTemplate(object):
     name = attr.ib()  # type:str
     template_str = attr.ib()  # type:str
-    expanded_template = attr.ib()  # type: str

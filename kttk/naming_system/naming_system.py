@@ -16,10 +16,10 @@ class NamingSystem(object):
             )
 
         missing_tokens = token_utils.get_missing_tokens(
-            path_template.expanded_template, token_dict
+            path_template.template_str, token_dict
         )
         if missing_tokens:
             raise ValueError(
                 "Some tokens are missing: {}".format(", ".join(sorted(missing_tokens)))
             )
-        return path_template.expanded_template.format(**token_dict)
+        return path_template.template_str.format(**token_dict)

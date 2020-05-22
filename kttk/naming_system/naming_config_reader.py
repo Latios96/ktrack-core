@@ -87,84 +87,8 @@ class RouteTemplateExpander(object):
         # type: () -> NamingConfig
         path_templates = set()
         for route_name, template_str in self._raw_config.routes.items():
-            path_templates.add(
-                PathTemplate(
-                    name=route_name,
-                    template_str=template_str,
-                    expanded_template=self._expand_template_str(
-                        route_name, template_str
-                    ),
-                )
-            )
+            path_templates.add(PathTemplate(name=route_name, template_str=template_str))
         return NamingConfig(path_templates=path_templates)
-
-    def _expand_template_str(self, name, template_str):
-        all_tokens = token_utils.find_all_tokens(template_str)
-
-        for token in all_tokens:
-            if self._token_is_route(token):
-                template_str = template_str.replace(
-                    "{{{}}}".format(token),
-                    self._expand_template_str(name, self._raw_config.routes.get(token)),
-                )
-        return template_str
-
-    def _token_is_route(self, token):
-        return self._raw_config.routes.get(token) is not None
-
-
-class NamingConfigValidator(object):
-    _naming_config = None  # type: NamingConfig
-
-    def __init__(self, naming_config):
-        # type: (NamingConfig) -> None
-        self._naming_config = naming_config
-
-    def validate(self):
-        self._check_for_duplicated_path_template_names()
-        self._check_for_expanded_duplicates()
-
-        for path_template in self._naming_config.route_templates:
-            self._validate_path_template(path_template)
-
-    def _check_for_duplicated_path_template_names(self):
-        path_template_names = set()
-
-        for path_template in self._naming_config.route_templates:
-            if not path_template.name in path_template_names:
-                path_template_names.add(path_template.name)
-            else:
-                raise ValueError(
-                    "Duplicated path template name: {}".format(path_template.name)
-                )
-
-    def _check_for_expanded_duplicates(self):
-        expanded_strings = OrderedDict()
-
-        for path_template in self._naming_config.route_templates:
-            possible_duplicate = expanded_strings.get(path_template.expanded_template)
-            if not possible_duplicate:
-                expanded_strings[path_template.expanded_template] = path_template
-            else:
-                duplicate = possible_duplicate
-                raise ValueError(
-                    "PathTemplate with name {} expands to the same template string as PathTemplate with name {}".format(
-                        path_template.name, duplicate.name
-                    )
-                )
-
-    def _validate_path_template(self, path_template):
-        parser = PathTemplateStringParser(path_template.expanded_template)
-        token_sequence = parser.parse()
-
-        self._ensure_every_string_token_exists(token_sequence)
-        self._ensure_path_template_is_parsable(token_sequence)
-
-    def _ensure_every_string_token_exists(self, token_sequence):
-        pass
-
-    def _ensure_path_template_is_parsable(self, token_sequence):
-        pass
 
 
 class NamingConfigReader(object):

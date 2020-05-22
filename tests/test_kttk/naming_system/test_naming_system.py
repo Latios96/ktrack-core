@@ -10,16 +10,8 @@ class TestFormatPathTemplate(object):
     def setup_naming_system(self):
         config = NamingConfig(
             {
-                PathTemplate(
-                    name="my_template",
-                    template_str="{test}",
-                    expanded_template="{test}",
-                ),
-                PathTemplate(
-                    name="my_template2",
-                    template_str="{test1}{test2}",
-                    expanded_template="{test1}{test2}",
-                ),
+                PathTemplate(name="my_template", template_str="{test}",),
+                PathTemplate(name="my_template2", template_str="{test1}{test2}",),
             }
         )
         self._naming_system = NamingSystem(config)
