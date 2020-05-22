@@ -78,7 +78,7 @@ class RawConfigReader(object):
         return key
 
 
-class RawConfigExpander(object):
+class RouteTemplateExpander(object):
     def __init__(self, raw_config):
         # type: (RawConfig) -> None
         self._raw_config = raw_config
@@ -193,7 +193,7 @@ class NamingConfigReader(object):
         raw_config_reader = RawConfigReader(self._config_str)
         raw_config = raw_config_reader.read()
 
-        raw_config_expander = RawConfigExpander(raw_config)
+        raw_config_expander = RouteTemplateExpander(raw_config)
         naming_config = raw_config_expander.expand()
 
         return naming_config

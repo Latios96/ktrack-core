@@ -8,7 +8,7 @@ from kttk.naming_system.naming_config_reader import (
     NamingConfigReader,
     RawConfigReader,
     RawConfig,
-    RawConfigExpander,
+    RouteTemplateExpander,
     NamingConfigValidator,
 )
 from kttk.naming_system.templates import PathTemplate, PathToken
@@ -227,14 +227,14 @@ class TestConfigExpander(object):
         ],
     )
     def test_expand_valid(self, raw_config, expected_naming_config):
-        raw_config_expander = RawConfigExpander(raw_config)
+        raw_config_expander = RouteTemplateExpander(raw_config)
         naming_config = raw_config_expander.expand()
 
         assert naming_config == expected_naming_config
 
     def test_expand_cyclic_recursion(self):
         raw_config = RawConfig(routes={"test": "{test}"})
-        raw_config_expander = RawConfigExpander(raw_config)
+        raw_config_expander = RouteTemplateExpander(raw_config)
         with pytest.raises(RuntimeError) as e:
             raw_config_expander.expand()
 
