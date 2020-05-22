@@ -6,9 +6,7 @@ import os
 import uuid
 import imp
 
-from ._version import __version__
-from .template import Template, Resolver
-from .error import ParseError, FormatError, NotFound
+from vendor.lucidity.error import ParseError, FormatError, NotFound
 
 
 def discover_templates(paths=None, recursive=True):

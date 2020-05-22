@@ -1,6 +1,6 @@
 import pytest
 
-from kttk.naming_system import token_utils
+from kttk.naming_system.internal import token_utils
 
 
 @pytest.mark.parametrize(

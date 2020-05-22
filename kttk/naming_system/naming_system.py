@@ -1,5 +1,5 @@
-from kttk.naming_system.naming_config import NamingConfig
-from kttk.naming_system import token_utils
+from kttk.naming_system.internal.naming_config import NamingConfig
+from kttk.naming_system.internal import token_utils
 
 
 class NamingSystem(object):

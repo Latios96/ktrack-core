@@ -1,8 +1,8 @@
 import pytest
 
 from kttk.naming_system.naming_system import NamingSystem
-from kttk.naming_system.naming_config import NamingConfig
-from kttk.naming_system.templates import PathTemplate
+from kttk.naming_system.internal.naming_config import NamingConfig
+from kttk.naming_system.internal.templates import PathTemplate
 
 
 class TestFormatPathTemplate(object):
