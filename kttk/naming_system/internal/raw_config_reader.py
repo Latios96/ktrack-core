@@ -1,6 +1,7 @@
 import attr
 import six
 import yaml
+from typing import Dict, Optional, Any
 
 
 @attr.s(frozen=True)
@@ -24,6 +25,7 @@ class RawConfigReader(object):
         return RawConfig(routes=routes)
 
     def _check_empty_yml_data(self, yml_data):
+        # type: (Optional[Any]) -> None
         if not yml_data:
             raise ValueError("could not load data from given string!")
 

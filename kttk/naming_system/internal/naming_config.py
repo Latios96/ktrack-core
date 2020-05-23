@@ -25,15 +25,19 @@ class NamingConfig(object):
         return path_template_dict
 
     def __eq__(self, other):
+        # type: (NamingConfig) -> bool
         return self._route_templates == other._route_templates
 
     def __ne__(self, other):
+        # type: (NamingConfig) -> bool
         return not self == other
 
     def __repr__(self):
+        # type: () -> str
         return str(self)
 
     def __str__(self):
+        # type: () -> str
         return "<NamingConfig route_templates={}".format(
             ", ".join(map(str, sorted(self._route_templates, key=lambda x: x.name)))
         )

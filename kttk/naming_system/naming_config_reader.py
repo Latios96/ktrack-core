@@ -24,6 +24,7 @@ class NamingConfigReader(object):
         return config_reader.read()
 
     def __init__(self, config_str):
+        # type: (str) -> None
         self._config_str = config_str
 
     def read(self):

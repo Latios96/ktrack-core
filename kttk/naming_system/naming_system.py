@@ -3,6 +3,8 @@ import getpass
 import os
 import platform
 
+from typing import Dict, Union, Any
+
 from kttk.naming_system.internal.naming_config import NamingConfig
 from kttk.naming_system.internal import token_utils
 
@@ -13,6 +15,7 @@ class NamingSystem(object):
         self._naming_config = naming_config
 
     def format_path_template(self, template_name, token_dict):
+        # type: (str, Dict[str, Union[str, Dict]]) -> str
         tokens = self._create_default_tokens()
         tokens.update(token_dict)
 
@@ -33,6 +36,7 @@ class NamingSystem(object):
         return path_template.format(data=tokens)
 
     def _create_default_tokens(self):
+        # type: () -> Dict[str, Union[str, Dict]]
         return self._stringify_dict(
             {
                 "current_date": self._current_date(),
@@ -45,6 +49,7 @@ class NamingSystem(object):
         )
 
     def _stringify_dict(self, dict_to_stringify):
+        # type: (Dict[str, Any]) -> Dict[str, Union[str, Dict]]
         for key, value in dict_to_stringify.items():
             if isinstance(value, dict):
                 self._stringify_dict(value)
@@ -53,6 +58,7 @@ class NamingSystem(object):
         return dict_to_stringify
 
     def _current_date(self):
+        # type: () -> Dict[str, int]
         current_time = datetime.datetime.now()
 
         return {
@@ -63,7 +69,9 @@ class NamingSystem(object):
         }
 
     def _current_platform(self):
+        # type: () -> Dict[str, str]
         return {"name": platform.system()}
 
     def _current_user(self):
+        # type: () -> Dict[str, str]
         return {"name": getpass.getuser()}
