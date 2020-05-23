@@ -13,6 +13,7 @@ from typing import Dict
 
 
 def update_modified(sender, document):
+    print("update_modified for {}", document)
     document.updated_at = datetime.datetime.now()
 
 
