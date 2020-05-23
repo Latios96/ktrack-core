@@ -14,7 +14,6 @@ from typing import Dict
 
 def update_modified(sender, document):
     now = datetime.datetime.now()
-    print("update_modified for {}, {}", document, now)
     document.updated_at = now
 
 
