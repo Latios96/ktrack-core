@@ -5,10 +5,6 @@ import pytest
 
 def has_pyside_no_dcc():
     # type: () -> bool
-    """
-    Checks if PySioe or PySide2 is avaible
-    :return: True if avaible, False otherwise
-    """
     if os.environ.get("TRAVIS"):
         print("running on travis")
         return False
