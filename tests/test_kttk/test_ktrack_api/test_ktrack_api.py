@@ -123,7 +123,7 @@ def test_update(ktrack_instance):
     import time
 
     time.sleep(1)
-    assert entity.updated_at != old_update_time
+    assert entity.updated_at is not old_update_time
 
 
 def test_delete(ktrack_instance):
