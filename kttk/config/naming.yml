@@ -19,7 +19,7 @@ routes:
       scenes:
         location: "{@shot.location}/{asset.name}_Maya"
       image_file_name:
-        vray: "{version}/<RenderLayer>/<Scene>"
+        vray: "{@utils.version_str}/<RenderLayer>/<Scene>"
     playblast:
       location: "{@shot.location}/{asset.name}_out/playblast"
 
@@ -38,7 +38,10 @@ routes:
       location: "{@shot.location}/{shot.code}_out/playblast"
 
   workfile:
-    base_name: "{code}_{task.name}_{task.step}_{version}{dcc_extension}"
+    base_name: "{code}_{task.name}_{task.step}_{@utils.version_str}{dcc_extension}"
+
+  utils:
+    version_str: "{version_number:\d+}"
 
 folders:
   project:
