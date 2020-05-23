@@ -5,10 +5,6 @@ import pytest
 
 def has_maya():
     # type: () -> bool
-    """
-    Checks if PySioe or PySide2 is avaible
-    :return: True if avaible, False otherwise
-    """
     try:
         import maya.cmds as cmds
 
