@@ -13,8 +13,9 @@ from typing import Dict
 
 
 def update_modified(sender, document):
-    print("update_modified for {}", document)
-    document.updated_at = datetime.datetime.now()
+    now = datetime.datetime.now()
+    print("update_modified for {}, {}", document, now)
+    document.updated_at = now
 
 
 signals.pre_save.connect(update_modified)
