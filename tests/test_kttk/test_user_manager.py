@@ -2,6 +2,7 @@ import json
 import os
 import sys
 
+import pytest
 import six
 from mock import patch, MagicMock
 
@@ -46,8 +47,8 @@ def test_generate_user_name():
     username = user_manager.generate_user_name("sonny", None)
     assert username == "sonny"
 
-    username = user_manager.generate_user_name(None, None)
-    assert username is None
+    with pytest.raises(ValueError):
+        user_manager.generate_user_name(None, None)
 
 
 def test_create_user():

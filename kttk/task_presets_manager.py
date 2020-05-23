@@ -13,6 +13,7 @@ example:
 }
 """
 import valideer
+from typing import List, Dict
 
 from kttk.config import config_manager
 
@@ -33,7 +34,7 @@ _data_presets = config_manager.load_file(
 
 
 def get_task_presets(entity_type):
-    # type: (str) -> list[dict]
+    # type: (str) -> List[Dict]
     """
     Returns list of all task templates for given type. Task preset example, everything will be lowercase
     {

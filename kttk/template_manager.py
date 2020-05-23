@@ -29,6 +29,7 @@ import platform
 import re
 
 import valideer
+from typing import List, Dict, Tuple
 
 from kttk.config import config_manager
 
@@ -61,7 +62,7 @@ _data_routes = config_manager.load_file(
 
 
 def get_file_templates(entity_type):
-    # type: (str) -> list[dict[str, str]]
+    # type: (str) -> List[Dict[str, str]]
     """
     Returns a list of file templates for one entity.
     :param entity_type: entity to get file templates for
@@ -71,7 +72,7 @@ def get_file_templates(entity_type):
 
 
 def get_folder_templates(entity_type):
-    # type: (str) -> list[str]
+    # type: (str) -> List[str]
     """
     Returns a list of folder templates for one entity.
     Templates are configured in folder_templates.yml, in dirname(__file__) or in config_manager.KTRACK_TEMPLATE_DIR enviroment variable
@@ -82,7 +83,7 @@ def get_folder_templates(entity_type):
 
 
 def get_file_and_folder_templates(entity_type):
-    # type: (str) -> tuple[list[dict[str, str]], list[str]]
+    # type: (str) -> Tuple[List[Dict[str, str]], List[str]]
     """
     Returns file and folder templates for given entity type
     :param entity_type: type of the entity as string

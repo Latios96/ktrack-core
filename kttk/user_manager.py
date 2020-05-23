@@ -4,6 +4,7 @@ Provides methods for getting the current user on the machine
 import json
 import os
 import sys
+from typing import Optional, Dict
 
 import six
 
@@ -65,7 +66,7 @@ def get_user_information_path():
 
 
 def save_user_information(user_information):
-    # type: (dict) -> ()
+    # type: (Dict) -> None
     """
     Saves information about given user to ~/KTRACK_USER_JSON
     :param user_information: user_information to save, dict like {'type': 'user, 'id': 'asdf'}
@@ -80,20 +81,18 @@ def save_user_information(user_information):
 
 
 def generate_user_name(first_name, second_name):
-    # type: (str, str) -> str
+    # type: (Optional[str], Optional[str]) -> str
 
-    first_name_part = None
-    second_name_part = None
+    first_name_part = ""
+    second_name_part = ""
 
     #  first name
     if first_name:
-        if len(first_name) > 0:
-            first_name_part = first_name[:1].lower()
+        first_name_part = first_name[:1].lower()
 
     #  second name
     if second_name:
-        if len(second_name) > 0:
-            second_name_part = second_name[:1].upper() + second_name[1:].lower()
+        second_name_part = second_name[:1].upper() + second_name[1:].lower()
 
     # check if both where valid ( first_name_part and second_name_part are not None anymore)
     if first_name_part and second_name_part:
@@ -107,8 +106,7 @@ def generate_user_name(first_name, second_name):
     elif second_name_part:
         return second_name.lower()
 
-    # both were None
-    return None
+    raise ValueError("Both first_name, second_name where empty or None!")
 
 
 def create_user():

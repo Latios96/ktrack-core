@@ -1,6 +1,7 @@
-import datetime
+from datetime import datetime
 
 import attr
+from typing import Any, Union, Optional
 
 from kttk.context import Context
 
@@ -9,9 +10,9 @@ KtrackId = str
 
 @attr.s
 class BasicEntity(object):
-    id = attr.ib(type=KtrackId, default=None)
-    created_at = attr.ib(type=datetime.datetime, default=None, eq=False)
-    updated_at = attr.ib(type=datetime.datetime, default=None, eq=False)
+    id = attr.ib(type=KtrackId, default=None)  # type: KtrackId
+    created_at = attr.ib(type=datetime, default=None, eq=False)  # type: datetime
+    updated_at = attr.ib(type=datetime, default=None, eq=False)  # type: datetime
 
 
 @attr.s

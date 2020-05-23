@@ -1,4 +1,3 @@
-import frozendict
 from typing import Optional, Dict
 
 
@@ -10,13 +9,12 @@ def entity_id_dict(entity):
 
 
 def frozen_entity_id_dict(entity):
-    # type: (dict) -> frozendict
-    if entity != None:
+    # type: (dict) -> FrozenDict
+    if entity is not None:
         return FrozenDict({"type": entity["type"], "id": entity["id"]})
     return None
 
 
-# todo WTF is this?
 class FrozenDict(dict):
     def __init__(self, data):
         # type: (dict) -> None
