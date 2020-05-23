@@ -24,18 +24,18 @@ routes:
       location: "{@shot.location}/{asset.name}_out/playblast"
 
   shot:
-    location: "{@project.root}/{project_name}/Shots/{code}"
+    location: "{@project.root}/{project_name}/Shots/{shot.code}"
     alembic:
-      location: "{@shot.location}/{code}_Alembic"
+      location: "{@shot.location}/{shot.code}_Alembic"
     renderoutput:
-      3D: "{@shot.location}/{code}_Input_3D"
+      3D: "{@shot.location}/{shot.code}_Input_3D"
     maya:
       workspace:
-        location: "{@shot.location}/{code}_Maya"
+        location: "{@shot.location}/{shot.code}_Maya"
       scenes:
-        location: "{@shot.location}/{code}_Maya"
+        location: "{@shot.location}/{shot.code}_Maya"
     playblast:
-      location: "{@shot.location}/{code}_out/playblast"
+      location: "{@shot.location}/{shot.code}_out/playblast"
 
   workfile:
     base_name: "{code}_{task.name}_{task.step}_{version}{dcc_extension}"
