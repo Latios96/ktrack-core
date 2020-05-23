@@ -37,7 +37,7 @@ class ProjectEntity(NonProjectEntity):
 @attr.s
 class Asset(ProjectEntity):
     name = attr.ib(type=str, default=None)
-    asset_type = attr.ib(type=str, default=None) # TODO make it an enum
+    asset_type = attr.ib(type=str, default=None)  # TODO make it an enum
 
 
 @attr.s
@@ -71,7 +71,7 @@ class EntityLink(object):
 @attr.s
 class Task(ProjectEntity):
     name = attr.ib(type=str, default=None)
-    step = attr.ib(type=str, default=None) # TODO make it an Enum
+    step = attr.ib(type=str, default=None)  # TODO make it an Enum
     entity = attr.ib(type=EntityLink, default=None)
 
 
