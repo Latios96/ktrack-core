@@ -1,5 +1,4 @@
-import os
-import mongomock
+import sys
 import pytest
 
 MAYA = False
@@ -7,21 +6,18 @@ NUKE = False
 HOUDINI = False
 try:
     import pymel.core as pm
-
     MAYA = True
 except ImportError:
     pass
 
 try:
     import nuke
-
     NUKE = True
 except ImportError:
     pass
 
 try:
     import hou
-
     HOUDINI = True
 except ImportError:
     pass
@@ -44,17 +40,4 @@ if __name__ == "__main__":
     interpreter = get_current_interpreter()
     print("running tests in {}...".format(interpreter))
 
-    args = [
-        "-x",
-        os.path.join(os.getcwd(), "tests"),
-        "--junitxml=junit_xml_test_{}.xml".format(interpreter),
-        "-o",
-        "junit_suite_name=test_{}".format(interpreter),
-    ]
-
-    # disable pytest-qt for houdini because of a requirements mismatch
-    # for six, both need six>=1.10.0 and houdini has six 1.9.0
-    if HOUDINI:
-        args.extend(["-p", "no:pytest-qt", "-p", "no:pytest_cov"])
-
-    pytest.main(args)
+    pytest.main(pytest.main(sys.argv[1:]))
