@@ -16,8 +16,13 @@ def test_should_create_project():
     project_repository = MagicMock()
     asset_repository = MagicMock()
     entity_initializer = MagicMock()
+    task_preset_applicator = MagicMock()
     create_project_command = CreateAssetCommand(
-        stream, project_repository, asset_repository, entity_initializer
+        stream,
+        project_repository,
+        asset_repository,
+        entity_initializer,
+        task_preset_applicator,
     )
     project_repository.find_by_name.return_value = Project(id="123", name="test")
 
@@ -33,8 +38,13 @@ def test_should_error_project_not_found():
     project_repository = MagicMock()
     asset_repository = MagicMock()
     entity_initializer = MagicMock()
+    task_preset_applicator = MagicMock()
     create_project_command = CreateAssetCommand(
-        stream, project_repository, asset_repository, entity_initializer
+        stream,
+        project_repository,
+        asset_repository,
+        entity_initializer,
+        task_preset_applicator,
     )
     project_repository.find_by_name.return_value = None
 
@@ -48,8 +58,13 @@ def test_should_not_exit():
     project_repository = MagicMock()
     asset_repository = MagicMock()
     entity_initializer = MagicMock()
+    task_preset_applicator = MagicMock()
     create_project_command = CreateAssetCommand(
-        stream, project_repository, asset_repository, entity_initializer
+        stream,
+        project_repository,
+        asset_repository,
+        entity_initializer,
+        task_preset_applicator,
     )
 
     create_project_command.run([])
