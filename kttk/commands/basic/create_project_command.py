@@ -29,17 +29,17 @@ class CreateProjectCommand(AbstractCommand):
         logger.info("initialise project")
         logger.info("create project in database..")
 
-        project = self._project_repository.save(Project(name=project_name))
+        project = self._project_repository.save(Project(name=project_name))  # type: Project
 
         logger.info(
-            "Created project {} with id {}".format(project["name"], project["id"])
+            "Created project {} with id {}".format(project.name, project.id)
         )
 
         logger.info("initialise project on disk..")
-        self._entity_initializer("project", project["id"])
+        self._entity_initializer("project", project.id)
 
         logger.info(
             "{entity_type} with id {entity_id} initialised. Done.".format(
-                entity_type="project", entity_id=project["id"]
+                entity_type="project", entity_id=project.id
             )
         )
