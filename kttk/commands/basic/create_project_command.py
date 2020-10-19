@@ -2,7 +2,6 @@ import argparse
 
 from typing import List
 
-import kttk
 from kttk.commands.abstract_command import AbstractCommand
 from kttk import logger
 from kttk.domain.entities import Project
