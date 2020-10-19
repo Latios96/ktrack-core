@@ -19,7 +19,7 @@ routes:
         raw_config_reader = RawConfigReader(config_str)
         raw_config = raw_config_reader.read()
 
-        assert raw_config == RawConfig(routes={"test": "{test}"},)
+        assert raw_config == RawConfig(routes={"test": "{test}"})
 
     @pytest.mark.parametrize(
         "config_str,message",
@@ -130,17 +130,15 @@ class TestConfigExpander(object):
             (
                 RawConfig(routes={"test": "{testing}"}),
                 NamingConfig(
-                    path_templates={
-                        PathTemplate(name="test", template_str="{testing}",)
-                    }
+                    path_templates={PathTemplate(name="test", template_str="{testing}")}
                 ),
             ),
             (
                 RawConfig(routes={"test": "{testing}", "testing": "{wurst}"}),
                 NamingConfig(
                     path_templates={
-                        PathTemplate(name="test", template_str="{testing}",),
-                        PathTemplate(name="testing", template_str="{wurst}",),
+                        PathTemplate(name="test", template_str="{testing}"),
+                        PathTemplate(name="testing", template_str="{wurst}"),
                     }
                 ),
             ),
@@ -154,10 +152,10 @@ class TestConfigExpander(object):
                 NamingConfig(
                     path_templates={
                         PathTemplate(
-                            name="project_root", template_str="M:/test/{project_name}",
+                            name="project_root", template_str="M:/test/{project_name}"
                         ),
                         PathTemplate(
-                            name="asset_root", template_str="{project_root}/Assets",
+                            name="asset_root", template_str="{project_root}/Assets"
                         ),
                     }
                 ),
@@ -184,7 +182,7 @@ class TestConfigExpander(object):
                             template_str="{projects_folder}/{project_name}",
                         ),
                         PathTemplate(
-                            name="asset_root", template_str="{project_root}/Assets",
+                            name="asset_root", template_str="{project_root}/Assets"
                         ),
                         PathTemplate(
                             name="asset_folder",

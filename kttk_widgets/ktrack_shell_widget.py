@@ -26,7 +26,6 @@ class TextAreaHandler(StreamHandler):
 
 
 class KtrackShellWidget(QtWidgets.QWidget):
-
     def __init__(self):
         super(KtrackShellWidget, self).__init__()
         self._setup_ui()

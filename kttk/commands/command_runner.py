@@ -4,7 +4,6 @@ from kttk.commands.command_registry import CommandRegistry
 
 
 class CommandRunner(object):
-
     def __init__(self, stream, command_registry):
         # type: (IO, CommandRegistry) -> None
         self._stream = stream
