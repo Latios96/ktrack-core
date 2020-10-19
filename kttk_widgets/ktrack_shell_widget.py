@@ -4,7 +4,7 @@ from Qt import QtWidgets
 from mongoengine import connect
 
 from kttk import logger, formatter
-from kttk.commands.command_parser import CommandRunner
+from kttk.commands.command_runner import CommandRunner
 from kttk.commands.command_registry import CommandRegistry
 
 
@@ -43,6 +43,7 @@ class KtrackShellWidget(QtWidgets.QWidget):
 
         self._log_handler = TextAreaHandler(self._text_edit)
         self._log_handler.setFormatter(formatter)
+        self.resize(600, 200)
 
     def _return_pressed(self):
         parser = CommandRunner(self._stream, CommandRegistry())
