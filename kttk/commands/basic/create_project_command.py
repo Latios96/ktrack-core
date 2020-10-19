@@ -5,13 +5,14 @@ from typing import List
 import kttk
 from kttk.commands.abstract_command import AbstractCommand
 from kttk import logger
+from kttk.domain.entities import Project
 
 
 class CreateProjectCommand(AbstractCommand):
 
-    def __init__(self, stream, ktrack_api, entity_initializer):
+    def __init__(self, stream, project_repository, entity_initializer):
         super(CreateProjectCommand, self).__init__(stream)
-        self._ktrack_api = ktrack_api
+        self._project_repository = project_repository
         self._entity_initializer = entity_initializer
 
     def run(self, args):
@@ -29,9 +30,7 @@ class CreateProjectCommand(AbstractCommand):
         logger.info("initialise project")
         logger.info("create project in database..")
 
-        project_data = {"name": project_name}
-
-        project = self._ktrack_api.create("project", project_data)
+        project = self._project_repository.save(Project(name=project_name))
 
         logger.info(
             "Created project {} with id {}".format(project["name"], project["id"])
