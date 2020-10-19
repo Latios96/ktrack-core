@@ -5,7 +5,7 @@ from ktrack_api.mongo_impl.mongo_repositories import (
     MongoProjectRepository,
     MongoAssetRepository,
 )
-from kttk.domain.entities import Project, Thumbnail, Asset, PathEntry
+from kttk.domain.entities import Project, Thumbnail, Asset, PathEntry, KtrackId
 
 
 class BaseRepositoryTest(object):
@@ -38,6 +38,7 @@ class BaseRepositoryTest(object):
 
         for project in projects:
             assert project.id
+            assert isinstance(project.id, KtrackId)
         assert mongo_repository.find_all() == projects
 
     def _do_test_save_all_project_entity(
