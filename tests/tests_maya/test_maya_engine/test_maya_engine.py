@@ -131,8 +131,8 @@ def test_update_file_for_context(maya_engine, saved_file, populated_context, tmp
         mock_get_vray.return_value = mock_vray_settings
         maya_engine.__get_vray_settings = mock_get_vray
 
-        expected_project_path = "{}/my_project/Assets/prop/my_entity/my_entity_Maya".format(
-            tmpdir.dirname
+        expected_project_path = (
+            "{}/my_project/Assets/prop/my_entity/my_entity_Maya".format(tmpdir.dirname)
         )
         os.makedirs(expected_project_path)
 
