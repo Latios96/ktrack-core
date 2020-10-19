@@ -2,20 +2,26 @@ import argparse
 
 from typing import List
 
-from kttk.commands.abstract_command import AbstractCommand
 from kttk import logger
-from kttk.domain.entities import Project, Asset
+from kttk.commands.abstract_command import AbstractCommand
+from kttk.domain.entities import Asset
 from kttk.domain.entity_reference import EntityReference
 
 
 class CreateAssetCommand(AbstractCommand):
     def __init__(
-            self, stream, project_repository, asset_repository, entity_initializer
+        self,
+        stream,
+        project_repository,
+        asset_repository,
+        entity_initializer,
+        task_preset_applicator,
     ):
         super(CreateAssetCommand, self).__init__(stream)
         self._project_repository = project_repository
         self._asset_repository = asset_repository
         self._entity_initializer = entity_initializer
+        self._task_preset_applicator = task_preset_applicator
 
     def run(self, args):
         # type: (List[str]) -> None
@@ -34,7 +40,7 @@ class CreateAssetCommand(AbstractCommand):
         project = self._project_repository.find_by_name(entity_reference.project_name)
         if not project:
             self._stream.write(
-                "Could not find project with name \"{}\"".format(
+                'Could not find project with name "{}"'.format(
                     entity_reference.project_name
                 )
             )
@@ -58,7 +64,12 @@ class CreateAssetCommand(AbstractCommand):
 
         self._entity_initializer("asset", asset.id)
 
-        logger.info("Asset with id {} initialised. Done.".format(asset.id))
+        logger.info("Asset with id {} initialised.".format(asset.id))
+
+        self._task_preset_applicator.apply("asset", project.id, asset.id)
+
+        logger.info("Tasks created for Asset {}".format(asset.name))
+        logger.info("Done.")
 
 
 def _format_asset_type(asset_type):

@@ -4,10 +4,12 @@ import kttk
 from ktrack_api.mongo_impl.mongo_repositories import (
     MongoProjectRepository,
     MongoAssetRepository,
+    MongoTaskRepository,
 )
 from kttk.commands.abstract_command import AbstractCommand
 from kttk.commands.basic.create_asset_command import CreateAssetCommand
 from kttk.commands.basic.create_project_command import CreateProjectCommand
+from kttk.task_preset_applicator import TaskPresetApplicator
 
 
 class CommandRegistry(object):
@@ -23,5 +25,9 @@ class CommandRegistry(object):
 
     def _create_asset_command(self, stream):
         return CreateAssetCommand(
-            stream, MongoProjectRepository(), MongoAssetRepository(), kttk.init_entity
+            stream,
+            MongoProjectRepository(),
+            MongoAssetRepository(),
+            kttk.init_entity,
+            TaskPresetApplicator(MongoTaskRepository(), kttk.init_entity),
         )
