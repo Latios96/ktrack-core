@@ -72,6 +72,11 @@ class MongoProjectRepository(
         # type: () -> Type[MongoProject]
         return MongoProject
 
+    def find_by_name(self, the_name):
+        # type: (str) -> Optional[T]
+        mongo_entity = self.mongo_entity().objects(name=the_name).first()
+        return self.to_domain_entity(mongo_entity)
+
     def to_mongo_entity(self, domain_entity):
         # type: (Project) -> MongoProject
         if domain_entity:

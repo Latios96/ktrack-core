@@ -37,7 +37,9 @@ class AbstractRepository(Generic[T]):
 
 
 class ProjectRepository(AbstractRepository[Project]):
-    pass
+    def find_by_name(self, the_name):
+        # type: (str) -> Optional[Project]
+        raise NotImplementedError()
 
 
 class AbstractProjectEntityRepository(AbstractRepository[T]):

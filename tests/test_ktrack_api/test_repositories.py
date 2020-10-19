@@ -91,6 +91,14 @@ class TestProjectRepository(BaseRepositoryTest):
     def test_delete(self, mongo_project_repository):
         self._do_test_delete(mongo_project_repository, Project(name="test_project"))
 
+    def test_should_not_find_by_name(self, mongo_project_repository):
+        assert not mongo_project_repository.find_by_name("")
+
+    def test_should_find_by_name(self, mongo_project_repository):
+        project = mongo_project_repository.save(Project(name="test_name"))
+
+        assert mongo_project_repository.find_by_name("test_name") == project
+
 
 class TestAssetRepository(BaseRepositoryTest):
     @pytest.mark.parametrize(
