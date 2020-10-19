@@ -89,7 +89,7 @@ class MongoProjectRepository(
         # type: (MongoProject) -> Project
         if mongo_entity:
             return Project(
-                id=mongo_entity.id,
+                id=KtrackId(mongo_entity.id),
                 created_at=mongo_entity.created_at,
                 updated_at=mongo_entity.updated_at,
                 thumbnail=Thumbnail(path=mongo_entity.thumbnail.get("path")),
@@ -125,7 +125,7 @@ class MongoAssetRepository(
         # type: (MongoAsset) -> Asset
         if mongo_entity:
             return Asset(
-                id=mongo_entity.id,
+                id=KtrackId(mongo_entity.id),
                 created_at=mongo_entity.created_at,
                 updated_at=mongo_entity.updated_at,
                 thumbnail=Thumbnail(path=mongo_entity.thumbnail.get("path")),
@@ -157,7 +157,7 @@ class MongoPathEntryRepository(
         # type: (MongoPathEntry) -> PathEntry
         if mongo_entity:
             return PathEntry(
-                id=mongo_entity.id,
+                id=KtrackId(mongo_entity.id),
                 created_at=mongo_entity.created_at,
                 updated_at=mongo_entity.updated_at,
                 path=mongo_entity.path,
