@@ -4,8 +4,17 @@ from mongoengine import ValidationError
 from ktrack_api.mongo_impl.mongo_repositories import (
     MongoProjectRepository,
     MongoAssetRepository,
+    MongoTaskRepository,
 )
-from kttk.domain.entities import Project, Thumbnail, Asset, PathEntry, KtrackId
+from kttk.domain.entities import (
+    Project,
+    Thumbnail,
+    Asset,
+    PathEntry,
+    KtrackId,
+    EntityLink,
+    Task,
+)
 
 
 class BaseRepositoryTest(object):
@@ -197,3 +206,69 @@ class TestPathEntryRepository(BaseRepositoryTest):
         path = "some_path"
 
         assert mongo_path_entry_repository.find_by_path(path) is None
+
+
+class TestTaskRepository(BaseRepositoryTest):
+    @pytest.mark.parametrize(
+        "task",
+        [
+            Task(
+                project="123",
+                entity=EntityLink(type="asset", id="456"),
+                name="task_name",
+                step="lsr",
+            ),
+        ],
+    )
+    def test_save(self, task, mongo_task_repository, mongo_project_repository):
+        # type: (Asset, MongoTaskRepository, MongoProjectRepository) -> None
+        self._do_test_save_project_entity(
+            mongo_task_repository, task, mongo_project_repository
+        )
+
+    def test_save_all(self, mongo_task_repository, mongo_project_repository):
+        tasks = [
+            Task(entity=EntityLink(type="asset", id="456"), name="lsr", step="lsr"),
+            Task(
+                entity=EntityLink(type="asset", id="456"), name="modelling", step="lsr"
+            ),
+        ]
+        self._do_test_save_all_project_entity(
+            mongo_task_repository, tasks, mongo_project_repository
+        )
+
+    def test_save_task_without_project(self, mongo_task_repository):
+        task = Task(entity=EntityLink(type="asset", id="456"), name="lsr", step="lsr")
+
+        with pytest.raises(ValidationError):
+            mongo_task_repository.save(task)
+
+    def test_find_by_project(self, mongo_task_repository, mongo_project_repository):
+        project1 = mongo_project_repository.save(Project(name="test_project"))
+        project2 = mongo_project_repository.save(Project(name="test_project"))
+
+        tasks = mongo_task_repository.save_all(
+            [
+                Task(
+                    entity=EntityLink(type="asset", id="456"),
+                    name="lsr",
+                    step="lsr",
+                    project=project1.id,
+                ),
+                Task(
+                    entity=EntityLink(type="asset", id="456"),
+                    name="lsr",
+                    step="lsr",
+                    project=project2.id,
+                ),
+            ]
+        )
+
+        assert mongo_task_repository.find_by_project(project1.id)[0] == tasks[0]
+        assert mongo_task_repository.find_by_project(project2.id)[0] == tasks[1]
+
+    def test_delete(self, mongo_task_repository, mongo_project_repository):
+        task = Task(entity=EntityLink(type="asset", id="456"), name="lsr", step="lsr")
+        self._do_test_delete_project_entity(
+            mongo_task_repository, task, mongo_project_repository
+        )

@@ -7,14 +7,24 @@ from ktrack_api.mongo_impl.entities import (
     Project as MongoProject,
     Asset as MongoAsset,
     PathEntry as MongoPathEntry,
+    Task as MongoTask,
 )
 from ktrack_api.repositories import (
     ProjectRepository,
     AssetRepository,
     PathEntryRepository,
+    TaskRepository,
 )
 from kttk.context import Context
-from kttk.domain.entities import Project, Thumbnail, Asset, KtrackId, PathEntry
+from kttk.domain.entities import (
+    Project,
+    Thumbnail,
+    Asset,
+    KtrackId,
+    PathEntry,
+    Task,
+    EntityLink,
+)
 
 T = TypeVar("T")
 MONGO_T = TypeVar("MONGO_T")
@@ -173,3 +183,44 @@ class MongoPathEntryRepository(
         # type: (str) -> Optional[PathEntry]
         mongo_entity = self.mongo_entity().objects(path=path).first()
         return self.to_domain_entity(mongo_entity)
+
+
+class MongoTaskRepository(
+    AbstractMongoProjectEntityRepository[Task, MongoTask], TaskRepository
+):
+    def mongo_entity(self):
+        # type: () -> Type[MongoTask]
+        return MongoTask
+
+    def to_mongo_entity(self, domain_entity):
+        # type: (Task) -> MongoTask
+        if domain_entity:
+            return MongoTask(
+                id=domain_entity.id,
+                created_at=domain_entity.created_at,
+                updated_at=domain_entity.updated_at,
+                project={"type": "project", "id": domain_entity.project}
+                if domain_entity.project
+                else None,
+                name=domain_entity.name,
+                step=domain_entity.step,
+                entity={
+                    "type": domain_entity.entity.type,
+                    "id": domain_entity.entity.id,
+                },
+            )
+
+    def to_domain_entity(self, mongo_entity):
+        # type: (MongoTask) -> Task
+        if mongo_entity:
+            return Task(
+                id=KtrackId(mongo_entity.id),
+                created_at=mongo_entity.created_at,
+                updated_at=mongo_entity.updated_at,
+                project=mongo_entity.project["id"],
+                name=mongo_entity.name,
+                step=mongo_entity.step,
+                entity=EntityLink(
+                    id=mongo_entity.entity["id"], type=mongo_entity.entity["type"]
+                ),
+            )
