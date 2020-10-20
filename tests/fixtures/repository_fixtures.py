@@ -6,13 +6,14 @@ from ktrack_api.mongo_impl.entities import (
     Asset as MongoAsset,
     PathEntry as MongoPathEntry,
     Task as MongoTask,
-    Shot as MongoShot
+    Shot as MongoShot,
 )
 from ktrack_api.mongo_impl.mongo_repositories import (
     MongoProjectRepository,
     MongoAssetRepository,
     MongoPathEntryRepository,
-    MongoTaskRepository, MongoShotRepository,
+    MongoTaskRepository,
+    MongoShotRepository,
 )
 
 

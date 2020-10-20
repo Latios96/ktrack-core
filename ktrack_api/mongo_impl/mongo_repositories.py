@@ -8,13 +8,14 @@ from ktrack_api.mongo_impl.entities import (
     Asset as MongoAsset,
     PathEntry as MongoPathEntry,
     Task as MongoTask,
-    Shot as MongoShot
+    Shot as MongoShot,
 )
 from ktrack_api.repositories import (
     ProjectRepository,
     AssetRepository,
     PathEntryRepository,
-    TaskRepository, ShotRepository,
+    TaskRepository,
+    ShotRepository,
 )
 from kttk.context import Context
 from kttk.domain.entities import (
@@ -25,7 +26,8 @@ from kttk.domain.entities import (
     PathEntry,
     Task,
     EntityLink,
-    Shot, CutInformation
+    Shot,
+    CutInformation,
 )
 
 T = TypeVar("T")
@@ -157,7 +159,9 @@ class MongoAssetRepository(
             )
 
 
-class MongoShotRepository(AbstractMongoProjectEntityRepository[Shot, MongoShot], ShotRepository):
+class MongoShotRepository(
+    AbstractMongoProjectEntityRepository[Shot, MongoShot], ShotRepository
+):
     def mongo_entity(self):
         # type: () -> Type[MongoShot]
         return MongoShot
@@ -178,7 +182,7 @@ class MongoShotRepository(AbstractMongoProjectEntityRepository[Shot, MongoShot],
                 else None,
                 cut_in=domain_entity.cut_information.cut_in,
                 cut_out=domain_entity.cut_information.cut_out,
-                cut_duration=domain_entity.cut_information.cut_duration
+                cut_duration=domain_entity.cut_information.cut_duration,
             )
 
     def to_domain_entity(self, mongo_entity):
@@ -191,7 +195,9 @@ class MongoShotRepository(AbstractMongoProjectEntityRepository[Shot, MongoShot],
                 thumbnail=Thumbnail(path=mongo_entity.thumbnail.get("path")),
                 code=mongo_entity.code,
                 project=mongo_entity.project["id"],
-                cut_information=CutInformation(cut_in=mongo_entity.cut_in, cut_out=mongo_entity.cut_out)
+                cut_information=CutInformation(
+                    cut_in=mongo_entity.cut_in, cut_out=mongo_entity.cut_out
+                ),
             )
 
 
