@@ -47,6 +47,10 @@ class AbstractProjectEntityRepository(AbstractRepository[T]):
         # type: (KtrackId) -> List[T]
         raise NotImplementedError()
 
+    def find_by_name(self, the_name):
+        # type: (str) -> Optional[T]
+        raise NotImplementedError()
+
 
 class AssetRepository(AbstractProjectEntityRepository[Asset]):
     pass
