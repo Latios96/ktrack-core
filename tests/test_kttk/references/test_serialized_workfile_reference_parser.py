@@ -2,7 +2,9 @@ import pytest
 
 from kttk.references.entity_types import ReferenceEntityType
 from kttk.references.workfile_reference import SerializedWorkfileReference
-from kttk.references.serialized_workfile_reference_parser import SerializedWorkfileReferenceParser
+from kttk.references.serialized_workfile_reference_parser import (
+    SerializedWorkfileReferenceParser,
+)
 
 
 def test_should_parse_asset_with_latest():
