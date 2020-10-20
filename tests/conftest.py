@@ -24,6 +24,7 @@ from tests.fixtures.repository_fixtures import (
     mongo_path_entry_repository,
     mongo_task_repository,
     mongo_shot_repository,
+    mongo_workfile_repository,
 )
 
 

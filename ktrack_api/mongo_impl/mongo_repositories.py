@@ -9,6 +9,7 @@ from ktrack_api.mongo_impl.entities import (
     PathEntry as MongoPathEntry,
     Task as MongoTask,
     Shot as MongoShot,
+    WorkFile as MongoWorkfile,
 )
 from ktrack_api.repositories import (
     ProjectRepository,
@@ -16,6 +17,7 @@ from ktrack_api.repositories import (
     PathEntryRepository,
     TaskRepository,
     ShotRepository,
+    WorkfileRepository,
 )
 from kttk.context import Context
 from kttk.domain.entities import (
@@ -28,6 +30,8 @@ from kttk.domain.entities import (
     EntityLink,
     Shot,
     CutInformation,
+    Workfile,
+    VersionNumber,
 )
 
 T = TypeVar("T")
@@ -78,9 +82,9 @@ class AbstractMongoProjectEntityRepository(AbstractMongoRepository[T, MONGO_T]):
         mongo_entity = self.mongo_entity().objects(project__id=domain_entity).all()
         return list(map(self.to_domain_entity, mongo_entity))
 
-    def find_by_name(self, name):
-        # type: (str) -> List[T]
-        mongo_entity = self.mongo_entity().objects(name=name).all()
+    def find_by_project_and_name(self, project, name):
+        # type: (KtrackId,str) -> List[T]
+        mongo_entity = self.mongo_entity().objects(project=project, name=name).all()
         return list(map(self.to_domain_entity, mongo_entity))
 
 
@@ -274,4 +278,75 @@ class MongoTaskRepository(
                 entity=EntityLink(
                     id=mongo_entity.entity["id"], type=mongo_entity.entity["type"]
                 ),
+            )
+
+
+class MongoWorkfileRepository(
+    AbstractMongoProjectEntityRepository[Workfile, MongoWorkfile], WorkfileRepository
+):
+    def find_by_task_and_version_number(self, task, version_number):
+        # type: (KtrackId, VersionNumber) -> Optional[Workfile]
+        mongo_entity = (
+            self.mongo_entity()
+            .objects(
+                entity={"type": "task", "id": task},
+                version_number=version_number.number,
+            )
+            .all()
+        )
+        return list(map(self.to_domain_entity, mongo_entity))
+
+    def find_by_task_latest(self, task):
+        # type: (KtrackId) -> Optional[Workfile]
+        entities = (
+            self.mongo_entity().objects(entity={"type": "task", "id": task}).all()
+        )
+        if not entities:
+            return None
+        latest = max(entities, key=lambda x: x.version_number)
+        return self.to_domain_entity(latest)
+
+    def mongo_entity(self):
+        # type: () -> Type[MongoWorkfile]
+        return MongoWorkfile
+
+    def to_mongo_entity(self, domain_entity):
+        # type: (Workfile) -> MongoWorkfile
+        if domain_entity:
+            return MongoWorkfile(
+                id=domain_entity.id,
+                created_at=domain_entity.created_at,
+                updated_at=domain_entity.updated_at,
+                project={"type": "project", "id": domain_entity.project}
+                if domain_entity.project
+                else None,
+                name=domain_entity.name,
+                entity={
+                    "type": domain_entity.entity.type,
+                    "id": domain_entity.entity.id,
+                },
+                path=domain_entity.path,
+                comment=domain_entity.comment,
+                version_number=domain_entity.version_number.number,
+                created_from=domain_entity.created_from,
+            )
+
+    def to_domain_entity(self, mongo_entity):
+        # type: (MongoWorkfile) -> Workfile
+        if mongo_entity:
+            return Workfile(
+                id=KtrackId(mongo_entity.id),
+                created_at=mongo_entity.created_at,
+                updated_at=mongo_entity.updated_at,
+                project=mongo_entity.project["id"],
+                name=mongo_entity.name,
+                entity=EntityLink(
+                    id=mongo_entity.entity["id"], type=mongo_entity.entity["type"]
+                ),
+                path=mongo_entity.path,
+                comment=mongo_entity.comment,
+                version_number=VersionNumber(mongo_entity.version_number),
+                created_from=KtrackId(mongo_entity.created_from)
+                if mongo_entity.created_from
+                else None,
             )

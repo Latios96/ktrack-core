@@ -100,7 +100,7 @@ register_entity("task", Task)
 class WorkFile(ProjectEntity):
     type = "workfile"
     name = StringField()
-    entity = DictField()
+    entity = DictField()  # todo make this task only and not entity link
     path = StringField(required=True)
     comment = StringField()
     version_number = IntField()

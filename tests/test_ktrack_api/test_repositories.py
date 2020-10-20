@@ -5,6 +5,7 @@ from ktrack_api.mongo_impl.mongo_repositories import (
     MongoProjectRepository,
     MongoAssetRepository,
     MongoTaskRepository,
+    MongoWorkfileRepository,
 )
 from kttk.domain.entities import (
     Project,
@@ -16,6 +17,8 @@ from kttk.domain.entities import (
     Task,
     Shot,
     CutInformation,
+    Workfile,
+    VersionNumber,
 )
 
 
@@ -344,3 +347,187 @@ class TestTaskRepository(BaseRepositoryTest):
         self._do_test_delete_project_entity(
             mongo_task_repository, task, mongo_project_repository
         )
+
+
+class TestWorkfileRepository(BaseRepositoryTest):
+    @pytest.mark.parametrize(
+        "workfile",
+        [
+            Workfile(
+                project="123",
+                entity=EntityLink(type="asset", id="456"),
+                name="task_name",
+                path="test",
+                comment="test",
+                version_number=VersionNumber(2),
+            ),
+        ],
+    )
+    def test_save(self, workfile, mongo_workfile_repository, mongo_project_repository):
+        # type: (Workfile, MongoWorkfileRepository, MongoProjectRepository) -> None
+        self._do_test_save_project_entity(
+            mongo_workfile_repository, workfile, mongo_project_repository
+        )
+
+    def test_save_all(self, mongo_workfile_repository, mongo_project_repository):
+        tasks = [
+            Workfile(
+                project="123",
+                entity=EntityLink(type="asset", id="456"),
+                name="task_name",
+                path="test",
+                comment="test",
+                version_number=VersionNumber(2),
+            ),
+            Workfile(
+                project="123sdf",
+                entity=EntityLink(type="asset", id="456"),
+                name="taskydfg_name",
+                path="test",
+                comment="test",
+                version_number=VersionNumber(3),
+            ),
+        ]
+        self._do_test_save_all_project_entity(
+            mongo_workfile_repository, tasks, mongo_project_repository
+        )
+
+    def test_save_task_without_project(self, mongo_workfile_repository):
+        workfile = Workfile(
+            entity=EntityLink(type="asset", id="456"),
+            name="task_name",
+            path="test",
+            comment="test",
+            version_number=VersionNumber(2),
+        )
+
+        with pytest.raises(ValidationError):
+            mongo_workfile_repository.save(workfile)
+
+    def test_find_by_project(self, mongo_workfile_repository, mongo_project_repository):
+        project1 = mongo_project_repository.save(Project(name="test_project"))
+        project2 = mongo_project_repository.save(Project(name="test_project"))
+
+        workfiles = mongo_workfile_repository.save_all(
+            [
+                Workfile(
+                    project=project1.id,
+                    entity=EntityLink(type="asset", id="456"),
+                    name="task_name",
+                    path="test",
+                    comment="test",
+                    version_number=VersionNumber(2),
+                ),
+                Workfile(
+                    project=project2.id,
+                    entity=EntityLink(type="asset", id="456"),
+                    name="taskydfg_name",
+                    path="test",
+                    comment="test",
+                    version_number=VersionNumber(3),
+                ),
+            ]
+        )
+
+        assert mongo_workfile_repository.find_by_project(project1.id)[0] == workfiles[0]
+        assert mongo_workfile_repository.find_by_project(project2.id)[0] == workfiles[1]
+
+    def test_delete(self, mongo_workfile_repository, mongo_project_repository):
+        task = Workfile(
+            project="132",
+            entity=EntityLink(type="asset", id="456"),
+            name="task_name",
+            path="test",
+            comment="test",
+            version_number=VersionNumber(2),
+        )
+        self._do_test_delete_project_entity(
+            mongo_workfile_repository, task, mongo_project_repository
+        )
+
+    def test_find_by_version_number_not_existing_task_should_return_empty(
+        self, mongo_workfile_repository
+    ):
+        assert not mongo_workfile_repository.find_by_task_and_version_number(
+            "132", VersionNumber(1)
+        )
+
+    def test_find_by_version_number_should_return_empty(
+        self, mongo_workfile_repository
+    ):
+        mongo_workfile_repository.save(
+            Workfile(
+                project="132",
+                entity=EntityLink(type="task", id="456"),
+                name="task_name",
+                path="test",
+                comment="test",
+                version_number=VersionNumber(2),
+            )
+        )
+
+        assert not mongo_workfile_repository.find_by_task_and_version_number(
+            "456", VersionNumber(1)
+        )
+
+    def test_find_by_version_number_should_return(self, mongo_workfile_repository):
+        mongo_workfile_repository.save(
+            Workfile(
+                project="132",
+                entity=EntityLink(type="task", id="456"),
+                name="task_name",
+                path="test",
+                comment="test",
+                version_number=VersionNumber(2),
+            )
+        )
+
+        assert mongo_workfile_repository.find_by_task_and_version_number(
+            "456", VersionNumber(2)
+        )
+
+    def test_find_by_latest_not_existing_task_should_return_empty(
+        self, mongo_workfile_repository
+    ):
+        assert not mongo_workfile_repository.find_by_task_latest("132")
+
+    def test_find_by_latest_existing_task_should_return_empty(
+        self, mongo_workfile_repository
+    ):
+        mongo_workfile_repository.save(
+            Workfile(
+                project="132",
+                entity=EntityLink(type="task", id="456"),
+                name="task_name",
+                path="test",
+                comment="test",
+                version_number=VersionNumber(2),
+            )
+        )
+        assert not mongo_workfile_repository.find_by_task_latest("132")
+
+    def test_find_by_latest_existing_task_should_return_latest(
+        self, mongo_workfile_repository
+    ):
+        mongo_workfile_repository.save(
+            Workfile(
+                project="132",
+                entity=EntityLink(type="task", id="456"),
+                name="task_name",
+                path="test",
+                comment="test",
+                version_number=VersionNumber(2),
+            )
+        )
+        mongo_workfile_repository.save(
+            Workfile(
+                project="132",
+                entity=EntityLink(type="task", id="456"),
+                name="task_name",
+                path="test",
+                comment="test",
+                version_number=VersionNumber(1),
+            )
+        )
+        workfile = mongo_workfile_repository.find_by_task_latest("456")
+        assert workfile.version_number == VersionNumber(2)
