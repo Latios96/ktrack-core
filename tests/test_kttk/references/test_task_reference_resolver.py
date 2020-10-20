@@ -29,7 +29,7 @@ def test_should_resolve_reference_correctly():
     task = Task(name="modelling")
     mock_project_repository.find_by_name.return_value = project
     mock_asset_repository.find_by_project_and_name.return_value = entity
-    mock_task_repository.find_by_project_and_name.return_value = task
+    mock_task_repository.find_by_project_and_entity_name.return_value = task
 
     workfile_reference = workfile_reference_resolver.resolve(serialized_reference)
 
@@ -135,7 +135,7 @@ def test_should_not_resolve_reference_missing_task():
     entity = Asset(name="Rheinturm")
     mock_project_repository.find_by_name.return_value = project
     mock_asset_repository.find_by_project_and_name.return_value = entity
-    mock_task_repository.find_by_project_and_name.return_value = None
+    mock_task_repository.find_by_project_and_entity_name.return_value = None
 
     with pytest.raises(ValueError):
         workfile_reference_resolver.resolve(serialized_reference)

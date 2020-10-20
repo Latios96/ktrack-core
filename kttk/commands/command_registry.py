@@ -10,9 +10,9 @@ from ktrack_api.mongo_impl.mongo_repositories import (
 from kttk import engines
 from kttk.commands.abstract_command import AbstractCommand
 from kttk.commands.basic.create_asset_command import CreateAssetCommand
-from kttk.commands.basic.create_new_command import DccCreateNewCommand
+from kttk.commands.dcc.create_new_command import DccCreateNewCommand
 from kttk.commands.basic.create_project_command import CreateProjectCommand
-from kttk.commands.basic.dcc_command import DccCommand
+from kttk.commands.dcc.dcc_command import DccCommand
 from kttk.file_manager.file_manager import FileManager
 from kttk.references.serialized_task_reference_parser import (
     SerializedTaskReferenceParser,
