@@ -9,5 +9,5 @@ coverage
 PySide;python_version <= '2.7'
 PySide2;python_version >= '3.7'
 mypy;python_version >= '3.7'
-black;python_version >= '3.7'
+black==20.8b1;python_version >= '3.7'
 pytest-black;python_version >= '3.7'
