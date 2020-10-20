@@ -62,7 +62,9 @@ class ShotRepository(AbstractProjectEntityRepository[Shot]):
 
 
 class TaskRepository(AbstractProjectEntityRepository[Task]):
-    pass
+    def find_by_project_and_entity_name(self, project, entity_type, entity_name):
+        # type: (KtrackId, str, str) -> Task
+        raise NotImplementedError()
 
 
 class WorkfileRepository(AbstractProjectEntityRepository[Workfile]):

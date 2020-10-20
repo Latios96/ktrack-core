@@ -83,9 +83,9 @@ class AbstractMongoProjectEntityRepository(AbstractMongoRepository[T, MONGO_T]):
         return list(map(self.to_domain_entity, mongo_entity))
 
     def find_by_project_and_name(self, project, name):
-        # type: (KtrackId,str) -> List[T]
-        mongo_entity = self.mongo_entity().objects(project=project, name=name).all()
-        return list(map(self.to_domain_entity, mongo_entity))
+        # type: (KtrackId,str) -> Optional[T]
+        mongo_entity = self.mongo_entity().objects(project=project, name=name).first()
+        return self.to_domain_entity(mongo_entity)
 
 
 class MongoProjectRepository(
@@ -132,6 +132,18 @@ class MongoAssetRepository(
         # type: () -> Type[MongoAsset]
         return MongoAsset
 
+    def find_by_name(self, the_name):
+        # type: (str) -> Optional[T]
+        mongo_entity = self.mongo_entity().objects(code=the_name).first()
+        return self.to_domain_entity(mongo_entity)
+
+    def find_by_project_and_name(self, project, name):
+        # type: (KtrackId,str) -> Optional[T]
+        mongo_entity = (
+            self.mongo_entity().objects(project__id=project, code=name).first()
+        )
+        return self.to_domain_entity(mongo_entity)
+
     def to_mongo_entity(self, domain_entity):
         # type: (Asset) -> MongoAsset
         if domain_entity:
@@ -169,6 +181,18 @@ class MongoShotRepository(
     def mongo_entity(self):
         # type: () -> Type[MongoShot]
         return MongoShot
+
+    def find_by_name(self, the_name):
+        # type: (str) -> Optional[T]
+        mongo_entity = self.mongo_entity().objects(code=the_name).first()
+        return self.to_domain_entity(mongo_entity)
+
+    def find_by_project_and_name(self, project, name):
+        # type: (KtrackId,str) -> Optional[T]
+        mongo_entity = (
+            self.mongo_entity().objects(project__id=project, code=name).first()
+        )
+        return self.to_domain_entity(mongo_entity)
 
     def to_mongo_entity(self, domain_entity):
         # type: (Shot) -> MongoShot
@@ -246,6 +270,22 @@ class MongoTaskRepository(
     def mongo_entity(self):
         # type: () -> Type[MongoTask]
         return MongoTask
+
+    def find_by_project_and_entity_name(self, project, entity_type, entity_name):
+        print(project, entity_type, entity_name)
+        if entity_type == "asset":
+            entity = MongoAsset.objects(project__id=project, code=entity_name).first()
+            if not entity:
+                return None
+            task = self.mongo_entity().objects(entity__id=str(entity.id)).first()
+        else:
+            entity = MongoShot.objects(project__id=project, code=entity_name).first()
+            if not entity:
+                return None
+            task = self.mongo_entity().objects(entity__id=str(entity.id)).first()
+
+        entity = self.to_domain_entity(task)
+        return entity
 
     def to_mongo_entity(self, domain_entity):
         # type: (Task) -> MongoTask

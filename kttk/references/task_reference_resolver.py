@@ -62,8 +62,12 @@ class TaskReferenceResolver(object):
                     )
                 )
 
-        task = self._task_repository.find_by_project_and_name(
-            project.id, serialized_reference.task_name
+        task = self._task_repository.find_by_project_and_entity_name(
+            project.id,
+            "asset"
+            if serialized_reference.entity_type == ReferenceEntityType.ASSET
+            else "shot",
+            serialized_reference.entity_name,
         )
         if not task:
             raise ValueError(

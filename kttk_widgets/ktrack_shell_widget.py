@@ -22,7 +22,10 @@ class TextAreaHandler(StreamHandler):
         self._text_edit = text
 
     def emit(self, record):
-        self._text_edit.append(self.format(record))
+        try:
+            self._text_edit.append(self.format(record))
+        except RuntimeError:
+            logger.removeHandler(self)
 
 
 class KtrackShellWidget(QtWidgets.QWidget):
@@ -56,6 +59,10 @@ class KtrackShellWidget(QtWidgets.QWidget):
     def hide(self):
         logger.removeHandler(self._log_handler)
         super(KtrackShellWidget, self).hide()
+
+    def close(self):
+        logger.removeHandler(self._log_handler)
+        super(KtrackShellWidget, self).close()
 
 
 if __name__ == "__main__":
