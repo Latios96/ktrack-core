@@ -6,12 +6,13 @@ from ktrack_api.mongo_impl.entities import (
     Asset as MongoAsset,
     PathEntry as MongoPathEntry,
     Task as MongoTask,
+    Shot as MongoShot
 )
 from ktrack_api.mongo_impl.mongo_repositories import (
     MongoProjectRepository,
     MongoAssetRepository,
     MongoPathEntryRepository,
-    MongoTaskRepository,
+    MongoTaskRepository, MongoShotRepository,
 )
 
 
@@ -41,3 +42,10 @@ def mongo_path_entry_repository():
     connect("mongoeengine_test", host="mongomock://localhost")
     MongoPathEntry.objects().all().delete()
     return MongoPathEntryRepository()
+
+
+@pytest.fixture
+def mongo_shot_repository():
+    connect("mongoeengine_test", host="mongomock://localhost")
+    MongoShot.objects().all().delete()
+    return MongoShotRepository()

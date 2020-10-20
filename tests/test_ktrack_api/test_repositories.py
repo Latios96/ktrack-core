@@ -13,7 +13,7 @@ from kttk.domain.entities import (
     PathEntry,
     KtrackId,
     EntityLink,
-    Task,
+    Task, Shot, CutInformation,
 )
 
 
@@ -30,7 +30,7 @@ class BaseRepositoryTest(object):
         assert mongo_repository.find_one(domain_entity.id) == domain_entity
 
     def _do_test_save_project_entity(
-        self, mongo_repository, domain_entity, mongo_project_repository
+            self, mongo_repository, domain_entity, mongo_project_repository
     ):
         project = mongo_project_repository.save(Project(name="test_project"))
         domain_entity.project = project.id
@@ -51,7 +51,7 @@ class BaseRepositoryTest(object):
         assert mongo_repository.find_all() == projects
 
     def _do_test_save_all_project_entity(
-        self, mongo_repository, entities, mongo_project_repository
+            self, mongo_repository, entities, mongo_project_repository
     ):
         project = mongo_project_repository.save(Project(name="test_project"))
         for entity in entities:
@@ -68,7 +68,7 @@ class BaseRepositoryTest(object):
         assert mongo_repository.find_one(entity.id) is None
 
     def _do_test_delete_project_entity(
-        self, mongo_repository, entity, mongo_project_repository
+            self, mongo_repository, entity, mongo_project_repository
     ):
         project = mongo_project_repository.save(Project(name="test_project"))
         entity.project = project.id
@@ -144,7 +144,7 @@ class TestAssetRepository(BaseRepositoryTest):
 
     @pytest.mark.skip("asset type is not a required field yet!")
     def test_save_asset_without_asset_type(
-        self, mongo_asset_repository, mongo_project_repository
+            self, mongo_asset_repository, mongo_project_repository
     ):
         asset = Asset(name="test_asset")
         project = mongo_project_repository.save(Project(name="test_project"))
@@ -171,6 +171,56 @@ class TestAssetRepository(BaseRepositoryTest):
         asset = Asset(name="test_asset")
         self._do_test_delete_project_entity(
             mongo_asset_repository, asset, mongo_project_repository
+        )
+
+
+class TestShotRepository(BaseRepositoryTest):
+    @pytest.mark.parametrize(
+        "shot",
+        [
+            Shot(code="sh010", cut_information=CutInformation(cut_in=1000, cut_out=1050)),
+            Shot(code="sh010", cut_information=CutInformation(cut_in=1010, cut_out=1040)),
+        ],
+    )
+    def test_save(self, shot, mongo_shot_repository, mongo_project_repository):
+        # type: (Asset, MongoAssetRepository, MongoProjectRepository) -> None
+        self._do_test_save_project_entity(
+            mongo_shot_repository, shot, mongo_project_repository
+        )
+
+    def test_save_all(self, mongo_shot_repository, mongo_project_repository):
+        shots = [
+            Shot(code="sh010", cut_information=CutInformation(cut_in=1000, cut_out=1050)),
+            Shot(code="sh010", cut_information=CutInformation(cut_in=1010, cut_out=1040)),
+        ]
+        self._do_test_save_all_project_entity(
+            mongo_shot_repository, shots, mongo_project_repository
+        )
+
+    def test_save_shot_without_project(self, mongo_shot_repository):
+        shot = Shot(code="sh010", cut_information=CutInformation(cut_in=1000, cut_out=1050))
+
+        with pytest.raises(ValidationError):
+            mongo_shot_repository.save(shot)
+
+    def test_find_by_project(self, mongo_shot_repository, mongo_project_repository):
+        project1 = mongo_project_repository.save(Project(name="test_project"))
+        project2 = mongo_project_repository.save(Project(name="test_project"))
+
+        shots = mongo_shot_repository.save_all(
+            [
+                Shot(code="sh010", cut_information=CutInformation(cut_in=1000, cut_out=1050), project=project1.id),
+                Shot(code="sh010", cut_information=CutInformation(cut_in=1010, cut_out=1040), project=project2.id),
+            ]
+        )
+
+        assert mongo_shot_repository.find_by_project(project1.id)[0] == shots[0]
+        assert mongo_shot_repository.find_by_project(project2.id)[0] == shots[1]
+
+    def test_delete(self, mongo_shot_repository, mongo_project_repository):
+        shot = Shot(code="sh010", cut_information=CutInformation(cut_in=1000, cut_out=1050))
+        self._do_test_delete_project_entity(
+            mongo_shot_repository, shot, mongo_project_repository
         )
 
 
@@ -201,7 +251,7 @@ class TestPathEntryRepository(BaseRepositoryTest):
         assert mongo_path_entry_repository.find_by_path(path) == path_entry
 
     def test_find_by_path_returns_none(
-        self, mongo_path_entry_repository, populated_context
+            self, mongo_path_entry_repository, populated_context
     ):
         path = "some_path"
 

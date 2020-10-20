@@ -8,12 +8,13 @@ from ktrack_api.mongo_impl.entities import (
     Asset as MongoAsset,
     PathEntry as MongoPathEntry,
     Task as MongoTask,
+    Shot as MongoShot
 )
 from ktrack_api.repositories import (
     ProjectRepository,
     AssetRepository,
     PathEntryRepository,
-    TaskRepository,
+    TaskRepository, ShotRepository,
 )
 from kttk.context import Context
 from kttk.domain.entities import (
@@ -24,6 +25,7 @@ from kttk.domain.entities import (
     PathEntry,
     Task,
     EntityLink,
+    Shot, CutInformation
 )
 
 T = TypeVar("T")
@@ -72,6 +74,11 @@ class AbstractMongoProjectEntityRepository(AbstractMongoRepository[T, MONGO_T]):
     def find_by_project(self, domain_entity):
         # type: (KtrackId) -> List[T]
         mongo_entity = self.mongo_entity().objects(project__id=domain_entity).all()
+        return list(map(self.to_domain_entity, mongo_entity))
+
+    def find_by_name(self, name):
+        # type: (str) -> List[T]
+        mongo_entity = self.mongo_entity().objects(name=name).all()
         return list(map(self.to_domain_entity, mongo_entity))
 
 
@@ -147,6 +154,44 @@ class MongoAssetRepository(
                 name=mongo_entity.code,
                 asset_type=mongo_entity.asset_type,
                 project=mongo_entity.project["id"],
+            )
+
+
+class MongoShotRepository(AbstractMongoProjectEntityRepository[Shot, MongoShot], ShotRepository):
+    def mongo_entity(self):
+        # type: () -> Type[MongoShot]
+        return MongoShot
+
+    def to_mongo_entity(self, domain_entity):
+        # type: (Shot) -> MongoShot
+        if domain_entity:
+            return MongoShot(
+                id=domain_entity.id,
+                created_at=domain_entity.created_at,
+                updated_at=domain_entity.updated_at,
+                thumbnail={"path": domain_entity.thumbnail.path}
+                if domain_entity.thumbnail
+                else {},
+                code=domain_entity.code,
+                project={"type": "project", "id": domain_entity.project}
+                if domain_entity.project
+                else None,
+                cut_in=domain_entity.cut_information.cut_in,
+                cut_out=domain_entity.cut_information.cut_out,
+                cut_duration=domain_entity.cut_information.cut_duration
+            )
+
+    def to_domain_entity(self, mongo_entity):
+        # type: (MongoShot) -> Shot
+        if mongo_entity:
+            return Shot(
+                id=KtrackId(mongo_entity.id),
+                created_at=mongo_entity.created_at,
+                updated_at=mongo_entity.updated_at,
+                thumbnail=Thumbnail(path=mongo_entity.thumbnail.get("path")),
+                code=mongo_entity.code,
+                project=mongo_entity.project["id"],
+                cut_information=CutInformation(cut_in=mongo_entity.cut_in, cut_out=mongo_entity.cut_out)
             )
 
 

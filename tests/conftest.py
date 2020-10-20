@@ -23,6 +23,7 @@ from tests.fixtures.repository_fixtures import (
     mongo_asset_repository,
     mongo_path_entry_repository,
     mongo_task_repository,
+mongo_shot_repository
 )
 
 
