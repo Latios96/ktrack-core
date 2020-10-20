@@ -1,11 +1,13 @@
 import argparse
 
-from typing import List
+from typing import List, IO, Callable
 
+from ktrack_api.repositories import ProjectRepository, AssetRepository
 from kttk import logger
 from kttk.commands.abstract_command import AbstractCommand
-from kttk.domain.entities import Asset
+from kttk.domain.entities import Asset, KtrackId
 from kttk.domain.entity_reference import EntityReference
+from kttk.task_preset_applicator import TaskPresetApplicator
 
 
 class CreateAssetCommand(AbstractCommand):
@@ -17,6 +19,7 @@ class CreateAssetCommand(AbstractCommand):
         entity_initializer,
         task_preset_applicator,
     ):
+        # type: (IO, ProjectRepository, AssetRepository, Callable[[str, KtrackId], None], TaskPresetApplicator) -> None
         super(CreateAssetCommand, self).__init__(stream)
         self._project_repository = project_repository
         self._asset_repository = asset_repository
@@ -46,8 +49,10 @@ class CreateAssetCommand(AbstractCommand):
             )
             return
 
-        logger.info("Initialise Asset")
+        self._create_asset(entity_reference, parsed_args, project)
 
+    def _create_asset(self, entity_reference, parsed_args, project):
+        logger.info("Initialise Asset")
         logger.info("Create Asset in database..")
 
         asset = Asset(
@@ -55,24 +60,22 @@ class CreateAssetCommand(AbstractCommand):
             name=entity_reference.entity_name,
             asset_type=_format_asset_type(parsed_args.asset_type),
         )
-
         asset = self._asset_repository.save(asset)
 
         logger.info("Created Asset {} with id {}.".format(asset.name, asset.asset_type))
 
         logger.info("Initialise entity on disk..")
-
         self._entity_initializer("asset", asset.id)
-
         logger.info("Asset with id {} initialised.".format(asset.id))
 
+        logger.info("Creating tasks for Asset {}...".format(asset.name))
         self._task_preset_applicator.apply("asset", project.id, asset.id)
-
         logger.info("Tasks created for Asset {}".format(asset.name))
         logger.info("Done.")
 
 
 def _format_asset_type(asset_type):
+    # type: (str) -> str
     asset_type = asset_type.lower()
 
     return asset_type[0].upper() + asset_type[1:]
